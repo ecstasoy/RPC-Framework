@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.example</groupId>
-    <artifactId>rpc-framework</artifactId>
+    <artifactId>rpc</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>rpc-framework</name>
@@ -19,10 +19,10 @@
 
     <modules>
         <module>rpc-core</module>
-        <module>rpc-core/rpc-example</module>
-        <module>rpc-core/rpc-example/rpc-example-api</module>
-        <module>rpc-core/rpc-example/rpc-example-client</module>
-        <module>rpc-core/rpc-example/rpc-example-server</module>
+        <module>rpc-example</module>
+        <module>rpc-example/rpc-example-api</module>
+        <module>rpc-example/rpc-example-client</module>
+        <module>rpc-example/rpc-example-server</module>
     </modules>
 
     <properties>

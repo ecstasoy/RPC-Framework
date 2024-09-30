@@ -5,13 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.example</groupId>
-        <artifactId>rpc-framework</artifactId>
+        <artifactId>rpc</artifactId>
         <version>1.0-SNAPSHOT</version>
-        <relativePath>../../../pom.xml</relativePath>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>rpc-example-server</artifactId>
-    <packaging>jar</packaging>
+    <artifactId>rpc-example-client</artifactId>
 
     <properties>
         <maven.compiler.source>22</maven.compiler.source>
@@ -21,15 +20,21 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.example</groupId>
             <artifactId>rpc-core</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+
         <dependency>
             <groupId>org.example</groupId>
             <artifactId>rpc-example-api</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
@@ -53,7 +58,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>2.7.3</version>
                 <configuration>
-                    <mainClass>com.suny.rpc.nettyrpc.server.RpcServerApplication</mainClass>
+                    <mainClass>com.suny.rpc.nettyrpc.client.NettyRpcApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>
@@ -66,5 +71,6 @@
             </plugin>
         </plugins>
     </build>
+
 
 </project>
