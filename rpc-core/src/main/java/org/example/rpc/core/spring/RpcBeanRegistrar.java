@@ -47,7 +47,8 @@ public class RpcBeanRegistrar implements ImportBeanDefinitionRegistrar, Resource
           .getIntrospectedClass().getPackage().getName()};
     }
 
-    RpcBeanDefinitionScanner serviceScanner = new RpcBeanDefinitionScanner(registry, RpcService.class);
+    RpcBeanDefinitionScanner serviceScanner = new RpcBeanDefinitionScanner(registry,
+        RpcService.class);
 
     serviceScanner.scan(CORE_MODULE_PACKAGE);
 
@@ -60,7 +61,8 @@ public class RpcBeanRegistrar implements ImportBeanDefinitionRegistrar, Resource
    */
   static class RpcBeanDefinitionScanner extends ClassPathBeanDefinitionScanner {
 
-    public RpcBeanDefinitionScanner(BeanDefinitionRegistry registry, Class<? extends Annotation> classType) {
+    public RpcBeanDefinitionScanner(BeanDefinitionRegistry registry,
+                                    Class<? extends Annotation> classType) {
       super(registry);
       addIncludeFilter(new AnnotationTypeFilter(classType));
     }
