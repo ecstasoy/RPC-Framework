@@ -9,6 +9,9 @@ import lombok.ToString;
 
 import java.io.Serializable;
 
+/**
+ * RPC request.
+ */
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)
