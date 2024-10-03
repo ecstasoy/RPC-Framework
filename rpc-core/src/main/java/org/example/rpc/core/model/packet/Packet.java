@@ -1,4 +1,4 @@
-package org.example.rpc.core.model;
+package org.example.rpc.core.model.packet;
 
 import org.example.rpc.core.enums.PacketType;
 import lombok.AccessLevel;
