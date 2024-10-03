@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -21,6 +22,7 @@ public class RpcResponse extends Packet implements Serializable {
   /**
    * Serial version UID.
    */
+  @Serial
   private static final long serialVersionUID = 6096668930426886407L;
 
   /**
