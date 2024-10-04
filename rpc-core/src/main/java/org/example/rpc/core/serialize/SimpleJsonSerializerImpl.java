@@ -5,9 +5,15 @@ import com.alibaba.fastjson.parser.ParserConfig;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import org.springframework.stereotype.Service;
 
-public class SimpleJsonSerializerImpl implements Serializer{
+/**
+ * Simple JSON serializer.
+ */
+public class SimpleJsonSerializerImpl implements Serializer {
 
-  static{
+  /**
+   * Register classes.
+   */
+  static {
     ParserConfig.getGlobalInstance().addAccept("org.example.rpc");
   }
 
