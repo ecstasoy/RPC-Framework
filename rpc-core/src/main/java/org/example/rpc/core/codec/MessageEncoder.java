@@ -37,6 +37,7 @@ public class MessageEncoder extends MessageToByteEncoder<Packet> {
     out.writeByte(msg.getPacketType().getType());
 
     final byte[] bytes = serializerFactory.getSerializer(type).serialize(msg);
+    out.writeInt(bytes.length);
 
     out.writeBytes(bytes);
   }
