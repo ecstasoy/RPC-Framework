@@ -31,6 +31,11 @@ public class RpcRequest extends Packet implements Serializable {
   private String sequence;
 
   /**
+   * Class name.
+   */
+  private String className;
+
+  /**
    * Method name.
    */
   private String methodName;

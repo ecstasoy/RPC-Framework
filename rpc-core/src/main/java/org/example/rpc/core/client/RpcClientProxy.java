@@ -1,5 +1,6 @@
 package org.example.rpc.core.client;
 
+import org.example.rpc.core.model.RpcRequest;
 import org.example.rpc.core.model.RpcResponse;
 import org.example.rpc.core.network.RpcRequestSender;
 import lombok.extern.slf4j.Slf4j;
@@ -7,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.UUID;
 
 /**
  * Class of RPC client proxy.
@@ -20,7 +22,14 @@ public class RpcClientProxy implements InvocationHandler {
 
   @Override
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-    // Send RPC request to server, and get response.
+    RpcRequest rpcRequest = new RpcRequest();
+    rpcRequest.setSequence(UUID.randomUUID().toString());
+    rpcRequest.setClassName(method.getDeclaringClass().getName());
+    rpcRequest.setMethodName(method.getName());
+    rpcRequest.setParameterTypes(method.getParameterTypes());
+    rpcRequest.setParameters(args);
 
+    final RpcResponse rpcResponse = sendRpcRequest(rpcRequest);
+    return rpcResponse.getResult();
   }
 }
