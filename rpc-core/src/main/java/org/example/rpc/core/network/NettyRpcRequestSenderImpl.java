@@ -36,5 +36,22 @@ public class NettyRpcRequestSenderImpl implements RpcRequestSender {
 
     String[] split = serviceInstance.split(":");
     final Channel channel = ChannelManager.get(new InetSocketAddress(split[0], Integer.parseInt(split[1])));
+    if (channel == null || !channel.isActive()) {
+      throw new IllegalStateException();
+    }
+
+    RequestFutureManager.addFuture(rpcRequest.getSequence(), resultFuture);
+
+    channel.writeAndFlush(rpcRequest).addListener((ChannelFutureListener) future -> {
+      if (future.isSuccess()) {
+        log.info("Send request [{}] to [{}].", rpcRequest.getSequence(), serviceInstance);
+      } else {
+        future.channel().close();
+        resultFuture.completeExceptionally(future.cause());
+        log.error("Send request [{}] to [{}] failed.", rpcRequest.getSequence(), serviceInstance);
+      }
+    });
+
+    return resultFuture.get();
   }
 }
