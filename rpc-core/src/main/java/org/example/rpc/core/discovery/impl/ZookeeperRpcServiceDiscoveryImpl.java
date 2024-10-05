@@ -30,7 +30,7 @@ public class ZookeeperRpcServiceDiscoveryImpl extends AbstractRpcServiceDiscover
   List<String> doGetServiceInstanceList(String serviceName) {
     List<String> childrenNodes = zookeeperHelper.getServiceInstanceNode(serviceName);
     if (CollectionUtils.isEmpty(childrenNodes)) {
-      // throw new RuntimeException("No available service instances");
+      log.warn("No available service instances found for " + serviceName);
       return Collections.emptyList();
     }
     return childrenNodes;

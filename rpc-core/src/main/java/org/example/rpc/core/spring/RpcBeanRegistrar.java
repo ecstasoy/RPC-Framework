@@ -15,6 +15,9 @@ import org.springframework.core.type.filter.AnnotationTypeFilter;
 
 import java.lang.annotation.Annotation;
 
+/**
+ * Rpc bean registrar.
+ */
 @Slf4j
 public class RpcBeanRegistrar implements ImportBeanDefinitionRegistrar, ResourceLoaderAware {
 

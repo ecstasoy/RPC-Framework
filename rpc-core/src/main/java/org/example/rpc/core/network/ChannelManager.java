@@ -12,79 +12,73 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Channel manager
+ * Class to manage channels.
  */
 @Slf4j
 public class ChannelManager {
 
   public static final Map<String, Channel> CHANNEL_MAP = new ConcurrentHashMap<>();
-
   private static Bootstrap b;
 
   public static void setBootstrap(Bootstrap bootstrap) {
     b = bootstrap;
   }
 
-
-  @SneakyThrows
-  private static Channel connect(InetSocketAddress address) {
+  private static Channel connect(InetSocketAddress address) throws Exception {
     CompletableFuture<Channel> future = new CompletableFuture<>();
     b.connect(address).addListener((ChannelFutureListener) f -> {
       if (f.isSuccess()) {
-        log.info("Successfully connect to: {}.", address.toString());
-        future.complete(f.channel());
+        log.info("Successfully connected to: {}.", address.toString());
+        Channel channel = f.channel();
+        set(address, channel);  // Store the connected channel in the map
+        future.complete(channel);
       } else {
-        throw new IllegalStateException();
+        log.error("Failed to connect to {}: {}", address.toString(), f.cause().getMessage());
+        future.completeExceptionally(f.cause());  // Propagate the cause of failure
       }
     });
 
-    return future.get();
+    return future.get();  // Handle exception when future fails
   }
 
-  /**
-   * Get channel
-   *
-   * @param address address
-   * @return channel
-   */
   public static Channel get(InetSocketAddress address) {
     final String s = address.toString();
-//        if (!CHANNEL_MAP.containsKey(s)) {
-//            return null;
-//        }
+    Channel channel = CHANNEL_MAP.get(s);
 
-    final Channel channel = CHANNEL_MAP.get(s);
     if (channel == null) {
-      return connect(address);
+      log.info("No existing channel found for {}. Initiating new connection.", address.toString());
+      try {
+        return connect(address);
+      } catch (Exception e) {
+        log.error("Failed to connect to {}: {}", address.toString(), e.getMessage());
+        return null;
+      }
     }
 
     if (channel.isActive()) {
+      log.info("Reusing active channel for {}.", address.toString());
       return channel;
     } else {
+      log.info("Channel for {} is inactive. Removing and reconnecting.", address.toString());
       CHANNEL_MAP.remove(s);
-      return null;
+      try {
+        return connect(address);
+      } catch (Exception e) {
+        log.error("Failed to reconnect to {}: {}", address.toString(), e.getMessage());
+        return null;
+      }
     }
   }
 
-  /**
-   * Set channel
-   *
-   * @param address address
-   * @param channel channel
-   */
   public static void set(InetSocketAddress address, Channel channel) {
     final String s = address.toString();
     CHANNEL_MAP.put(s, channel);
+    log.info("Channel added for {}.", s);
   }
 
-  /**
-   * Remove channel
-   *
-   * @param address address
-   */
   public static void remove(InetSocketAddress address) {
     final String s = address.toString();
     CHANNEL_MAP.remove(s);
+    log.info("Channel removed for {}.", s);
   }
-
 }

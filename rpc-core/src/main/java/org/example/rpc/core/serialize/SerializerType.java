@@ -12,5 +12,5 @@ public enum SerializerType {
 
   JSON((byte) 1);
 
-  private byte type;
+  private final byte type;
 }

@@ -13,5 +13,11 @@ import java.lang.annotation.*;
 @Import(RpcBeanRegistrar.class)
 @Documented
 public @interface RpcServiceScan {
+
+  /**
+   * Base packages.
+   *
+   * @return base packages
+   */
   String[] basePackages() default {};
 }

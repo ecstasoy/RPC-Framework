@@ -12,11 +12,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
 import java.net.InetAddress;
 
+/**
+ * Class to process RPC-related beans.
+ */
 @Component
 @Slf4j
 public class RpcBeanProcessor implements BeanPostProcessor {
@@ -37,14 +39,21 @@ public class RpcBeanProcessor implements BeanPostProcessor {
   public Object postProcessBeforeInitialization(Object bean, String beanName)
       throws BeansException {
 
-    Service rpcServiceAnnotation = bean.getClass().getAnnotation(Service.class);
+    RpcService rpcServiceAnnotation = bean.getClass().getAnnotation(RpcService.class);
 
     if (rpcServiceAnnotation == null) {
       return bean;
     }
 
+    // Check if the bean implements any interfaces
+    Class<?>[] interfaces = bean.getClass().getInterfaces();
+    if (interfaces.length == 0) {
+      log.warn("Bean [{}] does not implement any interfaces, skipping service registration.", beanName);
+      return bean;
+    }
+
     RpcServiceRegistryParam registryParam = new RpcServiceRegistryParam();
-    registryParam.setServiceName(bean.getClass().getInterfaces()[0].getCanonicalName());
+    registryParam.setServiceName(interfaces[0].getCanonicalName());
     registryParam.setIp(InetAddress.getLocalHost().getHostAddress());
     registryParam.setPort(nettyServerProperties.getServerPort());
     registryParam.setRpcBean(bean);
@@ -68,7 +77,8 @@ public class RpcBeanProcessor implements BeanPostProcessor {
 
       final RpcClientProxy rpcClientProxy = new RpcClientProxy(requestSender);
       final Object proxy = rpcClientProxy.getProxy(field.getType());
-      field.setAccessible(true);try {
+      field.setAccessible(true);
+      try {
         field.set(bean, proxy);
       } catch (IllegalAccessException e) {
         throw new RuntimeException("Property [" + field.getName() + "] is not accessible", e);

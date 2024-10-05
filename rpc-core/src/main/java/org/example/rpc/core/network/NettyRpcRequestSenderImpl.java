@@ -29,6 +29,11 @@ public class NettyRpcRequestSenderImpl implements RpcRequestSender {
 
     final String className = rpcRequest.getClassName();
     final String serviceInstance = rpcServiceDiscovery.getServiceInstance(className);
+    if (StringUtils.isBlank(serviceInstance)) {
+      log.error("Service discovery failed for class [{}]. No available service instance.", className);
+      throw new RuntimeException(className + " has no available service instance.");
+    }
+    log.info("Discovered service instance [{}] for class [{}].", serviceInstance, className);
 
     if (StringUtils.isBlank(serviceInstance)) {
       throw new RuntimeException(className + " has no available service instance.");
@@ -37,8 +42,10 @@ public class NettyRpcRequestSenderImpl implements RpcRequestSender {
     String[] split = serviceInstance.split(":");
     final Channel channel = ChannelManager.get(new InetSocketAddress(split[0], Integer.parseInt(split[1])));
     if (channel == null || !channel.isActive()) {
-      throw new IllegalStateException();
+      log.error("Channel for service instance [{}] is either null or inactive.", serviceInstance);
+      throw new IllegalStateException("No active channel for service instance: " + serviceInstance);
     }
+    log.info("Using channel [{}] for service instance [{}].", channel, serviceInstance);
 
     RequestFutureManager.addFuture(rpcRequest.getSequence(), resultFuture);
 

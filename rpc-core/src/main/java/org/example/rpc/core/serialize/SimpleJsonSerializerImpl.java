@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 /**
  * Simple JSON serializer.
  */
+@Service
 public class SimpleJsonSerializerImpl implements Serializer {
 
   /**

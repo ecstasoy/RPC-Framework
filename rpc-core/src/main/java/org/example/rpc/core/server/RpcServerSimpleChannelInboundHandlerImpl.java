@@ -11,6 +11,9 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Rpc server simple channel inbound handler.
+ */
 @Slf4j
 public class RpcServerSimpleChannelInboundHandlerImpl extends SimpleChannelInboundHandler<Object> {
 

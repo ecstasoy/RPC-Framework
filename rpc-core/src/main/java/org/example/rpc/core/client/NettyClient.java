@@ -33,6 +33,7 @@ public class NettyClient {
           @Override
           protected void initChannel(SocketChannel ch) throws Exception {
             final ChannelPipeline pipeline = ch.pipeline();
+            pipeline.addLast(new IdleStateHandler(0, 5, 0, TimeUnit.SECONDS));
             pipeline.addLast(new MessageEncoder(serializerFactory));
             pipeline.addLast(new MessageDecoder(serializerFactory));
             pipeline.addLast(new RpcClientChannelInboundHandlerImpl());

@@ -57,8 +57,10 @@ public class ZookeeperHelper implements DisposableBean {
         zookeeperClient.create().creatingParentsIfNeeded().withMode(CreateMode.EPHEMERAL)
             .forPath(serviceNode);
       } else {
+        // Format the address without leading '/' by using getHostString() and getPort() instead of toString()
+        String formattedAddress = data.getHostString() + ":" + data.getPort();
         zookeeperClient.create().creatingParentsIfNeeded().withMode(CreateMode.EPHEMERAL_SEQUENTIAL)
-            .forPath(serviceNode, data.toString().getBytes(StandardCharsets.UTF_8));
+            .forPath(serviceNode, formattedAddress.getBytes(StandardCharsets.UTF_8));
       }
     }
     catch (Exception e) {
@@ -80,12 +82,15 @@ public class ZookeeperHelper implements DisposableBean {
       List<String> serviceAddressList = new ArrayList<>();
       for (String childNode : serviceNodeList) {
         try {
-          final byte[] bytes = zookeeperClient.getData().forPath(serviceNodeName + "/" + childNode);
-          serviceAddressList.add(new String(bytes, StandardCharsets.UTF_8));
+          final byte[] bytes = getZookeeperClient().getData().forPath(serviceNodeName + "/" + childNode);
+          String address = new String(bytes, StandardCharsets.UTF_8);
+          log.debug("Service address for node " + childNode + ": " + address);
+          serviceAddressList.add(address);
         } catch (Exception e) {
           log.error("Get service address for [{}] failed.", serviceName, e);
         }
       }
+      log.debug("Service address list for " + serviceName + ": " + serviceAddressList);
       return serviceAddressList;
     } catch (Exception e) {
       log.error("Get service instances for [{}] failed.", serviceName, e);
