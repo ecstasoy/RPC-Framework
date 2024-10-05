@@ -6,7 +6,7 @@ import org.example.rpc.core.client.RpcClientProxy;
 import org.example.rpc.core.network.RpcRequestSender;
 import org.example.rpc.core.registry.RpcServiceRegistry;
 import org.example.rpc.core.registry.param.RpcServiceRegistryParam;
-import org.example.rpc.core.registry.server.NettyServerProperties;
+import org.example.rpc.core.server.NettyServerProperties;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;

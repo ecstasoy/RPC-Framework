@@ -1,6 +1,6 @@
 package org.example.rpc.core.registry.impl;
 
-import org.example.rpc.core.RpcRequestProcessor;
+import org.example.rpc.core.process.RpcRequestProcessor;
 import org.example.rpc.core.registry.RpcServiceRegistry;
 import org.example.rpc.core.registry.param.RpcServiceRegistryParam;
 import org.example.rpc.core.registry.param.RpcServiceUnregistryParam;
@@ -12,7 +12,7 @@ public abstract class AbstractRpcServiceRegistry implements RpcServiceRegistry {
   @Override
   public void register(RpcServiceRegistryParam registryParam) {
     doRegister(registryParam);
-    RpcRequestProcessor.addRpcBean(registryParam.getServiceName(), registryParam.getRpcBean());
+    RpcRequestProcessor.addService(registryParam.getServiceName(), registryParam.getRpcBean());
     log.info("[{}] Service: [{}] is registered >> {}:{}", getRegistryCenterType().getName(),
         registryParam.getServiceName(), registryParam.getIp(), registryParam.getPort());
   }

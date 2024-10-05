@@ -16,6 +16,12 @@ import java.util.UUID;
 @Slf4j
 public class RpcClientProxy implements InvocationHandler {
 
+  private final RpcRequestSender rpcRequestSender;
+
+  public RpcClientProxy(RpcRequestSender rpcRequestSender) {
+    this.rpcRequestSender = rpcRequestSender;
+  }
+
   public <T> T getProxy(Class<T> clazz) {
     return (T) Proxy.newProxyInstance(clazz.getClassLoader(), new Class<?>[]{clazz}, this);
   }
@@ -29,7 +35,7 @@ public class RpcClientProxy implements InvocationHandler {
     rpcRequest.setParameterTypes(method.getParameterTypes());
     rpcRequest.setParameters(args);
 
-    final RpcResponse rpcResponse = sendRpcRequest(rpcRequest);
+    final RpcResponse rpcResponse = rpcRequestSender.sendRpcRequest(rpcRequest);
     return rpcResponse.getResult();
   }
 }
