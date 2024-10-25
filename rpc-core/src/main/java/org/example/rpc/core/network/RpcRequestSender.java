@@ -3,6 +3,8 @@ package org.example.rpc.core.network;
 import org.example.rpc.core.model.RpcResponse;
 import org.example.rpc.core.model.RpcRequest;
 
+import java.util.concurrent.CompletableFuture;
+
 /**
  * RPC request sender.
  */
@@ -14,5 +16,5 @@ public interface RpcRequestSender {
    * @param rpcRequest RPC request
    * @return RPC response
    */
-  RpcResponse sendRpcRequest(RpcRequest rpcRequest);
+  CompletableFuture<RpcResponse> sendRpcRequest(RpcRequest rpcRequest);
 }

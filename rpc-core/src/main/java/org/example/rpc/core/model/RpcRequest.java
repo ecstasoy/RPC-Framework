@@ -1,11 +1,8 @@
 package org.example.rpc.core.model;
 
+import lombok.*;
 import org.example.rpc.core.enums.PacketType;
 import org.example.rpc.core.model.packet.Packet;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -15,6 +12,9 @@ import java.util.Map;
  */
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @ToString
 public class RpcRequest extends Packet implements Serializable {
@@ -47,7 +47,7 @@ public class RpcRequest extends Packet implements Serializable {
   /**
    * Parameters.
    */
-  private Object[] parameters;
+  private Map<String, Object> parameters;
 
   /**
    * HTTP method.

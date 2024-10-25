@@ -1,22 +1,17 @@
 package org.example.rpc.core.client;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.rpc.core.annotations.GET;
-import org.example.rpc.core.annotations.POST;
-import org.example.rpc.core.annotations.Query;
-import org.example.rpc.core.annotations.Path;
+import org.example.rpc.core.annotations.RpcMethod;
+import org.example.rpc.core.annotations.Param;
 import org.example.rpc.core.model.RpcRequest;
 import org.example.rpc.core.model.RpcResponse;
 import org.example.rpc.core.network.RpcRequestSender;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-import java.lang.reflect.Proxy;
-import java.util.Arrays;
+import java.lang.reflect.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Class of RPC client proxy.
@@ -24,78 +19,70 @@ import java.util.UUID;
 @Slf4j
 public class RpcClientProxy implements InvocationHandler {
 
-  private final RpcRequestSender rpcRequestSender;
+  private final RpcRequestSender requestSender;
 
   /**
    * Constructor.
    *
-   * @param rpcRequestSender RPC request sender
+   * @param requestSender RPC request sender
    */
-  public RpcClientProxy(RpcRequestSender rpcRequestSender) {
-    this.rpcRequestSender = rpcRequestSender;
+  public RpcClientProxy(RpcRequestSender requestSender) {
+    this.requestSender = requestSender;
   }
 
-  /**
-   * Get proxy.
-   *
-   * @param clazz class
-   * @return proxy
-   */
+  @SuppressWarnings("unchecked")
   public <T> T getProxy(Class<T> clazz) {
     return (T) Proxy.newProxyInstance(clazz.getClassLoader(), new Class<?>[]{clazz}, this);
   }
 
   @Override
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-    RpcRequest rpcRequest = new RpcRequest();
-    rpcRequest.setSequence(UUID.randomUUID().toString());
-    rpcRequest.setClassName(method.getDeclaringClass().getName());
-    rpcRequest.setMethodName(method.getName());
-    rpcRequest.setParameterTypes(method.getParameterTypes());
-
-    // Process method annotations of GET and POST
-    String httpMethod = "GET";  // Default to GET
-    String path = "";
-    if (method.isAnnotationPresent(GET.class)) {
-      GET annotation = method.getAnnotation(GET.class);
-      path = annotation.value();
-    } else if (method.isAnnotationPresent(POST.class)) {
-      POST annotation = method.getAnnotation(POST.class);
-      path = annotation.value();
-      httpMethod = "POST";
+    if (Object.class.equals(method.getDeclaringClass())) {
+      return method.invoke(this, args);
     }
 
-    // Process method parameters of Path and Query
-    Map<String, String> queryParams = new HashMap<>();
-    for (int i = 0; i < method.getParameters().length; i++) {
-      Parameter parameter = method.getParameters()[i];
-      if (parameter.isAnnotationPresent(Path.class)) {
-        Path annotation = parameter.getAnnotation(Path.class);
-        path = path.replace("{" + annotation.value() + "}", args[i].toString());
-      } else if (parameter.isAnnotationPresent(Query.class)) {
-        Query annotation = parameter.getAnnotation(Query.class);
-        queryParams.put(annotation.value(), args[i].toString());
+    RpcMethod rpcMethod = method.getAnnotation(RpcMethod.class);
+    if (rpcMethod == null) {
+      throw new IllegalStateException("RPC method must be annotated with @RpcMethod");
+    }
+
+    RpcRequest rpcRequest = buildRequest(method, args);
+    CompletableFuture<RpcResponse> responseFuture = requestSender.sendRpcRequest(rpcRequest);
+
+    if (CompletableFuture.class.isAssignableFrom(method.getReturnType())) {
+      return responseFuture.thenApply(this::handleResponse);
+    } else {
+      return handleResponse(responseFuture.get());
+    }
+  }
+
+  private RpcRequest buildRequest(Method method, Object[] args) {
+    String methodName = method.getName();
+    Parameter[] parameters = method.getParameters();
+    Map<String, Object> paramMap = new HashMap<>();
+
+    for (int i = 0; i < parameters.length; i++) {
+      Param param = parameters[i].getAnnotation(Param.class);
+      if (param != null) {
+        paramMap.put(param.value(), args[i]);
+      } else {
+        paramMap.put("param" + i, args[i]);
       }
     }
 
-    // Set RPC request parameters
-    rpcRequest.setHttpMethod(httpMethod);
-    rpcRequest.setPath(path);
-    rpcRequest.setQueryParams(queryParams);
-    rpcRequest.setParameters(args);
+    return RpcRequest.builder()
+        .className(method.getDeclaringClass().getName())
+        .methodName(methodName)
+        .parameters(paramMap)
+        .parameterTypes(method.getParameterTypes())
+        .sequence(UUID.randomUUID().toString())
+        .build();
+  }
 
-    log.info("Invoking method: {}, on proxy: {} with arguments: {}",
-        method.getName(), proxy.getClass().getName(), Arrays.toString(args));
-    log.info("Sending RPC request: {}", rpcRequest);
-
-    final RpcResponse rpcResponse = rpcRequestSender.sendRpcRequest(rpcRequest);
-
-    log.info("Received RPC response: {}", rpcResponse);
-
+  private Object handleResponse(RpcResponse rpcResponse) {
     if (rpcResponse.getThrowable() != null) {
-      throw rpcResponse.getThrowable();
+      throw new RuntimeException(rpcResponse.getThrowable());
     }
-
     return rpcResponse.getResult();
   }
 }

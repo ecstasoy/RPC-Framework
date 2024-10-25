@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Netty RPC request sender implementation.
@@ -28,7 +27,9 @@ public class NettyRpcRequestSenderImpl implements RpcRequestSender {
 
   @SneakyThrows
   @Override
-  public RpcResponse sendRpcRequest(RpcRequest rpcRequest) {
+  public CompletableFuture<RpcResponse> sendRpcRequest(RpcRequest rpcRequest) {
+    CompletableFuture<RpcResponse> resultFuture = new CompletableFuture<>();
+
     int maxRetries = 3;
     for (int i = 0; i < maxRetries; i++) {
       try {
@@ -36,39 +37,38 @@ public class NettyRpcRequestSenderImpl implements RpcRequestSender {
       } catch (Exception e) {
         log.warn("Failed to send RPC request, attempt {} of {}", i + 1, maxRetries, e);
         if (i == maxRetries - 1) {
-          throw new RuntimeException("Failed to send RPC request after " + maxRetries + " attempts", e);
+          resultFuture.completeExceptionally(new RuntimeException("Failed to send RPC request after " + maxRetries + " attempts", e));
+          return resultFuture;
         }
         try {
           Thread.sleep(1000);
         } catch (InterruptedException ie) {
           Thread.currentThread().interrupt();
-          throw new RuntimeException("Interrupted while retrying to send RPC request", ie);
+          resultFuture.completeExceptionally(new RuntimeException("Interrupted while retrying to send RPC request", ie));
+          return resultFuture;
         }
       }
     }
-    throw new RuntimeException("Unexpected error in sendRpcRequest");
+    resultFuture.completeExceptionally(new RuntimeException("Unexpected error in sendRpcRequest"));
+    return resultFuture;
   }
 
-  public RpcResponse doSendRpcRequest(RpcRequest rpcRequest) throws ExecutionException, InterruptedException {
+  private CompletableFuture<RpcResponse> doSendRpcRequest(RpcRequest rpcRequest) {
     CompletableFuture<RpcResponse> resultFuture = new CompletableFuture<>();
 
     final String className = rpcRequest.getClassName();
     final String serviceInstance = rpcServiceDiscovery.getServiceInstance(className);
     if (StringUtils.isBlank(serviceInstance)) {
-      log.error("Service discovery failed for class [{}]. No available service instance.", className);
-      throw new RuntimeException(className + " has no available service instance.");
+      resultFuture.completeExceptionally(new RuntimeException(className + " has no available service instance."));
+      return resultFuture;
     }
     log.info("Discovered service instance [{}] for class [{}].", serviceInstance, className);
-
-    if (StringUtils.isBlank(serviceInstance)) {
-      throw new RuntimeException(className + " has no available service instance.");
-    }
 
     String[] split = serviceInstance.split(":");
     final Channel channel = ChannelManager.get(new InetSocketAddress(split[0], Integer.parseInt(split[1])));
     if (channel == null || !channel.isActive()) {
-      log.error("Channel for service instance [{}] is either null or inactive.", serviceInstance);
-      throw new IllegalStateException("No active channel for service instance: " + serviceInstance);
+      resultFuture.completeExceptionally(new IllegalStateException("No active channel for service instance: " + serviceInstance));
+      return resultFuture;
     }
     log.info("Using channel [{}] for service instance [{}].", channel, serviceInstance);
 
@@ -84,6 +84,6 @@ public class NettyRpcRequestSenderImpl implements RpcRequestSender {
       }
     });
 
-    return resultFuture.get();
+    return resultFuture;
   }
 }

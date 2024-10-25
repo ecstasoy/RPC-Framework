@@ -26,15 +26,14 @@ public class BffService {
   public CompletableFuture<User> getUserInfo() {
     log.info("Fetching user info...");
     String userId = "1";
-    return CompletableFuture.supplyAsync(() -> {
-      try {
-        User user = userService.selectById(userId);
-        log.info("User info: {}", user);
-        return user;
-      } catch (Exception e) {
-        log.error("Error while fetching user info: {}", e.getMessage(), e);
-        throw e; // If necessary, propagate the exception or handle it
-      }
-    });
+    return userService.selectById(userId)
+        .thenApply(user -> {
+          log.info("User info: {}", user);
+          return user;
+        })
+        .exceptionally(e -> {
+          log.error("Error while fetching user info: {}", e.getMessage(), e);
+          throw new CompletionException(e);
+        });
   }
 }
