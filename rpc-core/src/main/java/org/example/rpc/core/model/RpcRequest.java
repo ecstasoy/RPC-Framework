@@ -9,6 +9,7 @@ import lombok.ToString;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * RPC request.
@@ -49,6 +50,21 @@ public class RpcRequest extends Packet implements Serializable {
    * Parameters.
    */
   private Object[] parameters;
+
+  /**
+   * HTTP method.
+   */
+  private String httpMethod;
+
+  /**
+   * Request path.
+   */
+  private String path;
+
+  /**
+   * Query parameters.
+   */
+  private Map<String, String> queryParams;
 
   @Override
   public PacketType getPacketType() {

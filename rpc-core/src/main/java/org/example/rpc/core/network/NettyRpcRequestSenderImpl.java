@@ -1,20 +1,23 @@
 package org.example.rpc.core.network;
 
-import org.example.rpc.core.model.RpcResponse;
-import org.example.rpc.core.model.RpcRequest;
-import org.example.rpc.core.client.RequestFutureManager;
-import org.example.rpc.core.discovery.RpcServiceDiscovery;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.example.rpc.core.client.RequestFutureManager;
+import org.example.rpc.core.discovery.RpcServiceDiscovery;
+import org.example.rpc.core.model.RpcRequest;
+import org.example.rpc.core.model.RpcResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * Netty RPC request sender implementation.
+ */
 @Service
 @Slf4j
 public class NettyRpcRequestSenderImpl implements RpcRequestSender {

@@ -1,14 +1,21 @@
 package org.example.rpc.core.client;
 
+import lombok.extern.slf4j.Slf4j;
+import org.example.rpc.core.annotations.GET;
+import org.example.rpc.core.annotations.POST;
+import org.example.rpc.core.annotations.Query;
+import org.example.rpc.core.annotations.Path;
 import org.example.rpc.core.model.RpcRequest;
 import org.example.rpc.core.model.RpcResponse;
 import org.example.rpc.core.network.RpcRequestSender;
-import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -45,6 +52,36 @@ public class RpcClientProxy implements InvocationHandler {
     rpcRequest.setClassName(method.getDeclaringClass().getName());
     rpcRequest.setMethodName(method.getName());
     rpcRequest.setParameterTypes(method.getParameterTypes());
+
+    // Process method annotations of GET and POST
+    String httpMethod = "GET";  // Default to GET
+    String path = "";
+    if (method.isAnnotationPresent(GET.class)) {
+      GET annotation = method.getAnnotation(GET.class);
+      path = annotation.value();
+    } else if (method.isAnnotationPresent(POST.class)) {
+      POST annotation = method.getAnnotation(POST.class);
+      path = annotation.value();
+      httpMethod = "POST";
+    }
+
+    // Process method parameters of Path and Query
+    Map<String, String> queryParams = new HashMap<>();
+    for (int i = 0; i < method.getParameters().length; i++) {
+      Parameter parameter = method.getParameters()[i];
+      if (parameter.isAnnotationPresent(Path.class)) {
+        Path annotation = parameter.getAnnotation(Path.class);
+        path = path.replace("{" + annotation.value() + "}", args[i].toString());
+      } else if (parameter.isAnnotationPresent(Query.class)) {
+        Query annotation = parameter.getAnnotation(Query.class);
+        queryParams.put(annotation.value(), args[i].toString());
+      }
+    }
+
+    // Set RPC request parameters
+    rpcRequest.setHttpMethod(httpMethod);
+    rpcRequest.setPath(path);
+    rpcRequest.setQueryParams(queryParams);
     rpcRequest.setParameters(args);
 
     log.info("Invoking method: {}, on proxy: {} with arguments: {}",
