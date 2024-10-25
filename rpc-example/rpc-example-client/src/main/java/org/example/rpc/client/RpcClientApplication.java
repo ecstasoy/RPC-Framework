@@ -20,6 +20,9 @@ public class RpcClientApplication implements CommandLineRunner {
   @Autowired
   private SerializerFactory serializerFactory;
 
+  @Autowired
+  private NettyClient nettyClient;
+
   /**
    * Run RPC client.
    */
@@ -29,7 +32,6 @@ public class RpcClientApplication implements CommandLineRunner {
 
   @Override
   public void run(String... args) throws Exception {
-    NettyClient nettyClient = new NettyClient(serializerFactory);
     new CountDownLatch(1).await();
   }
 }

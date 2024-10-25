@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Bff controller.
@@ -22,7 +23,7 @@ public class BffController {
    * @return user
    */
   @GetMapping
-  public User testUser() {
+  public CompletableFuture<User> testUser() {
     return bffService.getUserInfo();
   }
 }

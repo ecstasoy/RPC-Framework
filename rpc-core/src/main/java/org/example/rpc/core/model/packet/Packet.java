@@ -5,7 +5,6 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
 
-import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -17,7 +16,6 @@ public abstract class Packet implements Serializable {
   /**
    * Serial version UID.
    */
-  @Serial
   private static final long serialVersionUID = 5058268849140034837L;
 
   /**

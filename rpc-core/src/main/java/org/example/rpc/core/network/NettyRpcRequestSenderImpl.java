@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Netty RPC request sender implementation.
@@ -28,6 +29,27 @@ public class NettyRpcRequestSenderImpl implements RpcRequestSender {
   @SneakyThrows
   @Override
   public RpcResponse sendRpcRequest(RpcRequest rpcRequest) {
+    int maxRetries = 3;
+    for (int i = 0; i < maxRetries; i++) {
+      try {
+        return doSendRpcRequest(rpcRequest);
+      } catch (Exception e) {
+        log.warn("Failed to send RPC request, attempt {} of {}", i + 1, maxRetries, e);
+        if (i == maxRetries - 1) {
+          throw new RuntimeException("Failed to send RPC request after " + maxRetries + " attempts", e);
+        }
+        try {
+          Thread.sleep(1000);
+        } catch (InterruptedException ie) {
+          Thread.currentThread().interrupt();
+          throw new RuntimeException("Interrupted while retrying to send RPC request", ie);
+        }
+      }
+    }
+    throw new RuntimeException("Unexpected error in sendRpcRequest");
+  }
+
+  public RpcResponse doSendRpcRequest(RpcRequest rpcRequest) throws ExecutionException, InterruptedException {
     CompletableFuture<RpcResponse> resultFuture = new CompletableFuture<>();
 
     final String className = rpcRequest.getClassName();
