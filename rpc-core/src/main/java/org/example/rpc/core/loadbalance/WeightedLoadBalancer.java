@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
 public class WeightedLoadBalancer implements LoadBalancer {
@@ -34,7 +35,7 @@ public class WeightedLoadBalancer implements LoadBalancer {
   }
 
   /**
-   * Smooth weighted round robin algorithm
+   * Smooth weighted round-robin algorithm
    * @param weights service weight list
    * @return selected instance
    */

@@ -6,6 +6,9 @@ import org.example.rpc.core.registry.param.RpcServiceRegistryParam;
 import org.example.rpc.core.registry.param.RpcServiceUnregistryParam;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Abstract class for service registry.
+ */
 @Slf4j
 public abstract class AbstractRpcServiceRegistry implements RpcServiceRegistry {
 

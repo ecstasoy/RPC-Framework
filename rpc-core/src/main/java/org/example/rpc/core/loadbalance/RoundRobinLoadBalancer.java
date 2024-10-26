@@ -15,8 +15,15 @@ public class RoundRobinLoadBalancer implements LoadBalancer {
     if (serviceInstance == null || serviceInstance.isEmpty()) {
       return null;
     }
-    int size = serviceInstance.size();
-    return serviceInstance.get(Math.abs(position.getAndIncrement() % size));
+    
+    // Use compareAndSet to ensure thread safety
+    for (;;) {
+      int current = position.get();
+      int next = (current + 1) % serviceInstance.size();
+      if (position.compareAndSet(current, next)) {
+        return serviceInstance.get(current);
+      }
+    }
   }
 
   @Override

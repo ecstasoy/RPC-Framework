@@ -1,11 +1,12 @@
 package org.example.rpc.core.loadbalance;
 
 import org.springframework.stereotype.Component;
-
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Least active load balancer
@@ -19,33 +20,44 @@ public class LeastActiveLoadBalancer implements LoadBalancer {
     if (serviceInstance == null || serviceInstance.isEmpty()) {
       return null;
     }
-    String selectedInstance = null;
-    int leastActive = Integer.MAX_VALUE;
 
+    // 1. 找出当前最小活跃数
+    int leastActive = Integer.MAX_VALUE;
+    List<String> leastActiveInstances = new ArrayList<>();
+    
     for (String instance : serviceInstance) {
-      AtomicInteger activeCount = activeCountMap.computeIfAbsent(instance, k -> new AtomicInteger(0));
-      int currentActive = activeCount.get();
-      if (currentActive < leastActive) {
-        leastActive = currentActive;
-        selectedInstance = instance;
+      AtomicInteger count = activeCountMap.computeIfAbsent(instance, k -> new AtomicInteger(0));
+      int active = count.get();
+      
+      if (active < leastActive) {
+        leastActive = active;
+        leastActiveInstances.clear();
+        leastActiveInstances.add(instance);
+      } else if (active == leastActive) {
+        leastActiveInstances.add(instance);
       }
     }
 
-    if (selectedInstance == null) {
-      activeCountMap.get(selectedInstance).incrementAndGet();
+    // 2. 如果有多个最小活跃数的实例，随机选择一个
+    String selectedInstance;
+    if (leastActiveInstances.size() == 1) {
+      selectedInstance = leastActiveInstances.get(0);
+    } else {
+      selectedInstance = leastActiveInstances.get(ThreadLocalRandom.current().nextInt(leastActiveInstances.size()));
     }
 
+    // 3. 增加选中实例的活跃数
+    activeCountMap.get(selectedInstance).incrementAndGet();
     return selectedInstance;
   }
 
   /**
-   * Decrement active count
-   * @param instance instance
+   * 服务调用完成后减少活跃数
    */
   public void decrementActive(String instance) {
-    AtomicInteger activeCount = activeCountMap.get(instance);
-    if (activeCount != null) {
-      activeCount.decrementAndGet();
+    AtomicInteger count = activeCountMap.get(instance);
+    if (count != null && count.get() > 0) {
+      count.decrementAndGet();
     }
   }
 

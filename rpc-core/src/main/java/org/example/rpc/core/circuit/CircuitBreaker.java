@@ -5,6 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
+/**
+ * Circuit breaker.
+ */
 @Slf4j
 public class CircuitBreaker {
   private final AtomicReference<CircuitBreakerState> state;
@@ -15,6 +18,9 @@ public class CircuitBreaker {
   private final int halfOpenMaxCalls;
   private volatile long lastFailureTime;
 
+  /**
+   * Circuit breaker state.
+   */
   public CircuitBreaker(CircuitBreakerProperties properties) {
     this.state = new AtomicReference<>(CircuitBreakerState.CLOSED);
     this.failureCount = new AtomicInteger(0);
@@ -24,6 +30,10 @@ public class CircuitBreaker {
     this.halfOpenMaxCalls = properties.getHalfOpenMaxCalls();
   }
 
+  /**
+   * Check if the request is allowed.
+   * @return true if the request is allowed, otherwise false
+   */
   public boolean allowRequest() {
     CircuitBreakerState currentState = state.get();
     if (currentState == CircuitBreakerState.CLOSED) {
@@ -44,6 +54,9 @@ public class CircuitBreaker {
     return true;
   }
 
+  /**
+   * Record a successful call.
+   */
   public void recordSuccess() {
     CircuitBreakerState currentState = state.get();
     if (currentState == CircuitBreakerState.HALF_OPEN) {
@@ -57,6 +70,9 @@ public class CircuitBreaker {
     }
   }
 
+  /**
+   * Record a failed call.
+   */
   public void recordFailure() {
     lastFailureTime = System.currentTimeMillis();
     CircuitBreakerState currentState = state.get();

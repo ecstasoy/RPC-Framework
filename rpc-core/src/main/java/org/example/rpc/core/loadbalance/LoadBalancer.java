@@ -2,6 +2,9 @@ package org.example.rpc.core.loadbalance;
 
 import java.util.List;
 
+/**
+ * Load balancer interface.
+ */
 public interface LoadBalancer {
 
   /**
@@ -11,5 +14,11 @@ public interface LoadBalancer {
    * @return selected instance
    */
   String select(List<String> serviceInstance, String serviceName);
+
+  /**
+   * Get current strategy.
+   *
+   * @return LoadBalanceStrategy
+   */
   LoadBalanceStrategy getStrategy();
 }

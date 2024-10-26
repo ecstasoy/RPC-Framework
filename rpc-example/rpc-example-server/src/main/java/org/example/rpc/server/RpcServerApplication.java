@@ -14,6 +14,7 @@ import java.util.concurrent.CountDownLatch;
 /**
  * RPC server application.
  */
+@SuppressWarnings("ALL")
 @RpcServiceScan(basePackages = "org.example.rpc.**")
 @SpringBootApplication
 public class RpcServerApplication implements CommandLineRunner {

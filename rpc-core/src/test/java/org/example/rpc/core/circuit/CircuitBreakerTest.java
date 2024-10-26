@@ -14,6 +14,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
+@SuppressWarnings("ALL")
 @Slf4j
 @SpringBootTest(
     classes = {TestApplication.class, TestConfig.class},

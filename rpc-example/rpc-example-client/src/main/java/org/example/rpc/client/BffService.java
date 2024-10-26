@@ -47,6 +47,12 @@ public class BffService {
         });
   }
 
+  /**
+   * Create user.
+   *
+   * @param user user
+   * @return user
+   */
   public CompletableFuture<User> createUser(User user) {
     log.info("Creating user...");
     return userService.createUser(user)
@@ -60,6 +66,13 @@ public class BffService {
         });
   }
 
+  /**
+   * Update user info.
+   *
+   * @param id user id
+   * @param user user
+   * @return user
+   */
   public CompletableFuture<User> updateUser(String id, User user) {
     log.info("Updating user info...");
     return userService.updateUser(id, user)
@@ -73,6 +86,12 @@ public class BffService {
         });
   }
 
+  /**
+   * Delete user.
+   *
+   * @param id user id
+   * @return void
+   */
   public CompletableFuture<Void> deleteUser(String id) {
     log.info("Deleting user...");
     return userService.deleteUser(id)
@@ -83,6 +102,12 @@ public class BffService {
         });
   }
 
+  /**
+   * Create users in batch.
+   *
+   * @param users users
+   * @return users
+   */
   public CompletableFuture<List<User>> createUsers(List<User> users) {
     log.info("Creating users...");
     return userService.createUsers(users)
