@@ -3,6 +3,7 @@ package org.example.rpc.api;
 import org.example.rpc.core.annotations.*;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.List;
 
 @Api("/users")
 public interface UserService {
@@ -18,4 +19,7 @@ public interface UserService {
 
   @DELETE("/{id}")
   CompletableFuture<Void> deleteUser(@Path("id") String id);
+
+  @POST("/batch")
+  CompletableFuture<List<User>> createUsers(@Body List<User> users);
 }

@@ -7,6 +7,7 @@ import org.example.rpc.core.annotations.Reference;
 import org.example.rpc.core.exception.BusinessException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
@@ -78,6 +79,19 @@ public class BffService {
         .thenRun(() -> log.info("User deleted, ID: {}", id))
         .exceptionally(e -> {
           log.error("Error while deleting user: {}", e.getMessage(), e);
+          throw new CompletionException(e);
+        });
+  }
+
+  public CompletableFuture<List<User>> createUsers(List<User> users) {
+    log.info("Creating users...");
+    return userService.createUsers(users)
+        .thenApply(createdUsers -> {
+          log.info("Created users info: {}", createdUsers);
+          return createdUsers;
+        })
+        .exceptionally(e -> {
+          log.error("Error while creating users: {}", e.getMessage(), e);
           throw new CompletionException(e);
         });
   }

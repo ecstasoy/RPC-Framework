@@ -1,7 +1,10 @@
 package org.example.rpc.core.discovery.impl;
 
-import org.example.rpc.core.discovery.RpcServiceDiscovery;
 import lombok.extern.slf4j.Slf4j;
+import org.example.rpc.core.discovery.RpcServiceDiscovery;
+import org.example.rpc.core.loadbalance.LoadBalancer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.List;
 
@@ -10,6 +13,10 @@ import java.util.List;
  */
 @Slf4j
 public abstract class AbstractRpcServiceDiscovery implements RpcServiceDiscovery {
+
+  @Autowired
+  @Qualifier("weightedLoadBalancer")
+  protected LoadBalancer loadBalancer;
 
   @Override
   public List<String> getServiceInstaceList(String serviceName) {
@@ -20,10 +27,13 @@ public abstract class AbstractRpcServiceDiscovery implements RpcServiceDiscovery
 
   @Override
   public String getServiceInstance(String serviceName) {
-    final List<String> list = doGetServiceInstanceList(serviceName);
-    if (list == null) {
+    final List<String> instances = doGetServiceInstanceList(serviceName);
+    if (instances == null || instances.isEmpty()) {
       return null;
     }
-    return list.stream().findFirst().orElse(null);
+    String selected = loadBalancer.select(instances, serviceName);
+    log.debug("Load balancer {} selected instance {} for service {}",
+        loadBalancer.getStrategy(), selected, serviceName);
+    return selected;
   }
 }
