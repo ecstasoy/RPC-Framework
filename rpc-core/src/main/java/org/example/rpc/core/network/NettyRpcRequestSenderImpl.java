@@ -5,15 +5,22 @@ import io.netty.channel.ChannelFutureListener;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.example.rpc.core.circuit.CircuitBreaker;
+import org.example.rpc.core.circuit.CircuitBreakerProperties;
 import org.example.rpc.core.client.RequestFutureManager;
 import org.example.rpc.core.discovery.RpcServiceDiscovery;
+import org.example.rpc.core.exception.RpcException;
 import org.example.rpc.core.model.RpcRequest;
 import org.example.rpc.core.model.RpcResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.context.annotation.Lazy;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Netty RPC request sender implementation.
@@ -25,31 +32,48 @@ public class NettyRpcRequestSenderImpl implements RpcRequestSender {
   @Autowired
   private RpcServiceDiscovery rpcServiceDiscovery;
 
+  @Autowired
+  private CircuitBreakerProperties circuitBreakerProperties;
+
+  private final ConcurrentHashMap<String, CircuitBreaker> circuitBreakers = new ConcurrentHashMap<>();
+
+  private CircuitBreaker getCircuitBreaker(String serviceName) {
+    return circuitBreakers.computeIfAbsent(serviceName,
+        k -> new CircuitBreaker(circuitBreakerProperties));
+  }
+
   @SneakyThrows
   @Override
   public CompletableFuture<RpcResponse> sendRpcRequest(RpcRequest rpcRequest) {
     CompletableFuture<RpcResponse> resultFuture = new CompletableFuture<>();
 
-    int maxRetries = 3;
-    for (int i = 0; i < maxRetries; i++) {
-      try {
-        return doSendRpcRequest(rpcRequest);
-      } catch (Exception e) {
-        log.warn("Failed to send RPC request, attempt {} of {}", i + 1, maxRetries, e);
-        if (i == maxRetries - 1) {
-          resultFuture.completeExceptionally(new RuntimeException("Failed to send RPC request after " + maxRetries + " attempts", e));
-          return resultFuture;
-        }
-        try {
-          Thread.sleep(1000);
-        } catch (InterruptedException ie) {
-          Thread.currentThread().interrupt();
-          resultFuture.completeExceptionally(new RuntimeException("Interrupted while retrying to send RPC request", ie));
-          return resultFuture;
-        }
-      }
+    String serviceName = rpcRequest.getClassName();
+    CircuitBreaker circuitBreaker = getCircuitBreaker(serviceName);
+
+    if (!circuitBreaker.allowRequest()) {
+      resultFuture.completeExceptionally(
+          new RpcException("SERVICE_UNAVAILABLE",
+              "Service is unavailable due to circuit breaker open: " + serviceName, 
+              503));
+      return resultFuture;
     }
-    resultFuture.completeExceptionally(new RuntimeException("Unexpected error in sendRpcRequest"));
+
+    try {
+      CompletableFuture<RpcResponse> response = doSendRpcRequest(rpcRequest);
+      response.whenComplete((result, throwable) -> {
+        if (throwable != null) {
+          circuitBreaker.recordFailure();
+          resultFuture.completeExceptionally(throwable);
+        } else {
+          circuitBreaker.recordSuccess();
+          resultFuture.complete(result);
+        }
+      });
+    } catch (Exception e) {
+      circuitBreaker.recordFailure();
+      resultFuture.completeExceptionally(e);
+    }
+
     return resultFuture;
   }
 
