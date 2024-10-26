@@ -2,6 +2,7 @@ package org.example.rpc.server.biz;
 
 import org.example.rpc.api.User;
 import org.example.rpc.api.UserService;
+import org.example.rpc.api.exception.UserNotFoundException;
 import org.example.rpc.core.annotations.*;
 import org.apache.commons.lang3.RandomStringUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +24,7 @@ public class UserServiceImpl implements UserService {
       User user = userMap.get(id);
       if (user == null) {
         log.warn("User not found with id: {}", id);
-        throw new RuntimeException("User not found");
+        throw new UserNotFoundException("User not found, ID: " + id);
       }
       log.info("Select user by id: {}", id);
       return user;

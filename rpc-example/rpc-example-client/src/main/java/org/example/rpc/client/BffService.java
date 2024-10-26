@@ -1,11 +1,12 @@
 package org.example.rpc.client;
 
+import lombok.extern.slf4j.Slf4j;
 import org.example.rpc.api.User;
 import org.example.rpc.api.UserService;
-import org.example.rpc.client.exception.UserNotFoundException;
 import org.example.rpc.core.annotations.Reference;
-import lombok.extern.slf4j.Slf4j;
+import org.example.rpc.core.exception.BusinessException;
 import org.springframework.stereotype.Service;
+
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
@@ -33,13 +34,13 @@ public class BffService {
           return user;
         })
         .exceptionally(e -> {
-          log.error("Error when fetching user info: {}", e.getMessage(), e);
+          log.error("Error when fetching user info: ", e);
           Throwable cause = e;
           while (cause.getCause() != null) {
             cause = cause.getCause();
           }
-          if (cause instanceof RuntimeException && cause.getMessage().contains("User not found")) {
-            throw new UserNotFoundException("User not found, ID: " + userId);
+          if (cause instanceof BusinessException) {
+            throw (BusinessException) cause;
           }
           throw new CompletionException(cause);
         });
