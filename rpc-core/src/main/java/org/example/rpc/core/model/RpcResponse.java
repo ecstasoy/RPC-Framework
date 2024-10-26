@@ -1,7 +1,9 @@
 package org.example.rpc.core.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import org.example.rpc.core.enums.PacketType;
 import org.example.rpc.core.model.packet.Packet;
+import org.example.rpc.core.serialize.SimpleJsonSerializerImpl;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,6 +33,8 @@ public class RpcResponse extends Packet implements Serializable {
   /**
    * Throwable.
    */
+  @JSONField(serializeUsing = SimpleJsonSerializerImpl.ThrowableSerializer.class,
+      deserializeUsing = SimpleJsonSerializerImpl.ThrowableDeserializer.class)
   private Throwable throwable;
 
   /**

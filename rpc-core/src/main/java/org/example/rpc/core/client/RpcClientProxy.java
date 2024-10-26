@@ -1,13 +1,15 @@
 package org.example.rpc.core.client;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.rpc.core.annotations.RpcMethod;
-import org.example.rpc.core.annotations.Param;
+import org.example.rpc.core.annotations.*;
 import org.example.rpc.core.model.RpcRequest;
 import org.example.rpc.core.model.RpcResponse;
 import org.example.rpc.core.network.RpcRequestSender;
 
-import java.lang.reflect.*;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -41,12 +43,28 @@ public class RpcClientProxy implements InvocationHandler {
       return method.invoke(this, args);
     }
 
-    RpcMethod rpcMethod = method.getAnnotation(RpcMethod.class);
-    if (rpcMethod == null) {
-      throw new IllegalStateException("RPC method must be annotated with @RpcMethod");
+    String httpMethod = null;
+    String path = "";
+
+    if (method.isAnnotationPresent(GET.class)) {
+      httpMethod = "GET";
+      path = method.getAnnotation(GET.class).value();
+    } else if (method.isAnnotationPresent(POST.class)) {
+      httpMethod = "POST";
+      path = method.getAnnotation(POST.class).value();
+    } else if (method.isAnnotationPresent(PUT.class)) {
+      httpMethod = "PUT";
+      path = method.getAnnotation(PUT.class).value();
+    } else if (method.isAnnotationPresent(DELETE.class)) {
+      httpMethod = "DELETE";
+      path = method.getAnnotation(DELETE.class).value();
     }
 
-    RpcRequest rpcRequest = buildRequest(method, args);
+    if (httpMethod == null) {
+      throw new IllegalStateException("HTTP method annotation is missing");
+    }
+
+    RpcRequest rpcRequest = buildRequest(method, args, httpMethod, path);
     CompletableFuture<RpcResponse> responseFuture = requestSender.sendRpcRequest(rpcRequest);
 
     if (CompletableFuture.class.isAssignableFrom(method.getReturnType())) {
@@ -56,15 +74,22 @@ public class RpcClientProxy implements InvocationHandler {
     }
   }
 
-  private RpcRequest buildRequest(Method method, Object[] args) {
+  private RpcRequest buildRequest(Method method, Object[] args, String httpMethod, String path) {
     String methodName = method.getName();
     Parameter[] parameters = method.getParameters();
     Map<String, Object> paramMap = new HashMap<>();
+    Map<String, String> queryParams = new HashMap<>();
 
     for (int i = 0; i < parameters.length; i++) {
-      Param param = parameters[i].getAnnotation(Param.class);
-      if (param != null) {
-        paramMap.put(param.value(), args[i]);
+      Parameter param = parameters[i];
+      if (param.isAnnotationPresent(Path.class)) {
+        String pathParamName = param.getAnnotation(Path.class).value();
+        path = path.replace("{" + pathParamName + "}", args[i].toString());
+      } else if (param.isAnnotationPresent(Query.class)) {
+        String queryParamName = param.getAnnotation(Query.class).value();
+        queryParams.put(queryParamName, args[i].toString());
+      } else if (param.isAnnotationPresent(Body.class)) {
+        paramMap.put("body", args[i]);
       } else {
         paramMap.put("param" + i, args[i]);
       }
@@ -76,11 +101,17 @@ public class RpcClientProxy implements InvocationHandler {
         .parameters(paramMap)
         .parameterTypes(method.getParameterTypes())
         .sequence(UUID.randomUUID().toString())
+        .httpMethod(httpMethod)
+        .path(path)
+        .queryParams(queryParams)
         .build();
   }
 
   private Object handleResponse(RpcResponse rpcResponse) {
     if (rpcResponse.getThrowable() != null) {
+      if (rpcResponse.getThrowable() instanceof RuntimeException) {
+        throw (RuntimeException) rpcResponse.getThrowable();
+      }
       throw new RuntimeException(rpcResponse.getThrowable());
     }
     return rpcResponse.getResult();

@@ -1,20 +1,21 @@
 package org.example.rpc.api;
 
-import org.example.rpc.core.annotations.RpcMethod;
-import org.example.rpc.core.annotations.Param;
+import org.example.rpc.core.annotations.*;
+
 import java.util.concurrent.CompletableFuture;
 
-/**
- * Interface of user service.
- */
+@Api("/users")
 public interface UserService {
 
-  /**
-   * Select user by id.
-   *
-   * @param id id
-   * @return user
-   */
-  @RpcMethod
-  CompletableFuture<User> selectById(@Param("id") String id);
+  @GET("/{id}")
+  CompletableFuture<User> selectById(@Path("id") String id);
+
+  @POST
+  CompletableFuture<User> createUser(@Body User user);
+
+  @PUT("/{id}")
+  CompletableFuture<User> updateUser(@Path("id") String id, @Body User user);
+
+  @DELETE("/{id}")
+  CompletableFuture<Void> deleteUser(@Path("id") String id);
 }
