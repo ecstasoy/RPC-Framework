@@ -1,7 +1,7 @@
 package org.example.rpc.core.registry.impl;
 
 import org.example.rpc.core.process.RpcRequestProcessor;
-import org.example.rpc.core.registry.RpcServiceRegistry;
+import org.example.rpc.core.registry.api.RpcServiceRegistry;
 import org.example.rpc.core.registry.param.RpcServiceRegistryParam;
 import org.example.rpc.core.registry.param.RpcServiceUnregistryParam;
 import lombok.extern.slf4j.Slf4j;

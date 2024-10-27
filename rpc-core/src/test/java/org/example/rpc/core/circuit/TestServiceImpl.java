@@ -1,7 +1,9 @@
 package org.example.rpc.core.circuit;
 
-import org.example.rpc.core.annotations.RpcService;
-import org.example.rpc.core.exception.RpcException;
+import org.example.rpc.core.common.annotations.RpcService;
+import org.example.rpc.core.common.circuit.CircuitBreaker;
+import org.example.rpc.core.common.circuit.CircuitBreakerProperties;
+import org.example.rpc.core.common.exception.RpcException;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

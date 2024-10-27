@@ -2,7 +2,7 @@ package org.example.rpc.client;
 
 import org.example.rpc.api.User;
 import org.example.rpc.client.exception.UserNotFoundException;
-import org.example.rpc.core.exception.BusinessException;
+import org.example.rpc.core.common.exception.BusinessException;
 import org.example.rpc.core.model.ErrorResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

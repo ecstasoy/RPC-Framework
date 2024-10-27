@@ -1,6 +1,6 @@
 package org.example.rpc.core;
 
-import org.example.rpc.core.enums.RegistryCenterType;
+import org.example.rpc.core.common.enums.RegistryCenterType;
 
 /**
  * Interface for registry center.

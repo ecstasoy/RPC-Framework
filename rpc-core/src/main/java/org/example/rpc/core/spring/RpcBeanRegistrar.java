@@ -1,7 +1,7 @@
 package org.example.rpc.core.spring;
 
-import org.example.rpc.core.annotations.RpcServiceScan;
-import org.example.rpc.core.annotations.RpcService;
+import org.example.rpc.core.common.annotations.RpcServiceScan;
+import org.example.rpc.core.common.annotations.RpcService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.ResourceLoaderAware;

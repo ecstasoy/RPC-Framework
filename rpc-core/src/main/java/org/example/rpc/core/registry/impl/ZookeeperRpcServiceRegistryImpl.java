@@ -1,6 +1,6 @@
 package org.example.rpc.core.registry.impl;
 
-import org.example.rpc.core.enums.RegistryCenterType;
+import org.example.rpc.core.common.enums.RegistryCenterType;
 import org.example.rpc.core.ext.zookeeper.ZookeeperHelper;
 import org.example.rpc.core.registry.param.RpcServiceRegistryParam;
 import org.example.rpc.core.registry.param.RpcServiceUnregistryParam;

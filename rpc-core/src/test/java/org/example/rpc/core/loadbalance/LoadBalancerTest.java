@@ -1,5 +1,9 @@
 package org.example.rpc.core.loadbalance;
 
+import org.example.rpc.core.loadbalance.impl.LeastActiveLoadBalancer;
+import org.example.rpc.core.loadbalance.impl.RandomLoadBalancer;
+import org.example.rpc.core.loadbalance.impl.RoundRobinLoadBalancer;
+import org.example.rpc.core.loadbalance.impl.WeightedLoadBalancer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -2,8 +2,9 @@ package org.example.rpc.core.circuit;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.rpc.core.TestApplication;
-import org.example.rpc.core.discovery.RpcServiceDiscovery;
-import org.example.rpc.core.exception.RpcException;
+import org.example.rpc.core.common.circuit.CircuitBreakerProperties;
+import org.example.rpc.core.discovery.api.RpcServiceDiscovery;
+import org.example.rpc.core.common.exception.RpcException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

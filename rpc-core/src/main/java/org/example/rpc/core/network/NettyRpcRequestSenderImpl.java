@@ -5,22 +5,19 @@ import io.netty.channel.ChannelFutureListener;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.example.rpc.core.circuit.CircuitBreaker;
-import org.example.rpc.core.circuit.CircuitBreakerProperties;
-import org.example.rpc.core.client.RequestFutureManager;
-import org.example.rpc.core.discovery.RpcServiceDiscovery;
-import org.example.rpc.core.exception.RpcException;
+import org.example.rpc.core.common.circuit.CircuitBreaker;
+import org.example.rpc.core.common.circuit.CircuitBreakerProperties;
+import org.example.rpc.core.transport.client.RequestFutureManager;
+import org.example.rpc.core.discovery.api.RpcServiceDiscovery;
+import org.example.rpc.core.common.exception.RpcException;
 import org.example.rpc.core.model.RpcRequest;
 import org.example.rpc.core.model.RpcResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.context.annotation.Lazy;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Netty RPC request sender implementation.

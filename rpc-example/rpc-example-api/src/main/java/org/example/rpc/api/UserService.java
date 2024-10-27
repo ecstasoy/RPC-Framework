@@ -1,6 +1,6 @@
 package org.example.rpc.api;
 
-import org.example.rpc.core.annotations.*;
+import org.example.rpc.core.common.annotations.*;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.List;

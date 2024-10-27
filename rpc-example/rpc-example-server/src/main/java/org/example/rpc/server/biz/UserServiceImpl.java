@@ -5,7 +5,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.example.rpc.api.User;
 import org.example.rpc.api.UserService;
 import org.example.rpc.api.exception.UserNotFoundException;
-import org.example.rpc.core.annotations.*;
+import org.example.rpc.core.common.annotations.*;
 
 import java.util.ArrayList;
 import java.util.List;

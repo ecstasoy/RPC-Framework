@@ -1,9 +1,9 @@
 package org.example.rpc.core.model;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import org.example.rpc.core.enums.PacketType;
+import org.example.rpc.core.common.enums.PacketType;
 import org.example.rpc.core.model.packet.Packet;
-import org.example.rpc.core.serialize.SimpleJsonSerializerImpl;
+import org.example.rpc.core.protocol.serialize.impl.SimpleJsonSerializerImpl;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;

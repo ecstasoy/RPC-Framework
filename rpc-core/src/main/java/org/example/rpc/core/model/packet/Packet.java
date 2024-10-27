@@ -1,6 +1,6 @@
 package org.example.rpc.core.model.packet;
 
-import org.example.rpc.core.enums.PacketType;
+import org.example.rpc.core.common.enums.PacketType;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;

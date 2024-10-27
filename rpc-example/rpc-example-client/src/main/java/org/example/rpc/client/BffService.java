@@ -3,8 +3,8 @@ package org.example.rpc.client;
 import lombok.extern.slf4j.Slf4j;
 import org.example.rpc.api.User;
 import org.example.rpc.api.UserService;
-import org.example.rpc.core.annotations.Reference;
-import org.example.rpc.core.exception.BusinessException;
+import org.example.rpc.core.common.annotations.Reference;
+import org.example.rpc.core.common.exception.BusinessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

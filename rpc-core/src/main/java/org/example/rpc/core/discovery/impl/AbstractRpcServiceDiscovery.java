@@ -1,8 +1,8 @@
 package org.example.rpc.core.discovery.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.rpc.core.discovery.RpcServiceDiscovery;
-import org.example.rpc.core.loadbalance.LoadBalancer;
+import org.example.rpc.core.discovery.api.RpcServiceDiscovery;
+import org.example.rpc.core.loadbalance.api.LoadBalancer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 

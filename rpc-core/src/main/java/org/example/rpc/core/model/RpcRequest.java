@@ -1,7 +1,7 @@
 package org.example.rpc.core.model;
 
 import lombok.*;
-import org.example.rpc.core.enums.PacketType;
+import org.example.rpc.core.common.enums.PacketType;
 import org.example.rpc.core.model.packet.Packet;
 
 import java.io.Serializable;
