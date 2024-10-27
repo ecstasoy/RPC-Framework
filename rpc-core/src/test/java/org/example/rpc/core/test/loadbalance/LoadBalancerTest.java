@@ -255,4 +255,57 @@ public class LoadBalancerTest {
   private void decrementActive(String instance) {
     loadBalancerFactory.decrementActive(LoadBalanceStrategy.LEAST_ACTIVE, instance);
   }
+
+  @Test
+  void testConsistentHashLoadBalancer() {
+    LoadBalancer loadBalancer = loadBalancerFactory.getLoadBalancer(LoadBalanceStrategy.CONSISTENT_HASH);
+
+    // Test same parameter always returns the same instance
+    String param1 = "test-param-1";
+    String param2 = "test-param-2";
+    String serviceNameWithParam1 = SERVICE_NAME + "#" + param1;
+    String serviceNameWithParam2 = SERVICE_NAME + "#" + param2;
+
+    String selected1 = loadBalancer.select(instances, serviceNameWithParam1);
+    String selected2 = loadBalancer.select(instances, serviceNameWithParam2);
+
+    // Multiple calls with the same parameter should return the same instance
+    for (int i = 0; i < 10; i++) {
+      assertEquals(selected1, loadBalancer.select(instances, serviceNameWithParam1),
+          "Same parameter should always return the same instance");
+      assertEquals(selected2, loadBalancer.select(instances, serviceNameWithParam2),
+          "Same parameter should always return the same instance");
+    }
+
+    // Test redistribution after instance removal
+    List<String> reducedInstances = new ArrayList<>(instances);
+    reducedInstances.remove(selected1);
+
+    String newSelected = loadBalancer.select(reducedInstances, serviceNameWithParam1);
+    assertNotEquals(selected1, newSelected,
+        "Should select different instance after removal");
+
+    // Test distribution uniformity
+    Map<String, AtomicInteger> distribution = new ConcurrentHashMap<>();
+    int totalRequests = 10000;
+
+    for (int i = 0; i < totalRequests; i++) {
+      String param = "test-param-" + i;
+      String serviceNameWithParam = SERVICE_NAME + "#" + param;
+      String selected = loadBalancer.select(instances, serviceNameWithParam);
+      distribution.computeIfAbsent(selected, k -> new AtomicInteger(0))
+          .incrementAndGet();
+    }
+
+    // Check if distribution is roughly equal, 10% deviation allowed
+    int expectedCount = totalRequests / instances.size();
+    double allowedDeviation = 0.1;
+
+    for (String instance : instances) {
+      int count = distribution.get(instance).get();
+      assertTrue(Math.abs(count - expectedCount) <= expectedCount * allowedDeviation,
+          String.format("Instance %s got %d requests, expected around %d (±%d%%)",
+              instance, count, expectedCount, (int)(allowedDeviation * 100)));
+    }
+  }
 }

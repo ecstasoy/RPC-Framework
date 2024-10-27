@@ -9,9 +9,9 @@ public interface Serializer {
    * Serialize object.
    *
    * @param obj object
-   * @return byte array
+   * @return <T> byte array
    */
-  byte[] serialize(Object obj);
+  <T> byte[] serialize(T obj);
 
   /**
    * Deserialize.

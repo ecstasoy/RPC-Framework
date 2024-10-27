@@ -29,28 +29,49 @@ public class MessageDecoder extends ByteToMessageDecoder {
 
   @Override
   protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
-
-    in.skipBytes(1);
-
-    final byte serializerType = in.readByte();
-
-    final byte messageType = in.readByte();
-    final Class<? extends Packet> packetClass = PacketClassManager.getPacketClass(messageType);
-    if (packetClass == null) {
-      throw new UnsupportedOperationException("Unsupported packet type: " + messageType);
+    // Check if there are enough bytes to read message (magic number: 1, serializer type: 1, message type: 1, message length: 4)
+    if (in.readableBytes() < 7) {
+      return;
+    }
+    
+    // Mark current read index
+    in.markReaderIndex();
+    
+    // read magic number
+    byte magicNum = in.readByte();
+    if (magicNum != 66) {
+      in.resetReaderIndex();
+      throw new IllegalStateException("Invalid magic number: " + magicNum);
+    }
+    
+    // read serializer type and message type
+    byte serializerType = in.readByte();
+    byte messageType = in.readByte();
+    
+    // read message length
+    int length = in.readInt();
+    if (length < 0) {
+      throw new IllegalStateException("Invalid message length: " + length);
+    }
+    
+    // If readable bytes are not enough, reset reader index and return
+    if (in.readableBytes() < length) {
+      in.resetReaderIndex();
+      return;
     }
 
-    final int length = in.readInt();
-
-    final Serializer serializer = serializerFactory.getSerializer(serializerType);
-    if (serializer == null) {
-      throw new UnsupportedOperationException("Unsupported serializer type: " + serializerType);
-    }
-
-    final byte[] bytes = new byte[length];
+    byte[] bytes = new byte[length];
     in.readBytes(bytes);
 
-    final Packet packet = serializer.deSerialize(bytes, packetClass);
+    // 8. 反序列化
+    Class<? extends Packet> packetClass = PacketClassManager.getPacketClass(messageType);
+    if (packetClass == null) {
+      throw new IllegalStateException("Unknown packet type: " + messageType);
+    }
+
+    Serializer serializer = serializerFactory.getSerializer(serializerType);
+    Packet packet = serializer.deSerialize(bytes, packetClass);
+
     out.add(packet);
   }
 }
