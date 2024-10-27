@@ -11,7 +11,7 @@ public interface Serializer {
    * @param obj object
    * @return <T> byte array
    */
-  <T> byte[] serialize(T obj);
+  <T> byte[] serialize(T obj) throws Exception;
 
   /**
    * Deserialize.
@@ -21,7 +21,7 @@ public interface Serializer {
    * @param <T> class type
    * @return object
    */
-  <T> T deSerialize(byte[] bytes, Class<T> classType);
+  <T> T deSerialize(byte[] bytes, Class<T> classType) throws Exception;
 
   /**
    * Get serializer type.

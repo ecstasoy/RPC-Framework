@@ -27,17 +27,15 @@ public class MessageEncoder extends MessageToByteEncoder<Packet> {
 
   @Override
   protected void encode(ChannelHandlerContext ctx, Packet msg, ByteBuf out) throws Exception {
-    final byte type = SerializerType.JSON.getType();
+    // 使用配置的序列化类型，而不是硬编码的JSON
+    final byte type = msg.getSerializerType().getType();
 
     out.writeByte(msg.getMagicNum());
-
     out.writeByte(type);
-
     out.writeByte(msg.getPacketType().getType());
 
     final byte[] bytes = serializerFactory.getSerializer(type).serialize(msg);
     out.writeInt(bytes.length);
-
     out.writeBytes(bytes);
   }
 }

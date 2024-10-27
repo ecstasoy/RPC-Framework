@@ -1,6 +1,7 @@
 package org.example.rpc.core.model.packet;
 
 import org.example.rpc.core.common.enums.PacketType;
+import org.example.rpc.core.protocol.serialize.SerializerType;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
@@ -30,4 +31,8 @@ public abstract class Packet implements Serializable {
    * @return packet type
    */
   public abstract PacketType getPacketType();
+
+  // 添加序列化类型字段
+  @Setter(AccessLevel.NONE)
+  private SerializerType serializerType = SerializerType.JSON; // 默认使用JSON序列化
 }

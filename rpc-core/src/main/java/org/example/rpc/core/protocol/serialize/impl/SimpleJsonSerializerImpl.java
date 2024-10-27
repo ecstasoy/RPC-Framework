@@ -10,6 +10,8 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import org.example.rpc.core.protocol.serialize.Serializer;
 import org.example.rpc.core.protocol.serialize.SerializerType;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Type;
 
@@ -19,6 +21,8 @@ import java.lang.reflect.Type;
 @Service
 public class SimpleJsonSerializerImpl implements Serializer {
 
+  private static final Logger logger = LoggerFactory.getLogger(SimpleJsonSerializerImpl.class);
+
   /**
    * Register classes.
    */
@@ -26,21 +30,24 @@ public class SimpleJsonSerializerImpl implements Serializer {
     ParserConfig.getGlobalInstance().addAccept("org.example.rpc");
     SerializeConfig.getGlobalInstance().put(Throwable.class, new ThrowableSerializer());
     ParserConfig.getGlobalInstance().putDeserializer(Throwable.class, new ThrowableDeserializer());
-  }
-
-  @Override
-  public byte[] serialize(Object obj) {
-    return JSON.toJSONBytes(obj, SerializerFeature.WriteClassName);
-  }
-
-  @Override
-  public <T>T deSerialize(byte[] bytes, Class<T> classType) {
-    return JSON.parseObject(bytes, classType);
+    ParserConfig.getGlobalInstance().setAutoTypeSupport(true);
   }
 
   @Override
   public SerializerType getSerializerType() {
     return SerializerType.JSON;
+  }
+
+  @Override
+  public <T> byte[] serialize(T obj) throws Exception {
+    // 使用 TypeReference 来保留泛型信息
+    return JSON.toJSONBytes(obj, SerializerFeature.WriteClassName);
+  }
+
+  @Override
+  public <T> T deSerialize(byte[] bytes, Class<T> clazz) throws Exception {
+    String jsonString = new String(bytes);
+    return JSON.parseObject(jsonString, clazz);
   }
 
   public static class ThrowableSerializer implements ObjectSerializer {
