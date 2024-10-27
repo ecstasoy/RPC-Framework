@@ -36,22 +36,30 @@ public class CircuitBreaker {
    */
   public boolean allowRequest() {
     CircuitBreakerState currentState = state.get();
+    
     if (currentState == CircuitBreakerState.CLOSED) {
-      return true;
+        return true;
     }
+    
     if (currentState == CircuitBreakerState.OPEN) {
-      if (System.currentTimeMillis() - lastFailureTime >= resetTimeoutMs) {
-        if (state.compareAndSet(CircuitBreakerState.OPEN, CircuitBreakerState.HALF_OPEN)) {
-          log.info("Circuit breaker state changed from OPEN to HALF_OPEN");
-          successCount.set(0);
-          failureCount.set(0);
-          return true;
+        // 检查是否已经过了重置时间
+        if (System.currentTimeMillis() - lastFailureTime >= resetTimeoutMs) {
+            // 尝试切换到半开状态
+            if (state.compareAndSet(CircuitBreakerState.OPEN, CircuitBreakerState.HALF_OPEN)) {
+                successCount.set(0);  // 重置成功计数
+                failureCount.set(0);  // 重置失败计数
+                log.info("Circuit breaker state changed to HALF_OPEN");
+            }
+            return true;
         }
-      }
-      return false;
+        return false;
     }
-    // HALF_OPEN state
-    return true;
+    
+    if (currentState == CircuitBreakerState.HALF_OPEN) {
+        return successCount.get() < halfOpenMaxCalls;
+    }
+    
+    return false;  // 默认情况下不允许请求
   }
 
   /**

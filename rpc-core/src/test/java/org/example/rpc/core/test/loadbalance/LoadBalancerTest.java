@@ -1,9 +1,9 @@
-package org.example.rpc.core.loadbalance;
+package org.example.rpc.core.test.loadbalance;
 
-import org.example.rpc.core.loadbalance.impl.LeastActiveLoadBalancer;
-import org.example.rpc.core.loadbalance.impl.RandomLoadBalancer;
-import org.example.rpc.core.loadbalance.impl.RoundRobinLoadBalancer;
-import org.example.rpc.core.loadbalance.impl.WeightedLoadBalancer;
+import org.example.rpc.core.loadbalance.LoadBalancerFactory;
+import org.example.rpc.core.loadbalance.api.LoadBalanceStrategy;
+import org.example.rpc.core.loadbalance.api.LoadBalancer;
+import org.example.rpc.core.test.TestConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,18 +19,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-@SpringBootTest
+@SpringBootTest(
+    classes = TestConfig.class  // 明确指定使用哪个配置类
+)
 public class LoadBalancerTest {
 
   private static final String SERVICE_NAME = "test.service";
   @Autowired
-  private RandomLoadBalancer randomLoadBalancer;
-  @Autowired
-  private RoundRobinLoadBalancer roundRobinLoadBalancer;
-  @Autowired
-  private WeightedLoadBalancer weightedLoadBalancer;
-  @Autowired
-  private LeastActiveLoadBalancer leastActiveLoadBalancer;
+  private LoadBalancerFactory loadBalancerFactory;
   private List<String> instances;
 
   @BeforeEach
@@ -44,11 +40,12 @@ public class LoadBalancerTest {
 
   @Test
   void testRandomLoadBalancer() {
+    LoadBalancer loadBalancer = loadBalancerFactory.getLoadBalancer(LoadBalanceStrategy.RANDOM);
     Map<String, AtomicInteger> selectionCount = new ConcurrentHashMap<>();
     int totalCalls = 10000; // 增加调用次数以获得更好的统计结果
 
     for (int i = 0; i < totalCalls; i++) {
-      String selected = randomLoadBalancer.select(instances, SERVICE_NAME);
+      String selected = loadBalancer.select(instances, SERVICE_NAME);
       assertNotNull(selected, "Selected instance should not be null");
       selectionCount.computeIfAbsent(selected, k -> new AtomicInteger(0)).incrementAndGet();
     }
@@ -67,13 +64,14 @@ public class LoadBalancerTest {
 
   @Test
   void testRoundRobinLoadBalancer() {
+    LoadBalancer loadBalancer = loadBalancerFactory.getLoadBalancer(LoadBalanceStrategy.ROUND_ROBIN);
     List<String> selections = new ArrayList<>();
     int rounds = 3;
 
     // 测试多轮完整轮询
     for (int round = 0; round < rounds; round++) {
       for (int i = 0; i < instances.size(); i++) {
-        String selected = roundRobinLoadBalancer.select(instances, SERVICE_NAME);
+        String selected = loadBalancer.select(instances, SERVICE_NAME);
         selections.add(selected);
       }
     }
@@ -97,7 +95,7 @@ public class LoadBalancerTest {
       executorService.submit(() -> {
         try {
           for (int j = 0; j < requestsPerThread; j++) {
-            String selected = roundRobinLoadBalancer.select(instances, SERVICE_NAME);
+            String selected = loadBalancerFactory.getLoadBalancer(LoadBalanceStrategy.ROUND_ROBIN).select(instances, SERVICE_NAME);
             assertNotNull(selected);
             selectionCount.computeIfAbsent(selected, k -> new AtomicInteger(0))
                 .incrementAndGet();
@@ -121,10 +119,10 @@ public class LoadBalancerTest {
 
   @Test
   void testEmptyInstances() {
-    assertNull(randomLoadBalancer.select(Collections.emptyList(), SERVICE_NAME));
-    assertNull(roundRobinLoadBalancer.select(Collections.emptyList(), SERVICE_NAME));
-    assertNull(weightedLoadBalancer.select(Collections.emptyList(), SERVICE_NAME));
-    assertNull(leastActiveLoadBalancer.select(Collections.emptyList(), SERVICE_NAME));
+    assertNull(loadBalancerFactory.getLoadBalancer(LoadBalanceStrategy.RANDOM).select(Collections.emptyList(), SERVICE_NAME));
+    assertNull(loadBalancerFactory.getLoadBalancer(LoadBalanceStrategy.ROUND_ROBIN).select(Collections.emptyList(), SERVICE_NAME));
+    assertNull(loadBalancerFactory.getLoadBalancer(LoadBalanceStrategy.WEIGHTED).select(Collections.emptyList(), SERVICE_NAME));
+    assertNull(loadBalancerFactory.getLoadBalancer(LoadBalanceStrategy.LEAST_ACTIVE).select(Collections.emptyList(), SERVICE_NAME));
   }
 
   @Test
@@ -135,7 +133,7 @@ public class LoadBalancerTest {
 
     // First round with default weights
     for (int i = 0; i < totalCalls; i++) {
-      String selected = weightedLoadBalancer.select(instances, serviceName);
+      String selected = loadBalancerFactory.getLoadBalancer(LoadBalanceStrategy.WEIGHTED).select(instances, serviceName);
       assertNotNull(selected);
       selectionCount.computeIfAbsent(selected, k -> new AtomicInteger(0)).incrementAndGet();
     }
@@ -155,13 +153,13 @@ public class LoadBalancerTest {
     selectionCount.clear();
 
     // Adjust weights
-    weightedLoadBalancer.adjustWeight(serviceName, "instance1:8080", 20);
-    weightedLoadBalancer.adjustWeight(serviceName, "instance2:8080", 10);
-    weightedLoadBalancer.adjustWeight(serviceName, "instance3:8080", 5);
+    loadBalancerFactory.adjustWeight(LoadBalanceStrategy.WEIGHTED, serviceName, "instance1:8080", 20);
+    loadBalancerFactory.adjustWeight(LoadBalanceStrategy.WEIGHTED, serviceName, "instance2:8080", 10);
+    loadBalancerFactory.adjustWeight(LoadBalanceStrategy.WEIGHTED, serviceName, "instance3:8080", 5);
 
     // Second round with adjusted weights
     for (int i = 0; i < totalCalls; i++) {
-      String selected = weightedLoadBalancer.select(instances, serviceName);
+      String selected = loadBalancerFactory.getLoadBalancer(LoadBalanceStrategy.WEIGHTED).select(instances, serviceName);
       assertNotNull(selected);
       selectionCount.computeIfAbsent(selected, k -> new AtomicInteger(0)).incrementAndGet();
     }
@@ -192,7 +190,7 @@ public class LoadBalancerTest {
     // 1. 初始状态，所有实例活跃度都是0，应该随机选择
     Map<String, Integer> selectionCount = new HashMap<>();
     for (int i = 0; i < 100; i++) {
-      String selected = leastActiveLoadBalancer.select(instances, SERVICE_NAME);
+      String selected = loadBalancerFactory.getLoadBalancer(LoadBalanceStrategy.LEAST_ACTIVE).select(instances, SERVICE_NAME);
       selectionCount.merge(selected, 1, Integer::sum);
     }
     // 验证所有实例都被选择过
@@ -200,17 +198,17 @@ public class LoadBalancerTest {
 
     // 2. 减少instance2的活跃度
     for (int i = 0; i < 3; i++) {
-      leastActiveLoadBalancer.decrementActive(instance2);
+      loadBalancerFactory.getLoadBalancer(LoadBalanceStrategy.LEAST_ACTIVE).decrementActive(instance2);
     }
 
     // instance2应该被优先选择
-    String selected = leastActiveLoadBalancer.select(instances, SERVICE_NAME);
+    String selected = loadBalancerFactory.getLoadBalancer(LoadBalanceStrategy.LEAST_ACTIVE).select(instances, SERVICE_NAME);
     assertEquals(instance2, selected, "Should select instance with least active count");
 
     // 3. 验证活跃度会自动增加
     Map<String, AtomicInteger> activeCount = new HashMap<>();
     for (int i = 0; i < 10; i++) {
-      String instance = leastActiveLoadBalancer.select(instances, SERVICE_NAME);
+      String instance = loadBalancerFactory.getLoadBalancer(LoadBalanceStrategy.LEAST_ACTIVE).select(instances, SERVICE_NAME);
       activeCount.computeIfAbsent(instance, k -> new AtomicInteger(0)).incrementAndGet();
     }
 
@@ -230,7 +228,7 @@ public class LoadBalancerTest {
       executorService.submit(() -> {
         try {
           for (int j = 0; j < requestsPerThread; j++) {
-            String selected = weightedLoadBalancer.select(instances, SERVICE_NAME);
+            String selected = loadBalancerFactory.getLoadBalancer(LoadBalanceStrategy.WEIGHTED).select(instances, SERVICE_NAME);
             assertNotNull(selected);
             selectionCount.computeIfAbsent(selected, k -> new AtomicInteger(0))
                 .incrementAndGet();
@@ -255,6 +253,6 @@ public class LoadBalancerTest {
   }
 
   private void decrementActive(String instance) {
-    leastActiveLoadBalancer.decrementActive(instance);
+    loadBalancerFactory.decrementActive(LoadBalanceStrategy.LEAST_ACTIVE, instance);
   }
 }

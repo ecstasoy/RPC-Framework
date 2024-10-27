@@ -1,4 +1,4 @@
-package org.example.rpc.core.circuit;
+package org.example.rpc.core.test;
 
 public interface TestService {
 

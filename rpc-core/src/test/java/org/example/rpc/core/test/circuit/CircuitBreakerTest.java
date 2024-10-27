@@ -1,10 +1,11 @@
-package org.example.rpc.core.circuit;
+package org.example.rpc.core.test.circuit;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.rpc.core.TestApplication;
 import org.example.rpc.core.common.circuit.CircuitBreakerProperties;
 import org.example.rpc.core.discovery.api.RpcServiceDiscovery;
 import org.example.rpc.core.common.exception.RpcException;
+import org.example.rpc.core.test.TestConfig;
+import org.example.rpc.core.test.TestService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,12 +19,7 @@ import static org.mockito.Mockito.when;
 @SuppressWarnings("ALL")
 @Slf4j
 @SpringBootTest(
-    classes = {TestApplication.class, TestConfig.class},
-    properties = {
-        "rpc.circuit-breaker.failure-threshold=5",
-        "rpc.circuit-breaker.reset-timeout-ms=1000",
-        "rpc.circuit-breaker.half-open-max-calls=10"
-    }
+    classes = {TestConfig.class}
 )
 public class CircuitBreakerTest {
   @Autowired

@@ -5,4 +5,5 @@ public enum LoadBalanceStrategy {
   ROUND_ROBIN,
   WEIGHTED, // Weighted Round Robin
   LEAST_ACTIVE,
+  CONSISTENT_HASH,
 }

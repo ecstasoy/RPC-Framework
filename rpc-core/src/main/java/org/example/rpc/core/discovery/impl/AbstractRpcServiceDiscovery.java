@@ -15,7 +15,7 @@ import java.util.List;
 public abstract class AbstractRpcServiceDiscovery implements RpcServiceDiscovery {
 
   @Autowired
-  @Qualifier("weightedLoadBalancer")
+  @Qualifier("consistentHashLoadBalancer")
   protected LoadBalancer loadBalancer;
 
   @Override

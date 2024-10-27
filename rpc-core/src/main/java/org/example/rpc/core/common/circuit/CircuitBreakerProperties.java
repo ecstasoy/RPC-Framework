@@ -13,10 +13,19 @@ public class CircuitBreakerProperties {
 
   @Value("${rpc.circuit-breaker.failure-threshold:5}")
   private int failureThreshold;
-
+  
   @Value("${rpc.circuit-breaker.reset-timeout-ms:30000}")
   private long resetTimeoutMs;
-
+  
   @Value("${rpc.circuit-breaker.half-open-max-calls:10}")
   private int halfOpenMaxCalls;
+
+  public CircuitBreakerProperties() {
+  }
+
+  public CircuitBreakerProperties(int failureThreshold, long resetTimeoutMs, int halfOpenMaxCalls) {
+    this.failureThreshold = failureThreshold;
+    this.resetTimeoutMs = resetTimeoutMs;
+    this.halfOpenMaxCalls = halfOpenMaxCalls;
+  }
 }

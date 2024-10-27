@@ -1,4 +1,4 @@
-package org.example.rpc.core.circuit;
+package org.example.rpc.core.test;
 
 import org.example.rpc.core.common.annotations.RpcService;
 import org.example.rpc.core.common.circuit.CircuitBreaker;
