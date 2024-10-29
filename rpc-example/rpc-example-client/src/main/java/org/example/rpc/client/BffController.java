@@ -1,75 +1,68 @@
 package org.example.rpc.client;
 
 import org.example.rpc.api.User;
-import org.example.rpc.client.exception.UserNotFoundException;
-import org.example.rpc.core.common.exception.BusinessException;
-import org.example.rpc.core.model.ErrorResponse;
+import org.example.rpc.api.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 /**
- * Bff controller.
+ * User Resource REST API Controller
  */
-@RequestMapping("/test")
 @RestController
+@RequestMapping("/api/v1/users")
+@Validated
 public class BffController {
 
-  @Autowired
-  private BffService bffService;
+  private final BffService bffService;
+  private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-  /**
-   * Test user.
-   *
-   * @return user
-   */
+  @Autowired
+  public BffController(BffService bffService) {
+    this.bffService = bffService;
+  }
+
+  // Single User Operations
   @GetMapping("/{id}")
-  public CompletableFuture<ResponseEntity<?>> testUser(@PathVariable String id) {
+  public CompletableFuture<String> getUser(@PathVariable String id) {
     return bffService.getUserInfo(id)
-        .handle((user, ex) -> {
-          if (ex != null) {
-            Throwable cause = ex instanceof CompletionException ? ex.getCause() : ex;
-            if (cause instanceof BusinessException) {
-              BusinessException be = (BusinessException) cause;
-              return ResponseEntity.status(be.getHttpStatus())
-                  .body(new ErrorResponse(be.getErrorCode(), be.getMessage()));
-            }
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ErrorResponse("INTERNAL_ERROR", "An error occurred"));
-          }
-          return ResponseEntity.ok().body(user);
-        });
+        .thenApply(user -> gson.toJson(ApiResponse.success(user)));
   }
 
   @PostMapping
-  public CompletableFuture<User> createUser(@RequestBody User user) {
-    return bffService.createUser(user);
+  public CompletableFuture<String> createUser(@RequestBody @Validated User user) {
+    return bffService.createUser(user)
+        .thenApply(created -> gson.toJson(ApiResponse.success(created)));
   }
 
   @PutMapping("/{id}")
-  public CompletableFuture<User> updateUser(@PathVariable String id, @RequestBody User user) {
-    return bffService.updateUser(id, user);
+  public CompletableFuture<String> updateUser(@PathVariable String id, @RequestBody @Validated User user) {
+    return bffService.updateUser(id, user)
+        .thenApply(updated -> gson.toJson(ApiResponse.success(updated)));
   }
 
   @DeleteMapping("/{id}")
-  public CompletableFuture<Void> deleteUser(@PathVariable String id) {
-    return bffService.deleteUser(id);
+  public CompletableFuture<String> deleteUser(@PathVariable String id) {
+    return bffService.deleteUser(id)
+        .thenApply(v -> gson.toJson(ApiResponse.success(null)));
   }
 
+  // Batch Operations
   @PostMapping("/batch")
-  public CompletableFuture<List<User>> createUsers(@RequestBody List<User> users) {
-    return bffService.createUsers(users);
+  public CompletableFuture<String> createUsers(@RequestBody @Validated List<User> users) {
+    return bffService.createUsers(users)
+        .thenApply(createdUsers -> gson.toJson(ApiResponse.success(createdUsers)));
   }
 
-  @ExceptionHandler(UserNotFoundException.class)
-  @ResponseStatus(HttpStatus.NOT_FOUND)
-  public ResponseEntity<String> handleUserNotFoundException(UserNotFoundException ex) {
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+  @GetMapping("/all")
+  public CompletableFuture<String> getAllUsers() {
+    return bffService.getAllUsers()
+        .thenApply(users -> gson.toJson(ApiResponse.success(users)));
   }
-
 }

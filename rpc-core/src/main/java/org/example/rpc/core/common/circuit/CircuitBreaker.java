@@ -32,34 +32,32 @@ public class CircuitBreaker {
 
   /**
    * Check if the request is allowed.
+   *
    * @return true if the request is allowed, otherwise false
    */
   public boolean allowRequest() {
     CircuitBreakerState currentState = state.get();
-    
+
     if (currentState == CircuitBreakerState.CLOSED) {
-        return true;
+      return true;
     }
-    
+
     if (currentState == CircuitBreakerState.OPEN) {
-        // 检查是否已经过了重置时间
-        if (System.currentTimeMillis() - lastFailureTime >= resetTimeoutMs) {
-            // 尝试切换到半开状态
-            if (state.compareAndSet(CircuitBreakerState.OPEN, CircuitBreakerState.HALF_OPEN)) {
-                successCount.set(0);  // 重置成功计数
-                failureCount.set(0);  // 重置失败计数
-                log.info("Circuit breaker state changed to HALF_OPEN");
-            }
-            return true;
+      // 检查是否已经过了重置超时时间
+      long currentTime = System.currentTimeMillis();
+      if (currentTime - lastFailureTime >= resetTimeoutMs) {
+        // 切换到半开状态
+        if (state.compareAndSet(CircuitBreakerState.OPEN, CircuitBreakerState.HALF_OPEN)) {
+          log.info("Circuit breaker state changed to HALF_OPEN");
+          successCount.set(0);
+          return true;
         }
-        return false;
+      }
+      return false;
     }
-    
-    if (currentState == CircuitBreakerState.HALF_OPEN) {
-        return successCount.get() < halfOpenMaxCalls;
-    }
-    
-    return false;  // 默认情况下不允许请求
+
+    // HALF_OPEN 状态下限制并发请求数
+    return successCount.get() < halfOpenMaxCalls;
   }
 
   /**
@@ -86,14 +84,23 @@ public class CircuitBreaker {
     CircuitBreakerState currentState = state.get();
 
     if (currentState == CircuitBreakerState.HALF_OPEN) {
-      state.set(CircuitBreakerState.OPEN);
-      log.info("Circuit breaker state changed to OPEN");
+      if (state.compareAndSet(CircuitBreakerState.HALF_OPEN, CircuitBreakerState.OPEN)) {
+        log.info("Circuit breaker state changed to OPEN");
+        failureCount.set(0);
+        successCount.set(0);
+      }
     } else if (currentState == CircuitBreakerState.CLOSED) {
       if (failureCount.incrementAndGet() >= failureThreshold) {
         if (state.compareAndSet(CircuitBreakerState.CLOSED, CircuitBreakerState.OPEN)) {
           log.info("Circuit breaker state changed to OPEN");
+          failureCount.set(0);
+          successCount.set(0);
         }
       }
     }
+  }
+
+  public CircuitBreakerState getState() {
+    return state.get();
   }
 }

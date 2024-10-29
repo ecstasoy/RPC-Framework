@@ -13,7 +13,7 @@ import java.util.concurrent.CountDownLatch;
 /**
  * RPC client application.
  */
-@RpcServiceScan
+@RpcServiceScan(basePackages = "org.example.rpc.**")
 @SpringBootApplication(scanBasePackages = {"org.example.rpc.**"})
 public class RpcClientApplication implements CommandLineRunner {
 

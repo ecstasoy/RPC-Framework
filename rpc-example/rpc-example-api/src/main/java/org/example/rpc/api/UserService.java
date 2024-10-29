@@ -22,4 +22,7 @@ public interface UserService {
 
   @POST("/batch")
   CompletableFuture<List<User>> createUsers(@Body List<User> users);
+
+  @GET("/all")
+  CompletableFuture<List<User>> selectAll();
 }

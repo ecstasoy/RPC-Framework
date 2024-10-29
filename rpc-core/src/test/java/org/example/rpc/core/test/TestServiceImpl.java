@@ -32,7 +32,6 @@ public class TestServiceImpl implements TestService {
 
       // 每连续3次调用中的第3次必定失败
       if (callCount.incrementAndGet() % 3 == 0) {
-        circuitBreaker.recordFailure();
         throw new RpcException("SERVICE_UNAVAILABLE",
             "Service temporarily unavailable", 503);
       }
@@ -42,5 +41,10 @@ public class TestServiceImpl implements TestService {
       circuitBreaker.recordFailure();
       throw e;
     }
+  }
+
+  @Override
+  public CircuitBreaker getCircuitBreaker() {
+    return circuitBreaker;
   }
 }

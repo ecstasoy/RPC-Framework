@@ -1,5 +1,7 @@
 package org.example.rpc.core.test.interceptor;
 
+import org.example.rpc.core.common.circuit.CircuitBreakerState;
+import org.example.rpc.core.common.enums.MetricType;
 import org.example.rpc.core.interceptor.impl.PerformanceInterceptor;
 import org.example.rpc.core.model.RpcRequest;
 import org.example.rpc.core.model.RpcResponse;
@@ -37,9 +39,9 @@ class PerformanceInterceptorTest {
     response.setThrowable(null);
 
     performanceInterceptor.preHandle(request);
-    performanceInterceptor.postHandle(request, response);
+    performanceInterceptor.postHandle(request, response, null);
 
-    verify(monitoringService).recordMetrics(eq("testMethod"), anyLong(), eq(true), isNull());
+    verify(monitoringService).recordMetrics(eq("testMethod"), anyLong(), eq(true), isNull(), eq(MetricType.NORMAL_REQUEST.toString()));
   }
 
   @Test
@@ -50,8 +52,8 @@ class PerformanceInterceptorTest {
     response.setThrowable(new RuntimeException("Test Exception"));
 
     performanceInterceptor.preHandle(request);
-    performanceInterceptor.postHandle(request, response);
+    performanceInterceptor.postHandle(request, response, null);
 
-    verify(monitoringService).recordMetrics(eq("testMethod"), anyLong(), eq(false), eq("Test Exception"));
+    verify(monitoringService).recordMetrics(eq("testMethod"), anyLong(), eq(false), eq("Test Exception"), eq(MetricType.EXCEPTION.toString()));
   }
 }

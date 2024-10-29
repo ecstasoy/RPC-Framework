@@ -1,5 +1,6 @@
 package org.example.rpc.core.interceptor;
 
+import org.example.rpc.core.common.circuit.CircuitBreakerState;
 import org.example.rpc.core.model.RpcRequest;
 import org.example.rpc.core.model.RpcResponse;
 
@@ -19,7 +20,7 @@ public interface RpcInterceptor {
    * @param request RPC request
    * @param response RPC response
    */
-  void postHandle(RpcRequest request, RpcResponse response);
+  void postHandle(RpcRequest request, RpcResponse response, CircuitBreakerState state);
 
   /**
    * After completion of the RPC request

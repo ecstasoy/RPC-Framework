@@ -1,6 +1,7 @@
 package org.example.rpc.core.interceptor.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.example.rpc.core.common.circuit.CircuitBreakerState;
 import org.example.rpc.core.interceptor.RpcInterceptor;
 import org.example.rpc.core.model.RpcRequest;
 import org.example.rpc.core.model.RpcResponse;
@@ -20,7 +21,7 @@ public class LoggingInterceptor implements RpcInterceptor {
   }
 
   @Override
-  public void postHandle(RpcRequest request, RpcResponse response) {
+  public void postHandle(RpcRequest request, RpcResponse response, CircuitBreakerState state) {
     if (response.getThrowable() != null) {
       log.error("Request processing error: [{}], error message: [{}]",
           request.getSequence(),

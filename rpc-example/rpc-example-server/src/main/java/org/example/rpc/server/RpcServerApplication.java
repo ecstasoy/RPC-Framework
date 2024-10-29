@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Import;
 
 import java.util.concurrent.CountDownLatch;
 
@@ -17,7 +18,7 @@ import java.util.concurrent.CountDownLatch;
  */
 @SuppressWarnings("ALL")
 @RpcServiceScan(basePackages = "org.example.rpc.**")
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "org.example.rpc.**")
 public class RpcServerApplication implements CommandLineRunner {
 
   @Autowired

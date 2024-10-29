@@ -2,6 +2,7 @@ package org.example.rpc.core.model;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import org.example.rpc.core.common.enums.PacketType;
+import org.example.rpc.core.common.exception.BaseRpcException;
 import org.example.rpc.core.model.packet.Packet;
 import org.example.rpc.core.protocol.serialize.impl.SimpleJsonSerializerImpl;
 import lombok.EqualsAndHashCode;
@@ -42,6 +43,10 @@ public class RpcResponse extends Packet implements Serializable {
    */
   private Object result;
 
+  private BaseRpcException rpcException;
+
+  private String exceptionType;
+
   /**
    * Constructor.
    *
@@ -51,6 +56,10 @@ public class RpcResponse extends Packet implements Serializable {
   public RpcResponse(String sequence, Throwable throwable) {
     this.sequence = sequence;
     this.throwable = throwable;
+    if (throwable instanceof BaseRpcException) {
+      this.rpcException = (BaseRpcException) throwable;
+      this.exceptionType = throwable.getClass().getName();
+    }
   }
 
   /**

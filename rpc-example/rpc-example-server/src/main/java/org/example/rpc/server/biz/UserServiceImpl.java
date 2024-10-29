@@ -6,6 +6,10 @@ import org.example.rpc.api.User;
 import org.example.rpc.api.UserService;
 import org.example.rpc.api.exception.UserNotFoundException;
 import org.example.rpc.core.common.annotations.*;
+import org.example.rpc.api.exception.DuplicateUserException;
+import org.example.rpc.api.exception.InvalidUserInputException;
+import org.example.rpc.api.exception.UserUpdateException;
+import org.example.rpc.api.exception.UserDeletionException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +42,13 @@ public class UserServiceImpl implements UserService {
   @POST
   @Override
   public CompletableFuture<User> createUser(@Body User user) {
-    return CompletableFuture.supplyAsync(() -> {
+    return CompletableFuture.supplyAsync(() -> {;
+      if (userMap.containsKey(user.getId())) {
+        throw new DuplicateUserException("User with ID " + user.getId() + " already exists");
+      }
+      if (user.getUsername() == null || user.getUsername().isEmpty()) {
+        throw new InvalidUserInputException("Username cannot be null or empty");
+      }
       String id = user.getId() == null ? RandomStringUtils.randomAlphanumeric(6) : user.getId();
       user.setId(id);
       userMap.put(id, user);
@@ -53,8 +63,10 @@ public class UserServiceImpl implements UserService {
     return CompletableFuture.supplyAsync(() -> {
       User existingUser = userMap.get(id);
       if (existingUser == null) {
-        log.warn("User not found with id: {}", id);
-        throw new RuntimeException("User not found");
+        throw new UserUpdateException("User not found, ID: " + id);
+      }
+      if (user.getUsername() == null || user.getUsername().isEmpty()) {
+        throw new InvalidUserInputException("Username cannot be null or empty");
       }
       existingUser.setUsername(user.getUsername());
       log.info("Updated user: {}", existingUser);
@@ -68,7 +80,7 @@ public class UserServiceImpl implements UserService {
     return CompletableFuture.runAsync(() -> {
       User removedUser = userMap.remove(id);
       if (removedUser == null) {
-        throw new RuntimeException("User not found");
+        throw new UserDeletionException("User not found, ID: " + id);
       }
       log.info("Deleted user with id: {}", id);
     });
@@ -86,14 +98,13 @@ public class UserServiceImpl implements UserService {
 
       if (specifiedIds.size() < users.stream()
           .filter(u -> u.getId() != null).count()) {
-        throw new IllegalArgumentException("Duplicate IDs are not allowed");
+        throw new DuplicateUserException("Duplicate IDs are not allowed");
       }
 
       // 检查是否与现有用户id冲突
       for (String id : specifiedIds) {
         if (userMap.containsKey(id)) {
-          throw new IllegalArgumentException(
-              "User with id " + id + " already exists");
+          throw new DuplicateUserException("User with id " + id + " already exists");
         }
       }
 
@@ -107,6 +118,15 @@ public class UserServiceImpl implements UserService {
         log.info("Created user: {}", user);
       }
       return createdUsers;
+    });
+  }
+
+  @GET("/all")
+  @Override
+  public CompletableFuture<List<User>> selectAll() {
+    return CompletableFuture.supplyAsync(() -> {
+      log.info("Select all users");
+      return new ArrayList<>(userMap.values());
     });
   }
 }

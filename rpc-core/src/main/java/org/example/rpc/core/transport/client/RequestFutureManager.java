@@ -1,8 +1,7 @@
 package org.example.rpc.core.transport.client;
 
-import org.example.rpc.core.model.RpcRequest;
-import org.example.rpc.core.model.RpcResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.example.rpc.core.model.RpcResponse;
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -24,6 +23,11 @@ public class RequestFutureManager {
       log.info("Future [{}] not exist.", sequence);
     } else {
       future.complete(rpcResponse);
+      log.info("Complete future [{}].", sequence);
     }
+  }
+
+  public static CompletableFuture<RpcResponse> removeFuture(String sequence) {
+    return RESPONSE_FUTURE_MAP.remove(sequence);
   }
 }

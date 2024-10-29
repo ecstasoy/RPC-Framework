@@ -12,4 +12,5 @@ public class MethodMetrics {
   private LocalDateTime timestamp;
   private boolean success;
   private String errorMessage;
+  private String metricType;
 }

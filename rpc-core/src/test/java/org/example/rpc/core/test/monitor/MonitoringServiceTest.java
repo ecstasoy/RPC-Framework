@@ -23,7 +23,7 @@ class MonitoringServiceTest {
 
   @Test
   void testRecordMetrics() {
-    monitoringService.recordMetrics("testMethod", 200, true, null);
+    monitoringService.recordMetrics("testMethod", 200, true, null, null);
     List<MethodMetrics> metrics = monitoringService.getMethodMetrics("testMethod");
     assertEquals(1, metrics.size());
     assertEquals("testMethod", metrics.get(0).getMethodName());
@@ -32,8 +32,8 @@ class MonitoringServiceTest {
 
   @Test
   void testGetStatistics() {
-    monitoringService.recordMetrics("testMethod", 200, true, null);
-    monitoringService.recordMetrics("testMethod", 300, false, "error");
+    monitoringService.recordMetrics("testMethod", 200, true, null, null);
+    monitoringService.recordMetrics("testMethod", 300, false, "error", null);
     Map<String, StatisticalMetrics> stats = monitoringService.getStatistics();
     assertEquals(1, stats.size());
     assertEquals(250.0, stats.get("testMethod").getAverageTime());
@@ -46,7 +46,7 @@ class MonitoringServiceTest {
 
   @Test
   void testClearHistoricalData() {
-    monitoringService.recordMetrics("testMethod", 200, true, null);
+    monitoringService.recordMetrics("testMethod", 200, true, null, null);
     monitoringService.clearHistoricalData(Duration.ofMinutes(1));
     List<MethodMetrics> metrics = monitoringService.getMethodMetrics("testMethod");
     assertEquals(1, metrics.size());
