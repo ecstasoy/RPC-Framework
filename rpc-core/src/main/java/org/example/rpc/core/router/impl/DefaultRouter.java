@@ -13,6 +13,14 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Default router.
+ *
+ * <p>It is used to route the request to the target service.
+ *
+ * @see Router
+ * @author Kunhua Huang
+ */
 @Component
 public class DefaultRouter implements Router {
 
@@ -76,10 +84,10 @@ public class DefaultRouter implements Router {
       if (param.isAnnotationPresent(Path.class)) {
         String pathParamName = param.getAnnotation(Path.class).value();
         String value = extractPathParameter(request.getPath(), pathParamName);
-        args[i] = convertPathParameter(value, param.getType());
+        args[i] = convertParameter(value, param.getType(), "path");
       } else if (param.isAnnotationPresent(Query.class)) {
         String queryParamName = param.getAnnotation(Query.class).value();
-        args[i] = convertQueryParameter(queryParams.get(queryParamName), param.getType());
+        args[i] = convertParameter(queryParams.get(queryParamName), param.getType(), "query");
       } else if (param.isAnnotationPresent(Body.class)) {
         args[i] = paramMap.get("body");
       } else {
@@ -90,25 +98,25 @@ public class DefaultRouter implements Router {
   }
 
   private String extractPathParameter(String path, String paramName) {
-    // 移除开头的斜杠
+    // remove leading slash
     if (path.startsWith("/")) {
       path = path.substring(1);
     }
 
     String fullTemplate = (basePath + methodPath).replaceAll("^/+", "");
 
-    // 将模板路径转换为正则表达式
+    // Convert the full template to a regex pattern
     String regex = fullTemplate.replaceAll("\\{([^/]+)\\}", "([^/]+)");
     Pattern pattern = Pattern.compile(regex);
 
-    // 提取参数名的顺序
+    // Extract parameter names
     List<String> paramNames = new ArrayList<>();
     Matcher paramMatcher = Pattern.compile("\\{([^/]+)\\}").matcher(fullTemplate);
     while (paramMatcher.find()) {
       paramNames.add(paramMatcher.group(1));
     }
 
-    // 匹配实际路径
+    // Match the path with the pattern
     Matcher matcher = pattern.matcher(path);
     if (matcher.matches()) {
       int paramIndex = paramNames.indexOf(paramName);
@@ -120,33 +128,27 @@ public class DefaultRouter implements Router {
     throw new IllegalArgumentException("Path parameter " + paramName + " not found in path: " + path);
   }
 
-  private Object convertPathParameter(String value, Class<?> targetType) {
+  private Object convertParameter(String value, Class<?> targetType, String type) {
     if (value == null) {
       return null;
     }
 
     if (targetType == String.class) {
       return value;
-    } else if (targetType == Integer.class || targetType == int.class) {
+    }
+
+    if (targetType == Integer.class || targetType == int.class) {
       return Integer.parseInt(value);
-    } else if (targetType == Long.class || targetType == long.class) {
+    }
+
+    if (targetType == Long.class || targetType == long.class) {
       return Long.parseLong(value);
-    } else if (targetType == Boolean.class || targetType == boolean.class) {
+    }
+
+    if (targetType == Boolean.class || targetType == boolean.class) {
       return Boolean.parseBoolean(value);
     }
 
-    throw new IllegalArgumentException("Unsupported path parameter type: " + targetType);
-  }
-
-  private Object convertQueryParameter(String value, Class<?> targetType) {
-    if (targetType == String.class) {
-      return value;
-    } else if (targetType == Integer.class || targetType == int.class) {
-      return Integer.parseInt(value);
-    } else if (targetType == Long.class || targetType == long.class) {
-      return Long.parseLong(value);
-    }
-    // 添加其他类型的转换
-    throw new IllegalArgumentException("Unsupported query parameter type: " + targetType);
+    throw new IllegalArgumentException("Unsupported {} parameter type: " + type);
   }
 }

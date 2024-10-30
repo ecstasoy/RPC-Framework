@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package org.example.rpc.core.protocol.proto;
+option java_multiple_files = true;
+
+message RpcRequestProto {
+  string sequence = 1;
+  string interfaceName = 2;
+  string className = 3;
+  string methodName = 4;
+  map<string, bytes> parameters = 5;
+  repeated string parameterTypes = 6;
+  string httpMethod = 7;
+  string path = 8;
+  map<string, string> queryParams = 9;
+}
+
+message RpcResponseProto {
+  string sequence = 1;
+  ThrowableProto throwable = 2;
+  bytes result = 3;
+  optional string returnType = 4;  // 添加返回值类型信息
+}
+
+message ThrowableProto {
+  string message = 1;
+  string stackTrace = 2;
+  string className = 3;
+  string cause = 4;
+}

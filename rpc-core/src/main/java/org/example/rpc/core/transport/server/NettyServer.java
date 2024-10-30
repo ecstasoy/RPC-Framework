@@ -1,5 +1,7 @@
 package org.example.rpc.core.transport.server;
 
+import io.netty.handler.timeout.IdleStateHandler;
+import org.example.rpc.core.common.handler.ServerIdleStateHandler;
 import org.example.rpc.core.process.RpcRequestProcessor;
 import org.example.rpc.core.protocol.codec.MessageEncoder;
 import org.example.rpc.core.protocol.codec.MessageDecoder;
@@ -22,6 +24,7 @@ public class NettyServer {
   private final RpcRequestProcessor requestProcessor;
   private final NettyServerProperties properties;
   private final SerializerFactory serializerFactory;
+  private static final int READER_IDLE_TIME = 60;
 
   public NettyServer(RpcRequestProcessor requestProcessor, 
                     NettyServerProperties properties,
@@ -41,12 +44,13 @@ public class NettyServer {
       ServerBootstrap bootstrap = new ServerBootstrap();
       bootstrap.group(bossGroup, workerGroup)
           .channel(NioServerSocketChannel.class)
-          .handler(new LoggingHandler(LogLevel.INFO))
           .childHandler(new ChannelInitializer<SocketChannel>() {
             @Override
             protected void initChannel(SocketChannel ch) {
               ChannelPipeline pipeline = ch.pipeline();
               pipeline
+                  .addLast(new IdleStateHandler(READER_IDLE_TIME, 0, 0))
+                  .addLast(new ServerIdleStateHandler())
                   .addLast(new MessageEncoder(serializerFactory))
                   .addLast(new MessageDecoder(serializerFactory))
                   .addLast(serviceHandlerGroup, new RpcServerSimpleChannelInboundHandlerImpl(requestProcessor));

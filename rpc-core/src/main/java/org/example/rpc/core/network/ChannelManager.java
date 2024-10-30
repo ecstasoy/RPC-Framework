@@ -61,7 +61,7 @@ public class ChannelManager {
     }
 
     if (channel.isActive()) {
-      log.info("Reusing active channel for {}.", address.toString());
+      log.debug("Reusing active channel for {}.", address.toString());
       return channel;
     } else {
       log.info("Channel for {} is inactive. Removing and reconnecting.", address.toString());

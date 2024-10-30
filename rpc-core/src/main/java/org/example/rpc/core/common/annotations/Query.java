@@ -8,9 +8,10 @@ import java.lang.annotation.Target;
 
 /**
  * Annotation for query parameters.
- * 
+ *
+ * <p>Used to mark a parameter as a query parameter.
+ *
  * @author Kunhua Huang
- * @since 2024-10-25
  */
 @Documented
 @Target(ElementType.PARAMETER)

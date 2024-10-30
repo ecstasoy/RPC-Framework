@@ -7,8 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootConfiguration
 @EnableAutoConfiguration
 @ComponentScan(basePackages = {
-    "org.example.rpc.core",
-    "org.example.rpc.core.common.circuit"
+    "org.example.rpc.core"
 })
 public class TestApplication {
 }

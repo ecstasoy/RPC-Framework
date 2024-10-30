@@ -1,5 +1,6 @@
 package org.example.rpc.core.transport.client;
 
+import org.example.rpc.core.common.handler.ClientIdleStateHandler;
 import org.example.rpc.core.protocol.codec.MessageEncoder;
 import org.example.rpc.core.protocol.codec.MessageDecoder;
 import org.example.rpc.core.network.ChannelManager;
@@ -21,6 +22,8 @@ public class NettyClient {
 
   private final Bootstrap bootstrap;
   private final EventLoopGroup eventLoopGroup;
+  private static final int READER_IDLE_TIME = 30; // 读超时 30s
+  private static final int WRITER_IDLE_TIME = 10; // 写超时 10s
 
   public NettyClient(SerializerFactory serializerFactory) {
     eventLoopGroup = new NioEventLoopGroup();
@@ -32,7 +35,8 @@ public class NettyClient {
           @Override
           protected void initChannel(SocketChannel ch) throws Exception {
             final ChannelPipeline pipeline = ch.pipeline();
-            pipeline.addLast(new IdleStateHandler(0, 5, 0, TimeUnit.SECONDS));
+            pipeline.addLast(new IdleStateHandler(READER_IDLE_TIME, WRITER_IDLE_TIME, 0));
+            pipeline.addLast(new ClientIdleStateHandler());
             pipeline.addLast(new MessageEncoder(serializerFactory));
             pipeline.addLast(new MessageDecoder(serializerFactory));
             pipeline.addLast(new RpcClientChannelInboundHandlerImpl());

@@ -8,6 +8,10 @@ import java.lang.annotation.Target;
 
 /**
  * Body annotation.
+ *
+ * <p>It is used to mark a parameter as the body of a request.
+ *
+ * @author Kunhua Huang
  */
 @Documented
 @Target(ElementType.PARAMETER)

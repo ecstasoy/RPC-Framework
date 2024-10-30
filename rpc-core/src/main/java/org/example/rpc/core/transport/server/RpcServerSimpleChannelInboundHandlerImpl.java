@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-public class RpcServerSimpleChannelInboundHandlerImpl extends SimpleChannelInboundHandler<Object> {
+public class RpcServerSimpleChannelInboundHandlerImpl extends SimpleChannelInboundHandler<Packet> {
 
   private final RpcRequestProcessor requestProcessor;
 
@@ -26,15 +26,16 @@ public class RpcServerSimpleChannelInboundHandlerImpl extends SimpleChannelInbou
   }
 
   @Override
-  protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
-    final PacketType packetType = ((Packet) msg).getPacketType();
+  protected void channelRead0(ChannelHandlerContext ctx, Packet msg) throws Exception {
+    final PacketType packetType = msg.getPacketType();
 
     log.info("Server receive message: [{}], packetType: [{}]", msg, packetType);
 
     if (packetType == PacketType.HEART_BEAT) {
       final HeartBeatPacket heartBeatPacket = new HeartBeatPacket();
       heartBeatPacket.pong();
-      ctx.writeAndFlush(heartBeatPacket).addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
+      ctx.writeAndFlush(heartBeatPacket);
+      log.debug("Heart beat response sent.");
     } else if (packetType == PacketType.RPC_REQUEST) {
       final RpcRequest rpcRequest = (RpcRequest) msg;
       requestProcessor.processRequest(rpcRequest)

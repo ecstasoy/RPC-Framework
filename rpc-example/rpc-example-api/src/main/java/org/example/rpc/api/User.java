@@ -1,5 +1,6 @@
 package org.example.rpc.api;
 
+import com.alibaba.fastjson.annotation.JSONType;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -8,6 +9,7 @@ import java.io.Serializable;
  * User entity.
  */
 @Data
+@JSONType(typeName = "org.example.rpc.api.User")
 public class User implements Serializable {
 
   private String id;

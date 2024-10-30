@@ -21,6 +21,11 @@ public class ZookeeperRpcServiceDiscoveryImpl extends AbstractRpcServiceDiscover
 
   private final ZookeeperHelper zookeeperHelper;
 
+  /**
+   * Constructor.
+   *
+   * @param zookeeperHelper zookeeper helper
+   */
   public ZookeeperRpcServiceDiscoveryImpl(ZookeeperHelper zookeeperHelper) {
     this.zookeeperHelper = zookeeperHelper;
   }

@@ -8,6 +8,11 @@ import java.util.Map;
 
 /**
  * Interface for service discovery.
+ *
+ * <p>Service discovery is used to get the service instance list of the specified service name.
+ *
+ * @see IRegistryCenter
+ * @author Kunhua Huang
  */
 public interface RpcServiceDiscovery extends IRegistryCenter {
 

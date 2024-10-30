@@ -8,8 +8,10 @@ import java.lang.annotation.Target;
 
 /**
  * Annotation for service reference.
- * Used to replace the @Autowired annotation.
- * Inspired by @Reference in Dubbo.
+ * <p>Used to replace the @Autowired annotation.
+ * <p>Inspired by @Reference in Dubbo.
+ *
+ * @author Kunhua Huang
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

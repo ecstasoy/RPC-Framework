@@ -10,6 +10,11 @@ import java.util.List;
 
 /**
  * Abstract class for service discovery.
+ *
+ * <p>It provides a default implementation for service instance selection.
+ *
+ * @see ZookeeperRpcServiceDiscoveryImpl
+ * @author Kunhua Huang
  */
 @Slf4j
 public abstract class AbstractRpcServiceDiscovery implements RpcServiceDiscovery {

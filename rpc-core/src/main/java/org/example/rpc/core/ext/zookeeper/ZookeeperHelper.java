@@ -14,13 +14,23 @@ import org.springframework.stereotype.Component;
 
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.TimeUnit;
 
 /**
  * Helper class for Zookeeper.
+ *
+ * <p>It provides methods to create service address node, get service address node, get all service
+ * address nodes, and register watcher for service nodes.
+ * It also provides a method to close the Zookeeper client.
+ *
+ * @author Kunhua Huang
  */
 @Slf4j
 @Component
@@ -186,7 +196,7 @@ public class ZookeeperHelper implements DisposableBean {
    * Closes the Zookeeper client.
    */
   @Override
-  public void destroy() throws Exception {
+  public void destroy() {
     log.info("Closing Zookeeper client.");
     zookeeperClient.close();
   }

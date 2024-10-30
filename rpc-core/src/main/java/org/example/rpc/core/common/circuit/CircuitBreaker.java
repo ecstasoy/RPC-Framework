@@ -7,6 +7,14 @@ import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Circuit breaker.
+ *
+ * <p>When the failure count reaches the threshold, the circuit breaker will be opened and all requests will be rejected.
+ * After the reset timeout, the circuit breaker will be half-opened and allow a limited number of requests to pass.
+ * If the requests are successful, the circuit breaker will be closed again. Otherwise, it will be opened again.
+ *
+ * @see CircuitBreakerState
+ * @see CircuitBreakerProperties
+ * @author Kunhua Huang
  */
 @Slf4j
 public class CircuitBreaker {
@@ -102,5 +110,13 @@ public class CircuitBreaker {
 
   public CircuitBreakerState getState() {
     return state.get();
+  }
+
+  public void reset() {
+    state.set(CircuitBreakerState.CLOSED);
+    failureCount.set(0);
+    successCount.set(0);
+    lastFailureTime = 0;
+    log.info("Circuit breaker manually reset to CLOSED state");
   }
 }

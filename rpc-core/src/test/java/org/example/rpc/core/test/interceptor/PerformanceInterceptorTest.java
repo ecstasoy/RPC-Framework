@@ -41,7 +41,7 @@ class PerformanceInterceptorTest {
     performanceInterceptor.preHandle(request);
     performanceInterceptor.postHandle(request, response, null);
 
-    verify(monitoringService).recordMetrics(eq("testMethod"), anyLong(), eq(true), isNull(), eq(MetricType.NORMAL_REQUEST.toString()));
+    verify(monitoringService).recordMetrics(eq("null#testMethod"), anyLong(), eq(true), isNull(), eq(MetricType.NORMAL_REQUEST.toString()));
   }
 
   @Test
@@ -54,6 +54,6 @@ class PerformanceInterceptorTest {
     performanceInterceptor.preHandle(request);
     performanceInterceptor.postHandle(request, response, null);
 
-    verify(monitoringService).recordMetrics(eq("testMethod"), anyLong(), eq(false), eq("Test Exception"), eq(MetricType.EXCEPTION.toString()));
+    verify(monitoringService).recordMetrics(eq("null#testMethod"), anyLong(), eq(false), eq("Test Exception"), eq(MetricType.EXCEPTION.toString()));
   }
 }

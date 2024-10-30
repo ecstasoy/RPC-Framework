@@ -1,9 +1,9 @@
 package org.example.rpc.core.model.packet;
 
-import org.example.rpc.core.common.enums.PacketType;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import org.example.rpc.core.common.enums.PacketType;
 
 /**
  * Heartbeat packet.

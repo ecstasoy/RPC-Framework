@@ -8,9 +8,10 @@ import java.lang.annotation.Target;
 
 /**
  * Annotation for POST requests.
- * 
+ *
+ * <p>Used to mark a method as a POST request.
+ *
  * @author Kunhua Huang
- * @since 2024-10-25
  */
 @Documented
 @Target(ElementType.METHOD)

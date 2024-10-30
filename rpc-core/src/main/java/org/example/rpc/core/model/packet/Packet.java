@@ -34,5 +34,5 @@ public abstract class Packet implements Serializable {
 
   // 添加序列化类型字段
   @Setter(AccessLevel.NONE)
-  private SerializerType serializerType = SerializerType.JSON; // 默认使用JSON序列化
+  private SerializerType serializerType = SerializerType.JSON;
 }

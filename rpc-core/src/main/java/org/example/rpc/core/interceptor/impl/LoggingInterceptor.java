@@ -7,13 +7,20 @@ import org.example.rpc.core.model.RpcRequest;
 import org.example.rpc.core.model.RpcResponse;
 import org.springframework.stereotype.Component;
 
+/**
+ * Logging interceptor.
+ *
+ * <p>Print the request processing log.
+ *
+ * @author Kunhua Huang
+ */
 @Slf4j
 @Component
 public class LoggingInterceptor implements RpcInterceptor {
 
   @Override
   public boolean preHandle(RpcRequest request) {
-    log.info("Processing request: [{}], method: [{}], parameters: [{}]",
+    log.debug("Processing request: [{}], method: [{}], parameters: [{}]",
         request.getSequence(),
         request.getMethodName(),
         request.getParameters());
@@ -27,7 +34,7 @@ public class LoggingInterceptor implements RpcInterceptor {
           request.getSequence(),
           response.getThrowable().getMessage());
     } else {
-      log.info("Request completed: [{}], result: [{}]",
+      log.debug("Request completed: [{}], result: [{}]",
           request.getSequence(),
           response.getResult());
     }

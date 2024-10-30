@@ -147,4 +147,27 @@ public class NettyRpcRequestSenderImpl implements RpcRequestSender {
 
     resultFuture.completeExceptionally(errorResponse.getThrowable());
   }
+
+  /**
+   * Reset the circuit breaker of the specified service.
+   *
+   * @param serviceName service name
+   */
+  public void resetCircuitBreaker(String serviceName) {
+    CircuitBreaker breaker = circuitBreakers.get(serviceName);
+    if (breaker != null) {
+      breaker.reset();
+      log.info("Reset circuit breaker for service: {}", serviceName);
+    }
+  }
+
+  /**
+   * Reset all circuit breakers.
+   */
+  public void resetAllCircuitBreakers() {
+    circuitBreakers.forEach((service, breaker) -> {
+      breaker.reset();
+      log.info("Reset circuit breaker for service: {}", service);
+    });
+  }
 }

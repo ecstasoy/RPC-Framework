@@ -6,8 +6,15 @@ import org.example.rpc.core.model.RpcResponse;
 
 /**
  * RPC interceptor
+ *
+ * <p>Interceptors are used to intercept RPC requests and responses.
+ * They can be used to perform operations before and after the RPC request is processed.
+ * <p>Here are some common use cases:
+ *
+ * @author Kunhua Huang
  */
 public interface RpcInterceptor {
+
   /**
    * Pre-process the RPC request
    * @param request RPC request

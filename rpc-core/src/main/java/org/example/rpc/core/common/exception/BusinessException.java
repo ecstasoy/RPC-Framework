@@ -2,6 +2,14 @@ package org.example.rpc.core.common.exception;
 
 /**
  * Exception caused by business logic.
+ *
+ * <p>It is a subclass of {@link BaseRpcException}.
+ * <p>It is used to indicate that the exception is caused by business logic.
+ * <p>User should handle this exception in the business layer.
+ *
+ * @see BaseRpcException
+ * @see RpcException
+ * @author Kunhua Huang
  */
 public class BusinessException extends BaseRpcException {
 

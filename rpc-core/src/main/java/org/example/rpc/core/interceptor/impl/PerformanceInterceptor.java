@@ -8,17 +8,29 @@ import org.example.rpc.core.model.RpcRequest;
 import org.example.rpc.core.model.RpcResponse;
 import org.example.rpc.core.monitor.api.MonitoringService;
 import org.example.rpc.core.monitor.model.MethodMetrics;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Performance interceptor to record method metrics.
+ *
+ * <p>It records the metrics for the server-side.
+ * <p>It records the duration of the method invocation, whether the method invocation is successful,
+ * and the error message if the method invocation fails.
+ * It also logs the duration of the method invocation and warns if the duration exceeds 1000ms.
+ * <p>It implements the {@link RpcInterceptor} interface and overrides the three methods to record the metrics and log the duration.
+ *
+ * @see RpcInterceptor
+ * @see MonitoringService
+ * @see MethodMetrics
+ * @author Kunhua Huang
+ */
 @Slf4j
 @Component
 public class PerformanceInterceptor implements RpcInterceptor {
@@ -27,6 +39,13 @@ public class PerformanceInterceptor implements RpcInterceptor {
   private final ThreadLocal<Long> startTime = new ThreadLocal<>();
   private final Map<String, List<MethodMetrics>> methodMetricsMap = new ConcurrentHashMap<>();
 
+  /**
+   * Instantiates a new Performance interceptor.
+   *
+   * <p>It is annotated with {@link org.springframework.beans.factory.annotation.Qualifier} to specify the monitoring service.
+   *
+   * @param monitoringService the monitoring service
+   */
   public PerformanceInterceptor(@Qualifier("defaultMonitoringService") MonitoringService monitoringService) {
     this.monitoringService = monitoringService;
   }
@@ -44,13 +63,20 @@ public class PerformanceInterceptor implements RpcInterceptor {
     String errorMessage = success ? null : response.getThrowable().getMessage();
     MetricType metricType = success ? MetricType.NORMAL_REQUEST : MetricType.EXCEPTION;
 
-    monitoringService.recordMetrics(request.getMethodName(), duration, success, errorMessage, metricType.toString());
+    monitoringService.recordMetrics(
+        request.getClassName() + "#" + request.getMethodName(),
+        duration,
+        success,
+        errorMessage,
+        metricType.toString()
+    );
 
     if (!success) {
       log.error("Method [{}] failed with exception: {}", request.getMethodName(), errorMessage);
     }
 
-    log.info("Method [{}] duration: {}ms", request.getMethodName(), duration);
+    NumberFormat formatter = new DecimalFormat("#0.0000");
+    log.debug("Method [{}] duration: {}ms", request.getMethodName(), formatter.format(duration));
     if (duration > 1000) {
       log.warn("Method [{}] duration too long: {}ms", request.getMethodName(), duration);
     }

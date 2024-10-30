@@ -1,16 +1,27 @@
 package org.example.rpc.core.interceptor;
 
 import org.example.rpc.core.common.circuit.CircuitBreakerState;
-import org.example.rpc.core.interceptor.RpcInterceptor;
 import org.example.rpc.core.interceptor.impl.ClientCircuitBreakerInterceptor;
 import org.example.rpc.core.interceptor.impl.LoggingInterceptor;
 import org.example.rpc.core.model.RpcRequest;
 import org.example.rpc.core.model.RpcResponse;
 import org.springframework.stereotype.Component;
+
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Client-side Interceptor Chain Manager.
+ *
+ * <p>Manage the interceptor chain for client-side RPC requests.
+ * It applies the preHandle, postHandle, and afterCompletion methods of each interceptor in the chain.
+ *
+ * @see RpcInterceptor
+ * @see ClientCircuitBreakerInterceptor
+ * @see LoggingInterceptor
+ * @author Kunhua Huang
+ */
 @Component("clientInterceptorChainManager")
 public class ClientInterceptorChainManager {
   private final List<RpcInterceptor> interceptors = new ArrayList<>();
@@ -18,6 +29,12 @@ public class ClientInterceptorChainManager {
   private final ClientCircuitBreakerInterceptor circuitBreakerInterceptor;
   private final LoggingInterceptor loggingInterceptor;
 
+  /**
+   * Constructor.
+   *
+   * @param circuitBreakerInterceptor Circuit Breaker Interceptor
+   * @param loggingInterceptor Logging Interceptor
+   */
   public ClientInterceptorChainManager(
       ClientCircuitBreakerInterceptor circuitBreakerInterceptor,
       LoggingInterceptor loggingInterceptor) {
@@ -25,13 +42,22 @@ public class ClientInterceptorChainManager {
     this.loggingInterceptor = loggingInterceptor;
   }
 
+  /**
+   * Initialize the interceptor chain.
+   */
   @PostConstruct
   public void init() {
-    // 添加拦截器，注意顺序
-    interceptors.add(loggingInterceptor);        // 首先记录日志
-    interceptors.add(circuitBreakerInterceptor); // 然后记录熔断指标
+    // Add interceptors to the chain, in the order of execution.
+    interceptors.add(loggingInterceptor);
+    interceptors.add(circuitBreakerInterceptor);
   }
 
+  /**
+   * Apply the preHandle method of each interceptor in the chain.
+   *
+   * @param request RPC request
+   * @return true if all interceptors return true, false otherwise
+   */
   public boolean applyPreHandle(RpcRequest request) {
     for (RpcInterceptor interceptor : interceptors) {
       if (!interceptor.preHandle(request)) {
@@ -41,15 +67,27 @@ public class ClientInterceptorChainManager {
     return true;
   }
 
+  /**
+   * Apply the postHandle method of each interceptor in the chain.
+   *
+   * @param request RPC request
+   * @param response RPC response
+   * @param state Circuit Breaker State
+   */
   public void applyPostHandle(RpcRequest request, RpcResponse response, CircuitBreakerState state) {
-    // 反向执行 post 处理
     for (int i = interceptors.size() - 1; i >= 0; i--) {
       interceptors.get(i).postHandle(request, response, state);
     }
   }
 
+  /**
+   * Apply the afterCompletion method of each interceptor in the chain.
+   *
+   * @param request RPC request
+   * @param response RPC response
+   * @param ex Exception
+   */
   public void applyAfterCompletion(RpcRequest request, RpcResponse response, Throwable ex) {
-    // 反向执行完成后处理
     for (int i = interceptors.size() - 1; i >= 0; i--) {
       interceptors.get(i).afterCompletion(request, response, ex);
     }

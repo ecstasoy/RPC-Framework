@@ -4,12 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.example.rpc.api.User;
 import org.example.rpc.api.UserService;
-import org.example.rpc.api.exception.UserNotFoundException;
+import org.example.rpc.api.exception.*;
 import org.example.rpc.core.common.annotations.*;
-import org.example.rpc.api.exception.DuplicateUserException;
-import org.example.rpc.api.exception.InvalidUserInputException;
-import org.example.rpc.api.exception.UserUpdateException;
-import org.example.rpc.api.exception.UserDeletionException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +38,7 @@ public class UserServiceImpl implements UserService {
   @POST
   @Override
   public CompletableFuture<User> createUser(@Body User user) {
-    return CompletableFuture.supplyAsync(() -> {;
+    return CompletableFuture.supplyAsync(() -> {
       if (userMap.containsKey(user.getId())) {
         throw new DuplicateUserException("User with ID " + user.getId() + " already exists");
       }

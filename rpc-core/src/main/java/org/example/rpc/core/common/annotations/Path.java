@@ -8,9 +8,10 @@ import java.lang.annotation.Target;
 
 /**
  * Annotation for path parameters.
- * 
+ *
+ * <p>It is used to mark a parameter as a path parameter of a request.
+ *
  * @author Kunhua Huang
- * @since 2024-10-25
  */
 @Documented
 @Target(ElementType.PARAMETER)
