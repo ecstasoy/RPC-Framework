@@ -20,6 +20,7 @@
     <modules>
         <module>rpc-core</module>
         <module>rpc-example</module>
+        <module>rpc-common</module>
     </modules>
 
     <properties>

@@ -1,7 +1,7 @@
 package org.example.rpc.core.monitor.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.rpc.core.common.circuit.CircuitBreakerState;
+import org.example.rpc.common.circuit.CircuitBreakerState;
 import org.example.rpc.core.monitor.api.MonitoringService;
 import org.example.rpc.core.monitor.model.MethodMetrics;
 import org.example.rpc.core.monitor.model.StatisticalMetrics;
