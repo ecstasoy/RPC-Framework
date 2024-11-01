@@ -9,8 +9,8 @@ import org.example.rpc.api.pojo.Blog;
 import org.example.rpc.api.pojo.User;
 import org.example.rpc.api.service.BlogService;
 import org.example.rpc.api.service.UserService;
-import org.example.rpc.core.common.annotations.*;
-import org.example.rpc.core.common.exception.BaseRpcException;
+import org.example.rpc.common.annotations.*;
+import org.example.rpc.common.exception.BaseRpcException;
 
 import java.util.ArrayList;
 import java.util.List;

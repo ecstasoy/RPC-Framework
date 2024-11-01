@@ -5,9 +5,9 @@ import org.example.rpc.api.pojo.Blog;
 import org.example.rpc.api.pojo.User;
 import org.example.rpc.api.service.BlogService;
 import org.example.rpc.api.service.UserService;
-import org.example.rpc.core.common.annotations.Reference;
-import org.example.rpc.core.common.exception.BaseRpcException;
-import org.example.rpc.core.common.exception.RpcException;
+import org.example.rpc.common.annotations.Reference;
+import org.example.rpc.common.exception.BaseRpcException;
+import org.example.rpc.common.exception.RpcException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 

@@ -9,7 +9,7 @@ import org.example.rpc.api.exception.user.UserNotFoundException;
 import org.example.rpc.api.exception.user.UserUpdateException;
 import org.example.rpc.api.pojo.User;
 import org.example.rpc.api.service.UserService;
-import org.example.rpc.core.common.annotations.*;
+import org.example.rpc.common.annotations.*;
 
 import java.util.ArrayList;
 import java.util.List;

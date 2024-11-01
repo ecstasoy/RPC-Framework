@@ -1,10 +1,10 @@
 package org.example.rpc.user;
 
-import org.example.rpc.core.common.annotations.RpcServiceScan;
-import org.example.rpc.core.process.RpcRequestProcessor;
-import org.example.rpc.core.protocol.serialize.SerializerFactory;
-import org.example.rpc.core.transport.server.NettyServer;
-import org.example.rpc.core.transport.server.NettyServerProperties;
+import org.example.rpc.processor.RpcRequestProcessor;
+import org.example.rpc.protocol.serialize.SerializerFactory;
+import org.example.rpc.spring.annotation.RpcServiceScan;
+import org.example.rpc.transport.server.NettyServer;
+import org.example.rpc.transport.server.NettyServerProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;

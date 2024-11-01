@@ -1,7 +1,7 @@
 package org.example.rpc.api.service;
 
 import org.example.rpc.api.pojo.Blog;
-import org.example.rpc.core.common.annotations.*;
+import org.example.rpc.common.annotations.*;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.List;

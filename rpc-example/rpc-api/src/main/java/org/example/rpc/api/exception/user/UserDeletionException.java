@@ -1,6 +1,6 @@
 package org.example.rpc.api.exception.user;
 
-import org.example.rpc.core.common.exception.BusinessException;
+import org.example.rpc.common.exception.BusinessException;
 
 public class UserDeletionException extends BusinessException {
   private static final String ERROR_CODE = "USER_DELETION_ERROR";

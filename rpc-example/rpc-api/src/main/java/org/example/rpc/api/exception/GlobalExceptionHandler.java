@@ -1,6 +1,6 @@
 package org.example.rpc.api.exception;
 
-import org.example.rpc.core.common.exception.BaseRpcException;
+import org.example.rpc.common.exception.BaseRpcException;
 import org.example.rpc.api.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

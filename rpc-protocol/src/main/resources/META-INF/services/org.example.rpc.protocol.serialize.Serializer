@@ -1,0 +1,2 @@
+org.example.rpc.protocol.serialize.impl.SimpleJsonSerializerImpl
+org.example.rpc.protocol.serialize.impl.ProtobufSerializerImpl

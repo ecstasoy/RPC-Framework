@@ -1,0 +1,44 @@
+package org.example.rpc.registry.discovery.impl;
+
+import lombok.extern.slf4j.Slf4j;
+import org.example.rpc.registry.discovery.api.RpcServiceDiscovery;
+import org.example.rpc.loadbalancer.api.LoadBalancer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+
+import java.util.List;
+
+/**
+ * Abstract class for service discovery.
+ *
+ * <p>It provides a default implementation for service instance selection.
+ *
+ * @see ZookeeperRpcServiceDiscoveryImpl
+ * @author Kunhua Huang
+ */
+@Slf4j
+public abstract class AbstractRpcServiceDiscovery implements RpcServiceDiscovery {
+
+  @Autowired
+  @Qualifier("consistentHashLoadBalancer")
+  protected LoadBalancer loadBalancer;
+
+  @Override
+  public List<String> getServiceInstaceList(String serviceName) {
+    return doGetServiceInstanceList(serviceName);
+  }
+
+  abstract List<String> doGetServiceInstanceList(String serviceName);
+
+  @Override
+  public String getServiceInstance(String serviceName) {
+    final List<String> instances = doGetServiceInstanceList(serviceName);
+    if (instances == null || instances.isEmpty()) {
+      return null;
+    }
+    String selected = loadBalancer.select(instances, serviceName);
+    log.debug("Load balancer {} selected instance {} for service {}",
+        loadBalancer.getStrategy(), selected, serviceName);
+    return selected;
+  }
+}

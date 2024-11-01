@@ -17,13 +17,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class CircuitBreakerProperties {
 
-  @Value("${rpc.circuit-breaker.failure-threshold:20}")
+  @Value("${rpc.circuit-breaker.failure-threshold:5}")
   private int failureThreshold;
   
-  @Value("${rpc.circuit-breaker.reset-timeout-ms:10000}")
+  @Value("${rpc.circuit-breaker.reset-timeout-ms:1000}")
   private long resetTimeoutMs;
   
-  @Value("${rpc.circuit-breaker.half-open-max-calls:30}")
+  @Value("${rpc.circuit-breaker.half-open-max-calls:10}")
   private int halfOpenMaxCalls;
 
   /**

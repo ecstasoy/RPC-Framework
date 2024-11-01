@@ -1,8 +1,8 @@
 package org.example.rpc.bff;
 
-import org.example.rpc.core.common.annotations.RpcServiceScan;
-import org.example.rpc.core.transport.client.NettyClient;
-import org.example.rpc.core.protocol.serialize.SerializerFactory;
+import org.example.rpc.spring.annotation.RpcServiceScan;
+import org.example.rpc.transport.client.NettyClient;
+import org.example.rpc.protocol.serialize.SerializerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;

@@ -14,11 +14,13 @@
     <packaging>jar</packaging>
 
     <dependencies>
+
         <dependency>
-        <groupId>org.example</groupId>
-        <artifactId>rpc-core</artifactId>
-        <version>1.0-SNAPSHOT</version>
+            <groupId>org.example</groupId>
+            <artifactId>rpc-common</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
+
     </dependencies>
 
     <properties>
