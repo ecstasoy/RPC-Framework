@@ -85,19 +85,19 @@ public class NettyRpcRequestSenderImpl implements RpcRequestSender {
 
       String serviceInstance = rpcServiceDiscovery.getServiceInstance(serviceName);
       if (StringUtils.isBlank(serviceInstance)) {
-        throw new RpcException("SERVICE_UNAVAILABLE", "Service instance not found", 404);
+        throw new RpcException("SERVICE_UNAVAILABLE", "Service instance not found for " + serviceName, 404);
       }
 
       String[] addressParts = serviceInstance.split("#");
       if (addressParts.length != 2) {
         throw new RpcException("INVALID_ADDRESS",
-            "Invalid service address format: " + serviceInstance, 500);
+            "Invalid service address format: " + serviceInstance + " for " + serviceName, 500);
       }
 
       String[] hostPort = addressParts[1].split(":");
       if (hostPort.length != 2) {
         throw new RpcException("INVALID_ADDRESS",
-            "Invalid host:port format: " + addressParts[1], 500);
+            "Invalid host:port format: " + addressParts[1] + " for " + serviceName, 500);
       }
 
       InetSocketAddress address = new InetSocketAddress(

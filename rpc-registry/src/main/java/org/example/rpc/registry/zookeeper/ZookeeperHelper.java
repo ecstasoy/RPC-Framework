@@ -6,10 +6,10 @@ import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.framework.api.GetDataBuilder;
 import org.apache.curator.framework.imps.CuratorFrameworkState;
 import org.apache.curator.framework.recipes.cache.PathChildrenCache;
-import org.apache.curator.framework.recipes.cache.PathChildrenCacheEvent;
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheListener;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.zookeeper.CreateMode;
+import org.example.rpc.registry.health.ServiceHealthManager;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.stereotype.Component;
 
@@ -19,9 +19,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -35,32 +32,25 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 @Component
-public class  ZookeeperHelper implements DisposableBean {
+public class ZookeeperHelper implements DisposableBean {
 
+  private static final int SESSION_TIMEOUT = 30000;
+  private static final int CONNECTION_TIMEOUT = 15000;
   public static final String ZOOKEEPER_ADDRESS = "127.0.0.1:2181";
   public static final String BASE_RPC_PATH = "/rpc";
   public static final String SERVICE_PATH = "/service";
-  public static final String HEALTH_PATH = "/health";
   private static volatile CuratorFramework zookeeperClient;
+  private final ServiceHealthManager serviceHealthManager;
 
-  private static final Map<String, List<String>> RPC_SERVICE_ADDRESS_MAP =
-      new ConcurrentHashMap<>();
-  public static final Set<String> PATH_SET = new ConcurrentSkipListSet<>();
-
-  /**
-   * Creates service address node in Zookeeper.
-   *
-   * @param serviceName service name
-   */
-  public void createServiceInstanceNode(String serviceName) {
-    createServiceInstanceNode(serviceName, null);
+  public ZookeeperHelper(ServiceHealthManager serviceHealthManager) {
+    this.serviceHealthManager = serviceHealthManager;
   }
 
   /**
    * Creates service address node in Zookeeper.
    *
    * @param serviceName service name
-   * @param data service address
+   * @param data        service address
    */
   public void createServiceInstanceNode(String serviceName, InetSocketAddress data) {
     checkInit();
@@ -82,9 +72,10 @@ public class  ZookeeperHelper implements DisposableBean {
           .withMode(CreateMode.EPHEMERAL)
           .forPath(instancePath, healthData);
 
+      registerWatcher(serviceName);
+
       log.info("Created service instance: {}", instancePath);
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       log.error("Create service instance node for [{}] failed.", serviceName, e);
       throw new RuntimeException("Create service instance node for [" + serviceName + "] failed.", e);
     }
@@ -150,18 +141,22 @@ public class  ZookeeperHelper implements DisposableBean {
     ExponentialBackoffRetry retry = new ExponentialBackoffRetry(1000, 3);
     synchronized (CuratorFramework.class) {
       if (zookeeperClient == null) {
-        zookeeperClient = CuratorFrameworkFactory.builder().connectString(ZOOKEEPER_ADDRESS)
-            .retryPolicy(retry).build();
+        zookeeperClient = CuratorFrameworkFactory.builder()
+            .connectString(ZOOKEEPER_ADDRESS)
+            .sessionTimeoutMs(SESSION_TIMEOUT)
+            .connectionTimeoutMs(CONNECTION_TIMEOUT)
+            .retryPolicy(retry)
+            .build();
       }
       zookeeperClient.start();
 
       try {
-        if (!zookeeperClient.blockUntilConnected(30, TimeUnit.SECONDS)) {
-          throw new RuntimeException("Zookeeper connection timeout.");
+        if (!zookeeperClient.blockUntilConnected(CONNECTION_TIMEOUT, TimeUnit.MILLISECONDS)) {
+          throw new RuntimeException("Zookeeper connection timeout");
         }
       } catch (InterruptedException e) {
-        log.info("Response interrupted when waiting for connection.");
-        throw new RuntimeException(e);
+        Thread.currentThread().interrupt();
+        throw new RuntimeException("Interrupted while connecting to Zookeeper", e);
       }
     }
   }
@@ -177,31 +172,18 @@ public class  ZookeeperHelper implements DisposableBean {
   }
 
   private void registerWatcher(String serviceName) throws Exception {
-    checkInit();
-    String path = BASE_RPC_PATH + "/" + serviceName;
-    PathChildrenCache pathChildrenCache = new PathChildrenCache(zookeeperClient, path, true);
-    PathChildrenCacheListener listener = (client, event) -> {
-      final GetDataBuilder data = client.getData();
-      if (data != null) {
-        switch (event.getType()) {
-          case CHILD_ADDED:
-            log.debug("Node added: [{}]", event.getData().getPath());
-            break;
-          case CHILD_REMOVED:
-            log.debug("Node removed: [{}]", event.getData().getPath());
-            break;
-          case CHILD_UPDATED:
-            log.debug("Node updated: [{}]", event.getData().getPath());
-            break;
-          default:
-            log.debug("Unknown event: [{}]", event.getType());
-        }
+    String servicePath = BASE_RPC_PATH + SERVICE_PATH + "/" + serviceName;
+    PathChildrenCache watcher = new PathChildrenCache(zookeeperClient, servicePath, true);
+    log.debug("Register watcher for service: {}", serviceName);
+    watcher.getListenable().addListener((client, event) -> {
+      switch (event.getType()) {
+        case CHILD_REMOVED:
+          String instanceId = event.getData().getPath().substring(servicePath.length() + 1);
+          serviceHealthManager.recordHeartbeatFailure(serviceName, instanceId, this);
+          break;
       }
-      List<String> list = client.getChildren().forPath(path);
-    };
-
-    pathChildrenCache.getListenable().addListener(listener);
-    pathChildrenCache.start();
+    });
+    watcher.start();
   }
 
   /**
@@ -240,23 +222,12 @@ public class  ZookeeperHelper implements DisposableBean {
 
   public void removeServiceInstanceNode(String serviceName, String instanceId) {
     checkInit();
-    final String serviceNode = BASE_RPC_PATH + "/" + serviceName + "/" + instanceId;
+    String instancePath = BASE_RPC_PATH + SERVICE_PATH + "/" + serviceName + "/" + instanceId;
     try {
-      zookeeperClient.delete().forPath(serviceNode);
+      zookeeperClient.delete().forPath(instancePath);
     } catch (Exception e) {
       log.error("Remove service instance node for [{}] failed.", serviceName, e);
       throw new RuntimeException("Remove service instance node for [" + serviceName + "] failed.", e);
-    }
-  }
-
-  public void removeHealthNode(String serviceName, String instanceId) {
-    checkInit();
-    final String healthNode = BASE_RPC_PATH + "/" + serviceName + "/" + instanceId + "/health";
-    try {
-      zookeeperClient.delete().forPath(healthNode);
-    } catch (Exception e) {
-      log.error("Remove health node for [{}] failed.", serviceName, e);
-      throw new RuntimeException("Remove health node for [" + serviceName + "] failed.", e);
     }
   }
 

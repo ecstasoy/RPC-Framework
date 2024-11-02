@@ -5,6 +5,7 @@ import org.example.rpc.common.enums.RegistryCenterType;
 import org.example.rpc.registry.registry.param.RpcServiceRegistryParam;
 import org.example.rpc.registry.registry.param.RpcServiceUnregistryParam;
 import org.example.rpc.registry.zookeeper.ZookeeperHelper;
+import org.example.rpc.registry.health.ServiceHealthManager;
 import org.springframework.context.annotation.Primary;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -25,14 +26,16 @@ public class ZookeeperRpcServiceRegistryImpl extends AbstractRpcServiceRegistry 
 
   private final ZookeeperHelper zookeeperHelper;
   private final Map<String, RpcServiceRegistryParam> serviceRegistryParamMap = new ConcurrentHashMap<>();
+  private final ServiceHealthManager serviceHealthManager;
 
   /**
    * Constructor.
    *
    * @param zookeeperHelper zookeeper helper
    */
-  public ZookeeperRpcServiceRegistryImpl(ZookeeperHelper zookeeperHelper) {
+  public ZookeeperRpcServiceRegistryImpl(ZookeeperHelper zookeeperHelper, ServiceHealthManager serviceHealthManager) {
     this.zookeeperHelper = zookeeperHelper;
+    this.serviceHealthManager = serviceHealthManager;
   }
 
   @Override
@@ -53,9 +56,11 @@ public class ZookeeperRpcServiceRegistryImpl extends AbstractRpcServiceRegistry 
     serviceRegistryParamMap.forEach((instanceId, param) -> {
       try {
         zookeeperHelper.updateHealthStatus(param.getServiceName(), instanceId);
+        serviceHealthManager.recordHeartbeatSuccess(param.getServiceName(), instanceId, zookeeperHelper);
         log.debug("Send heartbeat to [{}]", param.getServiceName());
       } catch (Exception e) {
         log.error("Send heartbeat error", e);
+        serviceHealthManager.recordHeartbeatFailure(param.getServiceName(), instanceId, zookeeperHelper);
       }
     });
   }
