@@ -13,6 +13,7 @@
     <option name="ignoredFiles">
       <set>
         <option value="$PROJECT_DIR$/rpc-core/rpc-common/pom.xml" />
+        <option value="$PROJECT_DIR$/rpc-registry-server/pom.xml" />
         <option value="$PROJECT_DIR$/rpc-transport/pom.xml" />
       </set>
     </option>

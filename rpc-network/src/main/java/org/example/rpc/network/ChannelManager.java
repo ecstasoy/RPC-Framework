@@ -23,7 +23,7 @@ public class ChannelManager {
     b = bootstrap;
   }
 
-  private static Channel connect(InetSocketAddress address) throws Exception {
+  static Channel connect(InetSocketAddress address) throws Exception {
     CompletableFuture<Channel> future = new CompletableFuture<>();
     b.connect(address).addListener((ChannelFutureListener) f -> {
       if (f.isSuccess()) {

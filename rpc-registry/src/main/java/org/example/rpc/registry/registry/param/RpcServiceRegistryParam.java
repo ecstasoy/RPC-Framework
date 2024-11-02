@@ -24,4 +24,9 @@ public class RpcServiceRegistryParam {
    * RPC bean.
    */
   private Object rpcBean;
+
+  /**
+   * Instance ID.
+   */
+  private String instanceId;
 }

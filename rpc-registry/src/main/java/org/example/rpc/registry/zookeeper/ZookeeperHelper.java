@@ -6,6 +6,7 @@ import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.framework.api.GetDataBuilder;
 import org.apache.curator.framework.imps.CuratorFrameworkState;
 import org.apache.curator.framework.recipes.cache.PathChildrenCache;
+import org.apache.curator.framework.recipes.cache.PathChildrenCacheEvent;
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheListener;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.zookeeper.CreateMode;
@@ -34,10 +35,12 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 @Component
-public class ZookeeperHelper implements DisposableBean {
+public class  ZookeeperHelper implements DisposableBean {
 
   public static final String ZOOKEEPER_ADDRESS = "127.0.0.1:2181";
   public static final String BASE_RPC_PATH = "/rpc";
+  public static final String SERVICE_PATH = "/service";
+  public static final String HEALTH_PATH = "/health";
   private static volatile CuratorFramework zookeeperClient;
 
   private static final Map<String, List<String>> RPC_SERVICE_ADDRESS_MAP =
@@ -61,17 +64,25 @@ public class ZookeeperHelper implements DisposableBean {
    */
   public void createServiceInstanceNode(String serviceName, InetSocketAddress data) {
     checkInit();
-    final String serviceNode = BASE_RPC_PATH + "/" + serviceName + "/node";
+    String serviceNodePath = BASE_RPC_PATH + SERVICE_PATH + "/" + serviceName;
+    String addressData = data.getHostString() + ":" + data.getPort();
+    String instanceId = serviceName + "#" + addressData;
+    String instancePath = serviceNodePath + "/" + instanceId;
     try {
-      if (data == null) {
-        zookeeperClient.create().creatingParentsIfNeeded().withMode(CreateMode.EPHEMERAL)
-            .forPath(serviceNode);
-      } else {
-        // Format the address without leading '/' by using getHostString() and getPort() instead of toString()
-        String formattedAddress = data.getHostString() + ":" + data.getPort();
-        zookeeperClient.create().creatingParentsIfNeeded().withMode(CreateMode.EPHEMERAL_SEQUENTIAL)
-            .forPath(serviceNode, formattedAddress.getBytes(StandardCharsets.UTF_8));
+      if (zookeeperClient.checkExists().forPath(serviceNodePath) == null) {
+        zookeeperClient.create()
+            .creatingParentsIfNeeded()
+            .withMode(CreateMode.PERSISTENT)
+            .forPath(serviceNodePath);
       }
+
+      byte[] healthData = "UP".getBytes(StandardCharsets.UTF_8);
+      zookeeperClient.create()
+          .creatingParentsIfNeeded()
+          .withMode(CreateMode.EPHEMERAL)
+          .forPath(instancePath, healthData);
+
+      log.info("Created service instance: {}", instancePath);
     }
     catch (Exception e) {
       log.error("Create service instance node for [{}] failed.", serviceName, e);
@@ -86,21 +97,22 @@ public class ZookeeperHelper implements DisposableBean {
    */
   public List<String> getServiceInstanceNode(String serviceName) {
     checkInit();
-    final String serviceNodeName = BASE_RPC_PATH + "/" + serviceName;
+    String serviceNodePath = BASE_RPC_PATH + SERVICE_PATH + "/" + serviceName;
     try {
-      List<String> serviceNodeList = zookeeperClient.getChildren().forPath(serviceNodeName);
+      List<String> instanceNodes = zookeeperClient.getChildren().forPath(serviceNodePath);
       List<String> serviceAddressList = new ArrayList<>();
-      for (String childNode : serviceNodeList) {
+      for (String instanceNode : instanceNodes) {
         try {
-          final byte[] bytes = getZookeeperClient().getData().forPath(serviceNodeName + "/" + childNode);
+          byte[] bytes = zookeeperClient.getData().forPath(serviceNodePath + "/" + instanceNode);
           String address = new String(bytes, StandardCharsets.UTF_8);
-          log.debug("Service address for node " + childNode + ": " + address);
-          serviceAddressList.add(address);
+          log.debug("Service address for node {}: {}", instanceNode, address);
+          serviceAddressList.add(instanceNode);
         } catch (Exception e) {
-          log.error("Get service address for [{}] failed.", serviceName, e);
+          log.error("Get service address for instance [{}] of service [{}] failed.",
+              instanceNode, serviceName, e);
         }
       }
-      log.debug("Service address list for " + serviceName + ": " + serviceAddressList);
+      log.debug("Service instances for {}: {}", serviceName, serviceAddressList);
       return serviceAddressList;
     } catch (Exception e) {
       log.error("Get service instances for [{}] failed.", serviceName, e);
@@ -200,4 +212,52 @@ public class ZookeeperHelper implements DisposableBean {
     log.info("Closing Zookeeper client.");
     zookeeperClient.close();
   }
+
+  public boolean checkHealthNode(String serviceName, String instanceId) {
+    checkInit();
+    String instancePath = BASE_RPC_PATH + SERVICE_PATH + "/" + serviceName + "/" + instanceId;
+    try {
+      byte[] healthData = zookeeperClient.getData().forPath(instancePath);
+      return healthData != null && "UP".equals(new String(healthData, StandardCharsets.UTF_8));
+    } catch (Exception e) {
+      log.error("Check health status failed for {}", instancePath, e);
+      return false;
+    }
+  }
+
+  public void updateHealthStatus(String serviceName, String instanceId) {
+    checkInit();
+    String instancePath = BASE_RPC_PATH + SERVICE_PATH + "/" + serviceName + "/" + instanceId;
+    try {
+      byte[] healthData = "UP".getBytes(StandardCharsets.UTF_8);
+      zookeeperClient.setData().forPath(instancePath, healthData);
+      log.debug("Updated health status for {}", instancePath);
+    } catch (Exception e) {
+      log.error("Failed to update health status for {}", instancePath, e);
+      throw new RuntimeException("Failed to update health status", e);
+    }
+  }
+
+  public void removeServiceInstanceNode(String serviceName, String instanceId) {
+    checkInit();
+    final String serviceNode = BASE_RPC_PATH + "/" + serviceName + "/" + instanceId;
+    try {
+      zookeeperClient.delete().forPath(serviceNode);
+    } catch (Exception e) {
+      log.error("Remove service instance node for [{}] failed.", serviceName, e);
+      throw new RuntimeException("Remove service instance node for [" + serviceName + "] failed.", e);
+    }
+  }
+
+  public void removeHealthNode(String serviceName, String instanceId) {
+    checkInit();
+    final String healthNode = BASE_RPC_PATH + "/" + serviceName + "/" + instanceId + "/health";
+    try {
+      zookeeperClient.delete().forPath(healthNode);
+    } catch (Exception e) {
+      log.error("Remove health node for [{}] failed.", serviceName, e);
+      throw new RuntimeException("Remove health node for [" + serviceName + "] failed.", e);
+    }
+  }
+
 }

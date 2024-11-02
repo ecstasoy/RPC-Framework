@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Zookeeper implementation of service discovery.
@@ -37,7 +38,9 @@ public class ZookeeperRpcServiceDiscoveryImpl extends AbstractRpcServiceDiscover
       log.warn("No available service instances found for " + serviceName);
       return Collections.emptyList();
     }
-    return childrenNodes;
+    return childrenNodes.stream()
+        .filter(instanceId -> zookeeperHelper.checkHealthNode(serviceName, instanceId))
+        .collect(Collectors.toList());
   }
 
   @Override

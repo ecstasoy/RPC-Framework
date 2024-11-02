@@ -57,6 +57,7 @@ public class RpcBeanProcessor implements BeanPostProcessor {
     registryParam.setIp(InetAddress.getLocalHost().getHostAddress());
     registryParam.setPort(nettyServerProperties.getServerPort());
     registryParam.setRpcBean(bean);
+    registryParam.setInstanceId(registryParam.getServiceName() + "#" + registryParam.getIp() + ":" + registryParam.getPort());
 
     rpcServiceRegistry.register(registryParam);
     return bean;

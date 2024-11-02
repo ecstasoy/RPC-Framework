@@ -79,39 +79,48 @@ public class NettyRpcRequestSenderImpl implements RpcRequestSender {
 
   private CompletableFuture<RpcResponse> doSendRpcRequest(RpcRequest rpcRequest, CircuitBreaker circuitBreaker) {
     String requestId = UUID.randomUUID().toString();
-    CompletableFuture<RpcResponse> resultFuture = new CompletableFuture<>();
+    String serviceName = rpcRequest.getClassName();
 
     try {
 
-      final String serviceInstance = rpcServiceDiscovery.getServiceInstance(rpcRequest.getClassName());
+      String serviceInstance = rpcServiceDiscovery.getServiceInstance(serviceName);
       if (StringUtils.isBlank(serviceInstance)) {
-        log.error("[{}] 未找到服务实例", requestId);
-        circuitBreaker.recordFailure();
-        handleException(rpcRequest, new RpcException("SERVICE_UNAVAILABLE", "Service instance not found", 404), resultFuture);
-        return resultFuture;
+        throw new RpcException("SERVICE_UNAVAILABLE", "Service instance not found", 404);
       }
 
-      String[] split = serviceInstance.split(":");
-      final Channel channel = ChannelManager.get(new InetSocketAddress(split[0], Integer.parseInt(split[1])));
-      RequestFutureManager.addFuture(rpcRequest.getSequence(), resultFuture);
+      String[] addressParts = serviceInstance.split("#");
+      if (addressParts.length != 2) {
+        throw new RpcException("INVALID_ADDRESS",
+            "Invalid service address format: " + serviceInstance, 500);
+      }
 
-      resultFuture.whenComplete((response, throwable) -> {
-        try {
-          if (throwable != null) {
-            handleException(rpcRequest, throwable, resultFuture);
-          } else {
-            clientInterceptorChainManager.applyPostHandle(rpcRequest, response, circuitBreaker.getState());
-            clientInterceptorChainManager.applyAfterCompletion(rpcRequest, response, null);
-          }
-        } catch (Exception e) {
-          log.error("[{}] 拦截器处理异常", requestId, e);
+      String[] hostPort = addressParts[1].split(":");
+      if (hostPort.length != 2) {
+        throw new RpcException("INVALID_ADDRESS",
+            "Invalid host:port format: " + addressParts[1], 500);
+      }
+
+      InetSocketAddress address = new InetSocketAddress(
+          hostPort[0],
+          Integer.parseInt(hostPort[1])
+      );
+
+      Channel channel = ChannelManager.get(address);
+      if (channel == null || !channel.isActive()) {
+        log.warn("Channel for {} is null or inactive, trying to reconnect...", address);
+        channel = ChannelManager.connect(address);
+        if (channel == null) {
+          throw new RpcException("CONNECTION_FAILED",
+              "Failed to create channel to " + address, 503);
         }
-      });
+      }
+
+      CompletableFuture<RpcResponse> resultFuture = new CompletableFuture<>();
+      RequestFutureManager.addFuture(rpcRequest.getSequence(), resultFuture);
 
       channel.writeAndFlush(rpcRequest).addListener((ChannelFutureListener) future -> {
         if (!future.isSuccess()) {
-          log.error("[{}] 发送请求失败", requestId, future.cause());
-          future.channel().close();
+          log.error("[{}] Failed to send request", requestId, future.cause());
           handleException(rpcRequest, future.cause(), resultFuture);
         }
       });
@@ -119,9 +128,10 @@ public class NettyRpcRequestSenderImpl implements RpcRequestSender {
       return resultFuture;
 
     } catch (Exception e) {
-      log.error("[{}] 处理请求异常", requestId, e);
-      handleException(rpcRequest, e, resultFuture);
-      return resultFuture;
+      log.error("[{}] Failed to process request", requestId, e);
+      CompletableFuture<RpcResponse> errorFuture = new CompletableFuture<>();
+      handleException(rpcRequest, e, errorFuture);
+      return errorFuture;
     }
   }
 
