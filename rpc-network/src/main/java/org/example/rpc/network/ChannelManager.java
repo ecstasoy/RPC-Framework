@@ -50,25 +50,25 @@ public class ChannelManager {
     Channel channel = CHANNEL_MAP.get(s);
 
     if (channel == null) {
-      log.info("No existing channel found for {}. Initiating new connection.", address.toString());
+      log.info("No existing channel found for {}. Initiating new connection.", address);
       try {
         return connect(address);
       } catch (Exception e) {
-        log.error("Failed to connect to {}: {}", address.toString(), e.getMessage());
+        log.error("Failed to connect to {}: {}", address, e.getMessage());
         return null;
       }
     }
 
     if (channel.isActive()) {
-      log.debug("Reusing active channel for {}.", address.toString());
+      log.debug("Reusing active channel for {}.", address);
       return channel;
     } else {
-      log.info("Channel for {} is inactive. Removing and reconnecting.", address.toString());
+      log.info("Channel for {} is inactive. Removing and reconnecting.", address);
       CHANNEL_MAP.remove(s);
       try {
         return connect(address);
       } catch (Exception e) {
-        log.error("Failed to reconnect to {}: {}", address.toString(), e.getMessage());
+        log.error("Failed to reconnect to {}: {}", address, e.getMessage());
         return null;
       }
     }
@@ -80,7 +80,7 @@ public class ChannelManager {
   public static void set(InetSocketAddress address, Channel channel) {
     final String s = address.toString();
     CHANNEL_MAP.put(s, channel);
-    log.info("Channel added for {}.", s);
+    log.info("Channel {} added for {}.", channel, s);
   }
 
   /**

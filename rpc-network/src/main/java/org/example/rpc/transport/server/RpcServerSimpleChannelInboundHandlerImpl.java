@@ -20,37 +20,62 @@ import org.springframework.stereotype.Component;
 public class RpcServerSimpleChannelInboundHandlerImpl extends SimpleChannelInboundHandler<Packet> {
 
   private final RpcRequestProcessor requestProcessor;
-
   public RpcServerSimpleChannelInboundHandlerImpl(RpcRequestProcessor requestProcessor) {
     this.requestProcessor = requestProcessor;
   }
 
   @Override
-  protected void channelRead0(ChannelHandlerContext ctx, Packet msg) throws Exception {
-    final PacketType packetType = msg.getPacketType();
+  public void channelActive(ChannelHandlerContext ctx) throws Exception {
+    log.info("Channel active: {}", ctx.channel().remoteAddress());
+    super.channelActive(ctx);
+  }
 
-    log.info("Server receive message: [{}], packetType: [{}]", msg, packetType);
+  @Override
+  public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+    log.info("Channel read raw message: {}, type: {}", msg, msg.getClass().getName());
+    super.channelRead(ctx, msg);
+  }
 
-    if (packetType == PacketType.HEART_BEAT) {
-      final HeartBeatPacket heartBeatPacket = new HeartBeatPacket();
-      heartBeatPacket.pong();
-      ctx.writeAndFlush(heartBeatPacket);
-      log.debug("Heart beat response sent.");
-    } else if (packetType == PacketType.RPC_REQUEST) {
-      final RpcRequest rpcRequest = (RpcRequest) msg;
-      requestProcessor.processRequest(rpcRequest)
-          .thenAccept(rpcResponse -> {
-            ctx.channel().writeAndFlush(rpcResponse).addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
-            log.info("Server processed RPC request: [{}]-[{}], response: [{}]", 
-                rpcRequest.getSequence(), packetType, rpcResponse);
-          })
-          .exceptionally(throwable -> {
-            log.error("Error processing RPC request", throwable);
-            RpcResponse errorResponse = new RpcResponse(rpcRequest.getSequence(), null);
-            errorResponse.setThrowable(throwable);
-            ctx.channel().writeAndFlush(errorResponse).addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
-            return null;
-          });
+  @Override
+  protected void channelRead0(ChannelHandlerContext ctx, Packet msg) {
+
+    if (!(msg instanceof RpcRequest)) {
+      log.warn("Received unexpected message type: {}", msg.getClass().getName());
+      return;
     }
+
+    final RpcRequest rpcRequest = (RpcRequest) msg;
+    log.info("Server receive RPC request: [{}]", rpcRequest);
+
+    requestProcessor.processRequest(rpcRequest)
+        .thenAccept(rpcResponse -> {
+          rpcResponse.setSerializerType(rpcRequest.getSerializerType());
+          ctx.channel().writeAndFlush(rpcResponse)
+              .addListener(future -> {
+                if (!future.isSuccess()) {
+                  log.error("Failed to send response", future.cause());
+                }
+              });
+          log.info("Server processed RPC request: [{}], response: [{}]",
+              rpcRequest.getSequence(), rpcResponse);
+        })
+        .exceptionally(throwable -> {
+          log.error("Error processing RPC request", throwable);
+          RpcResponse errorResponse = new RpcResponse(rpcRequest.getSequence(), null);
+          errorResponse.setThrowable(throwable);
+          ctx.channel().writeAndFlush(errorResponse)
+              .addListener(future -> {
+                if (!future.isSuccess()) {
+                  log.error("Failed to send response", future.cause());
+                }
+              });
+          return null;
+        });
+  }
+
+  @Override
+  public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+    log.error("Server caught exception", cause);
+    ctx.close();
   }
 }

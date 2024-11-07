@@ -42,7 +42,7 @@ public class ClientCircuitBreakerInterceptor implements RpcInterceptor {
   @Override
   public boolean preHandle(RpcRequest request) {
     requestStartTimes.put(request.getSequence(), System.currentTimeMillis());
-    return true;
+    return false;
   }
 
   @Override

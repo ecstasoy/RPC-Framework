@@ -2,101 +2,107 @@ package org.example.rpc.blog.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.example.rpc.api.dto.request.CreateBlogDTO;
+import org.example.rpc.api.dto.request.UpdateBlogDTO;
+import org.example.rpc.api.dto.response.BlogDTO;
+import org.example.rpc.api.entity.BlogEntity;
 import org.example.rpc.api.exception.blog.BlogNotFoundException;
 import org.example.rpc.api.exception.blog.DuplicateBlogException;
-import org.example.rpc.api.exception.InvalidUserInputException;
-import org.example.rpc.api.pojo.Blog;
-import org.example.rpc.api.pojo.User;
 import org.example.rpc.api.service.BlogService;
-import org.example.rpc.api.service.UserService;
+import org.example.rpc.blog.convert.BlogConverter;
+import org.example.rpc.blog.repository.BlogRepository;
 import org.example.rpc.common.annotations.*;
-import org.example.rpc.common.exception.BaseRpcException;
+import org.example.rpc.common.exception.RpcException;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RpcService
 public class BlogServiceImpl implements BlogService {
 
-  private final Map<String, Blog> blogMap = new ConcurrentHashMap<>();
+  private final BlogRepository blogRepository;
+  private final BlogConverter blogConverter;
 
-  @Reference
-  private UserService userService;
+  public BlogServiceImpl(BlogRepository blogRepository, BlogConverter blogConverter) {
+    this.blogRepository = blogRepository;
+    this.blogConverter = blogConverter;
+  }
 
   @GET("/{id}")
   @Override
-  public CompletableFuture<Blog> selectById(@Path("id") String id) {
+  public CompletableFuture<BlogDTO> selectById(@Path("id") String id) {
     return CompletableFuture.supplyAsync(() -> {
       log.debug("Selecting blog by id: {}", id);
-      Blog blog = blogMap.get(id);
-      if (blog == null) {
+      BlogEntity blogEntity = blogRepository.findByIdWithAuthor(id);
+      if (blogEntity == null) {
         log.warn("Blog not found with id: {}", id);
         throw new BlogNotFoundException("Blog not found, ID: " + id);
       }
       log.info("Select blog by id: {}", id);
-      return blog;
+      BlogDTO blogDTO = blogConverter.toBlogDTO(blogEntity);
+      return blogDTO;
     });
   }
 
-  @POST("/{id}")
+  @POST
   @Override
-  public CompletableFuture<Blog> createBlog(@Body Blog blog) {
+  public CompletableFuture<BlogDTO> createBlog(@Body CreateBlogDTO createBlogDTO) {
     return CompletableFuture.supplyAsync(() -> {
-      String id = validateBlogInfo(blog);
-      blog.setId(id);
-      blogMap.put(id, blog);
-      log.info("Created blog: {}", blog);
-      return blog;
+      validateCreateBlogDTO(createBlogDTO);
+
+      BlogEntity authorInfo = blogRepository.validateAuthor(createBlogDTO.getAuthorId());
+      if (authorInfo == null) {
+        throw new RpcException("AUTHOR_NOT_FOUND",
+            "Author not found with ID: " + createBlogDTO.getAuthorId(),
+            HttpStatus.NOT_FOUND.value());
+      }
+
+      BlogEntity blogEntity = blogConverter.toBlogEntity(createBlogDTO);
+      String blogId = RandomStringUtils.randomAlphanumeric(6);
+      blogEntity.setId(blogId);
+      blogEntity.setCreateTime(System.currentTimeMillis());
+      blogEntity.setUpdateTime(System.currentTimeMillis());
+      blogEntity.setAuthorName(authorInfo.getAuthorName());  // 设置作者名
+
+      blogRepository.save(blogEntity);
+      return blogConverter.toBlogDTO(blogEntity);
     });
   }
 
-  private String validateBlogInfo(@Body Blog blog) {
-    String blogId = blog.getId() == null ? RandomStringUtils.randomAlphanumeric(6) : blog.getId();
-    if (blogMap.containsKey(blogId)) {
-      throw new DuplicateBlogException("Blog with ID " + blog.getId() + " already exists");
+  private void validateCreateBlogDTO(CreateBlogDTO createBlogDTO) {
+    if (createBlogDTO.getId() != null &&
+        blogRepository.findById(createBlogDTO.getId()) != null) {
+      throw new DuplicateBlogException(
+          "Blog with ID " + createBlogDTO.getId() + " already exists");
     }
-    if (blog.getTitle() == null || blog.getTitle().isEmpty()) {
-      throw new InvalidUserInputException("Title cannot be null or empty");
+  }
+
+  private void validateUpdateBlogDTO(String id, UpdateBlogDTO dto) {
+    BlogEntity existingBlog = blogRepository.findById(id);
+    if (existingBlog == null) {
+      throw new BlogNotFoundException("Blog not found, ID: " + id);
     }
-    if (blog.getContent() == null || blog.getContent().isEmpty()) {
-      throw new InvalidUserInputException("Content cannot be null or empty");
-    }
-    if (blog.getAuthor() == null) {
-      throw new InvalidUserInputException("Author cannot be null");
-    }
-    try {
-      User author = blog.getAuthor();
-      userService.validateUser(author.getId(), author.getUsername()).join();
-    } catch (CompletionException e) {
-      if (e.getCause() instanceof BaseRpcException) {
-        throw (BaseRpcException) e.getCause();
-      }
-      throw e;
-    }
-    return blogId;
   }
 
   @PUT("/{id}")
   @Override
-  public CompletableFuture<Blog> updateBlog(@Path("id") String id, @Body Blog blog) {
+  public CompletableFuture<BlogDTO> updateBlog(@Path("id") String id, @Body UpdateBlogDTO updateBlogDTO) {
     return CompletableFuture.supplyAsync(() -> {
-      String blogId = validateBlogInfo(blog);
-      Blog existingBlog = blogMap.get(id);
-      if (!id.equals(blogId)) {
-        throw new InvalidUserInputException("Blog ID in path and body do not match");
-      }
-      if (existingBlog == null) {
-        log.warn("Blog not found with id: {}", id);
-        throw new BlogNotFoundException("Blog not found, ID: " + id);
-      }
-      blogMap.put(id, blog);
-      log.info("Updated blog: {}", blog);
-      return blog;
+      validateUpdateBlogDTO(id, updateBlogDTO);
+      BlogEntity blogEntity = blogRepository.findByIdWithAuthor(id);
+      blogConverter.updateBlog(updateBlogDTO, blogEntity);
+      blogRepository.update(blogEntity);
+      log.info("Updated blog: {}", blogEntity);
+      BlogDTO blogDTO = blogConverter.toBlogDTO(blogEntity);
+      return blogDTO;
     });
   }
 
@@ -104,36 +110,64 @@ public class BlogServiceImpl implements BlogService {
   @Override
   public CompletableFuture<Void> deleteBlog(@Path("id") String id) {
     return CompletableFuture.supplyAsync(() -> {
-      Blog blog = blogMap.remove(id);
-      if (blog == null) {
-        log.warn("Blog not found with id: {}", id);
+      BlogEntity blogEntity = blogRepository.findById(id);
+      if (blogEntity == null) {
         throw new BlogNotFoundException("Blog not found, ID: " + id);
       }
-      log.info("Deleted blog by id: {}", id);
+      blogRepository.deleteById(id);
+      log.info("Deleted blog with id: {}", id);
       return null;
     });
   }
 
   @POST("/batch")
   @Override
-  public CompletableFuture<List<Blog>> createBlogs(@Body List<Blog> blogs) {
+  @Transactional
+  public CompletableFuture<List<BlogDTO>> createBlogs(@Body List<CreateBlogDTO> createBlogDTOs) {
     return CompletableFuture.supplyAsync(() -> {
-      blogs.forEach(blog -> {
-        String id = validateBlogInfo(blog);
-        blog.setId(id);
-        blogMap.put(id, blog);
-        log.info("Created blog: {}", blog);
-      });
-      return blogs;
+
+      Set<String> authorIds = createBlogDTOs.stream()
+          .map(CreateBlogDTO::getAuthorId)
+          .collect(Collectors.toSet());
+
+      Map<String, String> authorNames = blogRepository.validateAuthors(authorIds);
+      Set<String> existingAuthorIds = authorNames.keySet();
+
+      Set<String> notFoundAuthors = authorIds.stream()
+          .filter(id -> !existingAuthorIds.contains(id))
+          .collect(Collectors.toSet());
+
+      if (!notFoundAuthors.isEmpty()) {
+        throw new RpcException("AUTHOR_NOT_FOUND",
+            "Authors not found with IDs: " + notFoundAuthors,
+            HttpStatus.NOT_FOUND.value());
+      }
+
+      List<BlogDTO> createdBlogs = new ArrayList<>();
+      for (CreateBlogDTO dto : createBlogDTOs) {
+        BlogEntity blogEntity = blogConverter.toBlogEntity(dto);
+        String blogId = RandomStringUtils.randomAlphanumeric(6);
+        blogEntity.setId(blogId);
+        blogEntity.setCreateTime(System.currentTimeMillis());
+        blogEntity.setUpdateTime(System.currentTimeMillis());
+        blogEntity.setAuthorName(authorNames.get(dto.getAuthorId()));
+
+        blogRepository.save(blogEntity);
+        createdBlogs.add(blogConverter.toBlogDTO(blogEntity));
+      }
+      return createdBlogs;
     });
   }
 
   @GET("/all")
   @Override
-  public CompletableFuture<List<Blog>> selectAll() {
+  public CompletableFuture<List<BlogDTO>> selectAll() {
     return CompletableFuture.supplyAsync(() -> {
       log.info("Select all blogs");
-      return new ArrayList<>(blogMap.values());
+      List<BlogEntity> blogEntities = blogRepository.findAllWithAuthor();
+      return blogEntities.stream()
+          .map(blogConverter::toBlogDTO)
+          .collect(Collectors.toList());
     });
   }
 }

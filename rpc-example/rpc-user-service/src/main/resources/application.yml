@@ -1,0 +1,48 @@
+server:
+  port: 8081
+  address: localhost
+  tomcat:
+    connection-timeout: 30000
+    async-timeout: 20000
+
+netty:
+  server:
+    port: 50002
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  datasource:
+    url: jdbc:mysql://localhost:3306/rpc_demo?useSSL=false&serverTimezone=UTC
+    username: root
+    password: '!Hyz001268'
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      minimum-idle: 10
+      maximum-pool-size: 10
+      auto-commit: true
+      idle-timeout: 300000
+      pool-name: UserServiceCP
+      max-lifetime: 900000
+      connection-timeout: 5000
+      connection-test-query: SELECT 1
+  mvc:
+    async:
+      request-timeout: 15000
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+
+logging:
+  level:
+    org:
+      example:
+        rpc: DEBUG
+
+rpc:
+  serializer:
+    type: PROTOBUF
+    enableAutoType: true
+    maxObjectSize: 10485760

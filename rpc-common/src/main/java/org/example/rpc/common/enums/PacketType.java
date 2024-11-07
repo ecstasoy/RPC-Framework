@@ -25,5 +25,5 @@ public enum PacketType {
 
   RPC_RESPONSE((byte) 2);
 
-  private byte type;
+  private final byte type;
 }

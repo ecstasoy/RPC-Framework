@@ -8,7 +8,8 @@ import lombok.Data;
  * <p>It is a base class for all RPC exceptions, which contains error code and HTTP status.</p>
  * <p>It is an abstract class, so it cannot be instantiated.</p>
  * <p>It is a subclass of {@link RuntimeException}.</p>
- * <p>User should provide error code, message and HTTP status when creating an instance of this class.</p>
+ * <p>User should provide error code, message and HTTP status
+ * when creating an instance of this class.</p>
  *
  * @author Kunhua Huang
  * @see RuntimeException

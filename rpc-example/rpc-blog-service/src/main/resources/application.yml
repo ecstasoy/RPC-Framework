@@ -1,0 +1,50 @@
+server:
+  port: 8082
+  address: localhost
+  tomcat:
+    connection-timeout: 30000
+    async-timeout: 25000
+
+netty:
+  server:
+    port: 50003
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  datasource:
+    url: jdbc:mysql://localhost:3306/rpc_demo?useSSL=false&serverTimezone=UTC
+    username: root
+    password: '!Hyz001268'
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      minimum-idle: 10
+      maximum-pool-size: 30
+      auto-commit: true
+      idle-timeout: 300000
+      pool-name: BlogServiceCP
+      max-lifetime: 900000
+      connection-timeout: 5000
+      connection-test-query: SELECT 1
+  mvc:
+    async:
+      request-timeout: 45000
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    type-aliases-package: org.example.rpc.blog.entity
+
+logging:
+  level:
+    org:
+      example:
+        rpc: DEBUG
+
+rpc:
+  serializer:
+    type: PROTOBUF
+    enableAutoType: true
+    maxObjectSize: 10485760

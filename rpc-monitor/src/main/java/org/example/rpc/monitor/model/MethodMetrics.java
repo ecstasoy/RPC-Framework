@@ -1,7 +1,8 @@
 package org.example.rpc.monitor.model;
 
-import lombok.Data;
 import lombok.AllArgsConstructor;
+import lombok.Data;
+
 import java.time.LocalDateTime;
 
 @Data

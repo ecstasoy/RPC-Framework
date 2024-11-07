@@ -1,5 +1,6 @@
 package org.example.rpc.user;
 
+import lombok.extern.slf4j.Slf4j;
 import org.example.rpc.processor.RpcRequestProcessor;
 import org.example.rpc.protocol.serialize.SerializerFactory;
 import org.example.rpc.spring.annotation.RpcServiceScan;
@@ -10,24 +11,28 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * RPC server application.
  */
 @SuppressWarnings("ALL")
+@Slf4j
 @RpcServiceScan(basePackages = "org.example.rpc.**")
-@SpringBootApplication(scanBasePackages = "org.example.rpc.**")
+@SpringBootApplication(scanBasePackages = {"org.example.rpc"})
 public class UserServiceApplication implements CommandLineRunner {
+  private final SerializerFactory serializerFactory;
+  private final NettyServerProperties nettyServerProperties;
+  private final RpcRequestProcessor requestProcessor;
 
   @Autowired
-  private SerializerFactory serializerFactory;
-
-  @Autowired
-  private NettyServerProperties nettyServerProperties;
-
-  @Autowired
-  private RpcRequestProcessor requestProcessor;
+  public UserServiceApplication(SerializerFactory serializerFactory,
+                                NettyServerProperties nettyServerProperties,
+                                RpcRequestProcessor requestProcessor) {
+    this.serializerFactory = serializerFactory;
+    this.nettyServerProperties = nettyServerProperties;
+    this.requestProcessor = requestProcessor;
+  }
 
   /**
    * Run RPC server.
@@ -38,12 +43,23 @@ public class UserServiceApplication implements CommandLineRunner {
 
   @Override
   public void run(String... args) throws Exception {
-    CountDownLatch latch = new CountDownLatch(1);
-    NettyServer nettyServer = new NettyServer(requestProcessor, nettyServerProperties, serializerFactory);
-    new Thread(() -> {
-      nettyServer.start();
-      latch.countDown();
-    }).start();
-    latch.await();
+    CompletableFuture.runAsync(() -> {
+      try {
+        NettyServer nettyServer = new NettyServer(
+            requestProcessor,
+            nettyServerProperties,
+            serializerFactory
+        );
+        nettyServer.start();
+        log.info("Netty server started successfully on port: {}", nettyServerProperties.getServerPort());
+      } catch (Exception e) {
+        log.error("Failed to start netty server", e);
+        System.exit(1);
+      }
+    }).exceptionally(throwable -> {
+      log.error("Unexpected error during server startup", throwable);
+      System.exit(1);
+      return null;
+    });
   }
 }

@@ -26,11 +26,8 @@ public class RpcBeanRegistrar implements ImportBeanDefinitionRegistrar, Resource
    */
   public static final String CORE_MODULE_PACKAGE = "org.example.rpc.core";
 
-  private ResourceLoader resourceLoader;
-
   @Override
   public void setResourceLoader(ResourceLoader resourceLoader) {
-    this.resourceLoader = resourceLoader;
   }
 
   @Override

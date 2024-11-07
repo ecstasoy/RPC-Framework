@@ -2,75 +2,111 @@ package org.example.rpc.user.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.example.rpc.api.dto.request.CreateUserDTO;
+import org.example.rpc.api.dto.request.UpdateUserDTO;
+import org.example.rpc.api.dto.response.UserDTO;
 import org.example.rpc.api.exception.InvalidUserInputException;
 import org.example.rpc.api.exception.user.DuplicateUserException;
 import org.example.rpc.api.exception.user.UserDeletionException;
 import org.example.rpc.api.exception.user.UserNotFoundException;
 import org.example.rpc.api.exception.user.UserUpdateException;
-import org.example.rpc.api.pojo.User;
 import org.example.rpc.api.service.UserService;
 import org.example.rpc.common.annotations.*;
+import org.example.rpc.user.convert.UserConverter;
+import org.example.rpc.api.entity.UserEntity;
+import org.example.rpc.user.repository.UserRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+/**
+ * User service implementation.
+ *
+ * <p>Provide user-related services.
+ *
+ * @author Kunhua Huang
+ */
 @Slf4j
 @RpcService
 public class UserServiceImpl implements UserService {
 
-  private final Map<String, User> userMap = new ConcurrentHashMap<>();
+  private final UserRepository userRepository;
+  private final UserConverter userConverter;
+
+  public UserServiceImpl(UserRepository userRepository, UserConverter userConverter) {
+    this.userRepository = userRepository;
+    this.userConverter = userConverter;
+  }
 
   @GET("/{id}")
   @Override
-  public CompletableFuture<User> selectById(@Path("id") String id) {
+  public CompletableFuture<UserDTO> selectById(@Path("id") String id) {
     return CompletableFuture.supplyAsync(() -> {
-      User user = userMap.get(id);
-      if (user == null) {
+      UserEntity userEntity = userRepository.findById(id);
+      if (userEntity == null) {
         log.warn("User not found with id: {}", id);
         throw new UserNotFoundException("User not found, ID: " + id);
       }
       log.info("Select user by id: {}", id);
-      return user;
+      return userConverter.toUserDTO(userEntity);
     });
   }
 
   @POST
   @Override
-  public CompletableFuture<User> createUser(@Body User user) {
+  public CompletableFuture<UserDTO> createUser(@Body CreateUserDTO createUserDTO) {
     return CompletableFuture.supplyAsync(() -> {
-      if (userMap.containsKey(user.getId())) {
-        throw new DuplicateUserException("User with ID " + user.getId() + " already exists");
-      }
-      if (user.getUsername() == null || user.getUsername().isEmpty()) {
-        throw new InvalidUserInputException("Username cannot be null or empty");
-      }
-      String id = user.getId() == null ? RandomStringUtils.randomAlphanumeric(6) : user.getId();
-      user.setId(id);
-      userMap.put(id, user);
-      log.info("Created user: {}", user);
-      return user;
+      validateCreateUserDTO(createUserDTO);
+      String id = createUserDTO.getId() == null ? RandomStringUtils.randomAlphanumeric(6) : createUserDTO.getId();
+      UserEntity userEntity = userConverter.toUserEntity(createUserDTO);
+      userEntity.setId(id);
+      userEntity.setCreateTime(System.currentTimeMillis());
+      userEntity.setUpdateTime(System.currentTimeMillis());
+      userRepository.save(userEntity);
+      log.info("Created user: {}", createUserDTO);
+      return userConverter.toUserDTO(userEntity);
     });
+  }
+
+  private void validateCreateUserDTO(CreateUserDTO dto) {
+    if (dto.getPassword() == null || dto.getPassword().isEmpty()) {
+      throw new InvalidUserInputException("Password cannot be null or empty");
+    }
+    if (dto.getUsername() == null || dto.getUsername().isEmpty()) {
+      throw new InvalidUserInputException("Username cannot be null or empty");
+    }
+    if (dto.getEmail() == null || dto.getEmail().isEmpty()) {
+      throw new InvalidUserInputException("Email cannot be null or empty");
+    }
+    if (dto.getId() != null && userRepository.findById(dto.getId()) != null) {
+      throw new DuplicateUserException("User with ID " + dto.getId() + " already exists");
+    }
+    if (userRepository.findByUsername(dto.getUsername()) != null) {
+      throw new DuplicateUserException("Username " + dto.getUsername() + " already exists");
+    }
+    if (userRepository.findByEmail(dto.getEmail()) != null) {
+      throw new DuplicateUserException("Email " + dto.getEmail() + " already exists");
+    }
   }
 
   @PUT("/{id}")
   @Override
-  public CompletableFuture<User> updateUser(@Path("id") String id, @Body User user) {
+  public CompletableFuture<UserDTO> updateUserId(@Path("id") String id, @Body UpdateUserDTO updateUserDTO) {
     return CompletableFuture.supplyAsync(() -> {
-      User existingUser = userMap.get(id);
+      UserEntity existingUser = userRepository.findById(id);
       if (existingUser == null) {
         throw new UserUpdateException("User not found, ID: " + id);
       }
-      if (user.getUsername() == null || user.getUsername().isEmpty()) {
-        throw new InvalidUserInputException("Username cannot be null or empty");
-      }
-      existingUser.setUsername(user.getUsername());
+
+      userConverter.updateEntity(updateUserDTO, existingUser);
+      userRepository.save(existingUser);
       log.info("Updated user: {}", existingUser);
-      return existingUser;
+
+      return userConverter.toUserDTO(existingUser);
     });
   }
 
@@ -78,43 +114,46 @@ public class UserServiceImpl implements UserService {
   @Override
   public CompletableFuture<Void> deleteUser(@Path("id") String id) {
     return CompletableFuture.runAsync(() -> {
-      User removedUser = userMap.remove(id);
+      UserEntity removedUser = userRepository.findById(id);
       if (removedUser == null) {
         throw new UserDeletionException("User not found, ID: " + id);
       }
+      userRepository.deleteById(id);
       log.info("Deleted user with id: {}", id);
     });
   }
 
   @POST("/batch")
   @Override
-  public CompletableFuture<List<User>> createUsers(@Body List<User> users) {
+  public CompletableFuture<List<UserDTO>> createUsers(@Body List<CreateUserDTO> createUserDTOs) {
     return CompletableFuture.supplyAsync(() -> {
-      // 首先检查是否有重复的指定id
-      Set<String> specifiedIds = users.stream()
-          .filter(u -> u.getId() != null)
-          .map(User::getId)
+      Set<String> specifiedIds = createUserDTOs.stream()
+          .filter(dto -> dto.getId() != null)
+          .map(CreateUserDTO::getId)
           .collect(Collectors.toSet());
 
-      if (specifiedIds.size() < users.stream()
-          .filter(u -> u.getId() != null).count()) {
+      if (specifiedIds.size() < createUserDTOs.stream()
+          .filter(dto -> dto.getId() != null).count()) {
         throw new DuplicateUserException("Duplicate IDs are not allowed");
       }
 
-      // 检查是否与现有用户id冲突
       for (String id : specifiedIds) {
-        if (userMap.containsKey(id)) {
+        if (userRepository.findById(id) != null) {
           throw new DuplicateUserException("User with id " + id + " already exists");
         }
       }
 
-      List<User> createdUsers = new ArrayList<>();
-      for (User user : users) {
-        String id = user.getId() == null ? RandomStringUtils.randomAlphanumeric(6) : user.getId();
-        user.setId(id);
-        userMap.put(id, user);
-        createdUsers.add(user);
-        log.info("Created user: {}", user);
+      List<UserDTO> createdUsers = new ArrayList<>();
+      for (CreateUserDTO createUserDTO : createUserDTOs) {
+        String id = createUserDTO.getId() == null
+            ? RandomStringUtils.randomAlphanumeric(6) : createUserDTO.getId();
+        validateCreateUserDTO(createUserDTO);
+        UserEntity userEntity = userConverter.toUserEntity(createUserDTO);
+        userEntity.setId(id);
+        userRepository.save(userEntity);
+
+        createdUsers.add(userConverter.toUserDTO(userEntity));
+        log.info("Created user: {}", userEntity);
       }
       return createdUsers;
     });
@@ -122,10 +161,13 @@ public class UserServiceImpl implements UserService {
 
   @GET("/all")
   @Override
-  public CompletableFuture<List<User>> selectAll() {
+  public CompletableFuture<List<UserDTO>> selectAll() {
     return CompletableFuture.supplyAsync(() -> {
       log.info("Select all users");
-      return new ArrayList<>(userMap.values());
+      List<UserEntity> userEntities = userRepository.findAll();
+      return userEntities.stream()
+          .map(userConverter::toUserDTO)
+          .collect(Collectors.toList());
     });
   }
 
@@ -134,10 +176,8 @@ public class UserServiceImpl implements UserService {
   public CompletableFuture<Void> validateUser(@Path("id") String id, @Query("username") String username) {
     return CompletableFuture.supplyAsync(() -> {
       log.info("Check if user exists with id: {}", id);
-      if (!userMap.containsKey(id)) {
+      if (userRepository.findById(id) == null) {
         throw new UserNotFoundException("User not found, ID: " + id);
-      } else if (!userMap.get(id).getUsername().equals(username)) {
-        throw new InvalidUserInputException("username does not match");
       }
       return null;
     });

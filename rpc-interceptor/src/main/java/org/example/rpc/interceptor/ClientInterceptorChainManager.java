@@ -56,15 +56,11 @@ public class ClientInterceptorChainManager {
    * Apply the preHandle method of each interceptor in the chain.
    *
    * @param request RPC request
-   * @return true if all interceptors return true, false otherwise
    */
-  public boolean applyPreHandle(RpcRequest request) {
+  public void applyPreHandle(RpcRequest request) {
     for (RpcInterceptor interceptor : interceptors) {
-      if (!interceptor.preHandle(request)) {
-        return false;
-      }
+      interceptor.preHandle(request);
     }
-    return true;
   }
 
   /**

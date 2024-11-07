@@ -1,12 +1,13 @@
 package org.example.rpc.registry.discovery.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.rpc.registry.discovery.api.RpcServiceDiscovery;
 import org.example.rpc.loadbalancer.api.LoadBalancer;
+import org.example.rpc.registry.discovery.api.RpcServiceDiscovery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Abstract class for service discovery.
@@ -20,18 +21,18 @@ import java.util.List;
 public abstract class AbstractRpcServiceDiscovery implements RpcServiceDiscovery {
 
   @Autowired
-  @Qualifier("consistentHashLoadBalancer")
+  @Qualifier("leastActiveLoadBalancer")
   protected LoadBalancer loadBalancer;
 
   @Override
-  public List<String> getServiceInstaceList(String serviceName) {
+  public List<String> getServiceInstaceList(String serviceName) throws ExecutionException {
     return doGetServiceInstanceList(serviceName);
   }
 
-  abstract List<String> doGetServiceInstanceList(String serviceName);
+  abstract List<String> doGetServiceInstanceList(String serviceName) throws ExecutionException;
 
   @Override
-  public String getServiceInstance(String serviceName) {
+  public String getServiceInstance(String serviceName) throws ExecutionException {
     final List<String> instances = doGetServiceInstanceList(serviceName);
     if (instances == null || instances.isEmpty()) {
       return null;

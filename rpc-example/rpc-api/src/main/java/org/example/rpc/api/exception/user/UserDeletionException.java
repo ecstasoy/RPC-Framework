@@ -2,6 +2,12 @@ package org.example.rpc.api.exception.user;
 
 import org.example.rpc.common.exception.BusinessException;
 
+/**
+ * <p>Exception for user deletion.
+ *
+ * <p>Return 500 Internal Server Error.
+ * <p>Code: USER_DELETION_ERROR
+ */
 public class UserDeletionException extends BusinessException {
   private static final String ERROR_CODE = "USER_DELETION_ERROR";
 

@@ -23,7 +23,7 @@ public class LoadBalancerFactory {
    * Constructor.
    *
    * @param randomLoadBalancer      random load balancer
-   * @param roundRobinLoadBalancer  round robin load balancer
+   * @param roundRobinLoadBalancer  round-robin load balancer
    * @param weightedLoadBalancer    weighted load balancer
    * @param leastActiveLoadBalancer least active load balancer
    * @param consistentHashLoadBalancer consistent hash load balancer

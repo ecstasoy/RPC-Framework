@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 /**
@@ -32,7 +33,7 @@ public class ZookeeperRpcServiceDiscoveryImpl extends AbstractRpcServiceDiscover
   }
 
   @Override
-  List<String> doGetServiceInstanceList(String serviceName) {
+  List<String> doGetServiceInstanceList(String serviceName) throws ExecutionException {
     List<String> childrenNodes = zookeeperHelper.getServiceInstanceNode(serviceName);
     if (CollectionUtils.isEmpty(childrenNodes)) {
       log.warn("No available service instances found for " + serviceName);

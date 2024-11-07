@@ -2,9 +2,10 @@ package org.example.rpc.proxy;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.rpc.common.annotations.*;
+import org.example.rpc.network.RpcRequestSender;
 import org.example.rpc.protocol.model.RpcRequest;
 import org.example.rpc.protocol.model.RpcResponse;
-import org.example.rpc.network.RpcRequestSender;
+import org.springframework.stereotype.Service;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -18,6 +19,7 @@ import java.util.concurrent.CompletableFuture;
 /**
  * Class of RPC client proxy, implemented by JDK dynamic proxy.
  */
+@Service
 @Slf4j
 public class RpcClientProxy implements InvocationHandler {
 

@@ -19,9 +19,6 @@ public class PacketClassManager {
    */
   private static final Map<Byte, Class<? extends Packet>> PACKET_CLASS_MAP = new HashMap<>();
 
-  /**
-   * Initialize the map.
-   */
   static {
     PACKET_CLASS_MAP.put(PacketType.HEART_BEAT.getType(), HeartBeatPacket.class);
     PACKET_CLASS_MAP.put(PacketType.RPC_REQUEST.getType(), RpcRequest.class);

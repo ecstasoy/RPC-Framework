@@ -1,5 +1,6 @@
 package org.example.rpc.protocol.serialize;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,23 +15,30 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class SerializerFactory {
 
-  private static final Map<Byte, Serializer> SERIALIZERS = new ConcurrentHashMap<>();
+  private final Map<Byte, Serializer> serializers = new ConcurrentHashMap<>();
+  private final SerializerType defaultType;
 
-  static {
-    // Use SPI to load all implementations of Serializer interface
+  @Autowired
+  public SerializerFactory(SerializerProperties properties) {
+    this.defaultType = properties.getType();
+    loadSerializers();
+  }
+
+  private void loadSerializers() {
     ServiceLoader<Serializer> serviceLoader = ServiceLoader.load(Serializer.class);
     for (Serializer serializer : serviceLoader) {
-      SERIALIZERS.put(serializer.getSerializerType().getType(), serializer);
-      log.info("Found serializer: [{}]", serializer.getClass().getCanonicalName());
+      serializers.put(serializer.getSerializerType().getType(), serializer);
+      log.info("Loaded serializer: [{}]", serializer.getClass().getCanonicalName());
     }
   }
 
-  public static Serializer getSerializer(byte type) {
-    Serializer serializer = SERIALIZERS.get(type);
-    if (serializer == null) {
-      throw new RuntimeException("Unknown serializer type: " + type);
-    }
-    return serializer;
+  public Serializer getSerializer(byte type) {
+    return serializers.getOrDefault(type,
+        serializers.get(defaultType.getType()));
+  }
+
+  public SerializerType getDefaultType() {
+    return defaultType;
   }
 
 }

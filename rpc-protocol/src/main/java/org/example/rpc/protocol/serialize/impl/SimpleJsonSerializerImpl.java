@@ -7,6 +7,9 @@ import com.alibaba.fastjson.serializer.JSONSerializer;
 import com.alibaba.fastjson.serializer.ObjectSerializer;
 import com.alibaba.fastjson.serializer.SerializeConfig;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.example.rpc.protocol.serialize.Serializer;
 import org.example.rpc.protocol.serialize.SerializerType;
 import org.springframework.stereotype.Service;
@@ -18,14 +21,12 @@ import java.lang.reflect.Type;
 /**
  * Simple JSON serializer.
  */
+@Slf4j
 @Service
 public class SimpleJsonSerializerImpl implements Serializer {
 
   private static final Logger logger = LoggerFactory.getLogger(SimpleJsonSerializerImpl.class);
 
-  /**
-   * Register classes.
-   */
   static {
     ParserConfig.getGlobalInstance().addAccept("org.example.rpc");
     SerializeConfig.getGlobalInstance().put(Throwable.class, new ThrowableSerializer());
@@ -40,12 +41,11 @@ public class SimpleJsonSerializerImpl implements Serializer {
 
   @Override
   public <T> byte[] serialize(T obj) throws Exception {
-    // 使用 TypeReference 来保留泛型信息
     return JSON.toJSONBytes(obj, SerializerFeature.WriteClassName);
   }
 
   @Override
-  public <T> T deSerialize(byte[] bytes, Class<T> clazz) throws Exception {
+  public <T> T deSerialize(byte[] bytes, Class<T> clazz) {
     String jsonString = new String(bytes);
     return JSON.parseObject(jsonString, clazz);
   }
@@ -76,6 +76,8 @@ public class SimpleJsonSerializerImpl implements Serializer {
     }
   }
 
+  @Getter
+  @Setter
   public static class ThrowableWrapper {
     private String className;
     private String message;
@@ -87,20 +89,5 @@ public class SimpleJsonSerializerImpl implements Serializer {
       this.message = message;
     }
 
-    public String getClassName() {
-      return className;
-    }
-
-    public void setClassName(String className) {
-      this.className = className;
-    }
-
-    public String getMessage() {
-      return message;
-    }
-
-    public void setMessage(String message) {
-      this.message = message;
-    }
   }
 }

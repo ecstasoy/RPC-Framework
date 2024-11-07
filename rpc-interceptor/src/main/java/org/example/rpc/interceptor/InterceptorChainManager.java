@@ -64,7 +64,7 @@ public class InterceptorChainManager {
    */
   public boolean applyPreHandle(RpcRequest request) {
     for (RpcInterceptor interceptor : interceptors) {
-      if (!interceptor.preHandle(request)) {
+      if (interceptor.preHandle(request)) {
         return false;
       }
     }

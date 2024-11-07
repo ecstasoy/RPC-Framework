@@ -2,38 +2,47 @@ package org.example.rpc.registry.registry.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.rpc.common.enums.RegistryCenterType;
+import org.example.rpc.registry.health.ServiceHealthManager;
+import org.example.rpc.registry.health.ServiceShutdownHook;
+import org.example.rpc.registry.registry.HeartbeatManager;
 import org.example.rpc.registry.registry.param.RpcServiceRegistryParam;
 import org.example.rpc.registry.registry.param.RpcServiceUnregistryParam;
 import org.example.rpc.registry.zookeeper.ZookeeperHelper;
-import org.example.rpc.registry.health.ServiceHealthManager;
 import org.springframework.context.annotation.Primary;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Zookeeper implementation of service registry.
+ *
+ * <p>Register service to zookeeper.
+ * Implement the {@link AbstractRpcServiceRegistry} abstract class.
+ *
+ * @see AbstractRpcServiceRegistry
+ * @author Kunhua Huang
  */
 @Primary
 @Component
 @Slf4j
 public class ZookeeperRpcServiceRegistryImpl extends AbstractRpcServiceRegistry {
 
+  private final HeartbeatManager heartbeatManager;
   private final ZookeeperHelper zookeeperHelper;
   private final Map<String, RpcServiceRegistryParam> serviceRegistryParamMap = new ConcurrentHashMap<>();
   private final ServiceHealthManager serviceHealthManager;
+  private final ServiceShutdownHook serviceShutdownHook = new ServiceShutdownHook(this);
 
   /**
    * Constructor.
    *
    * @param zookeeperHelper zookeeper helper
    */
-  public ZookeeperRpcServiceRegistryImpl(ZookeeperHelper zookeeperHelper, ServiceHealthManager serviceHealthManager) {
+  public ZookeeperRpcServiceRegistryImpl(HeartbeatManager heartbeatManager, ZookeeperHelper zookeeperHelper, ServiceHealthManager serviceHealthManager) {
+    this.heartbeatManager = heartbeatManager;
     this.zookeeperHelper = zookeeperHelper;
     this.serviceHealthManager = serviceHealthManager;
   }
@@ -49,25 +58,31 @@ public class ZookeeperRpcServiceRegistryImpl extends AbstractRpcServiceRegistry 
         registryParam.getPort());
     zookeeperHelper.createServiceInstanceNode(registryParam.getServiceName(), address);
     serviceRegistryParamMap.put(registryParam.getInstanceId(), registryParam);
-  }
 
-  @Scheduled(fixedRate = 5000)
-  public void sendHeartbeat() {
-    serviceRegistryParamMap.forEach((instanceId, param) -> {
-      try {
-        zookeeperHelper.updateHealthStatus(param.getServiceName(), instanceId);
-        serviceHealthManager.recordHeartbeatSuccess(param.getServiceName(), instanceId, zookeeperHelper);
-        log.debug("Send heartbeat to [{}]", param.getServiceName());
-      } catch (Exception e) {
-        log.error("Send heartbeat error", e);
-        serviceHealthManager.recordHeartbeatFailure(param.getServiceName(), instanceId, zookeeperHelper);
-      }
-    });
+    RpcServiceUnregistryParam unregistryParam = RpcServiceUnregistryParam.builder()
+        .ip(registryParam.getIp())
+        .port(registryParam.getPort())
+        .serviceName(registryParam.getServiceName())
+        .instanceId(registryParam.getInstanceId())
+        .build();
+
+    serviceShutdownHook.addRegisteredService(registryParam.getInstanceId(), unregistryParam);
+    heartbeatManager.startHeartbeat(registryParam.getServiceName(), registryParam.getInstanceId());
   }
 
   @Override
-  void doUnregister(RpcServiceUnregistryParam unregistryParam) {
-    // final InetSocketAddress inetSocketAddress = new InetSocketAddress(unRegistryParam.getIp(), unRegistryParam.getPort());
-    // zookeeperHelper.removeNode(inetSocketAddress);
+  public void doUnregister(RpcServiceUnregistryParam unregistryParam) {
+    String instanceId = unregistryParam.getInstanceId();
+    RpcServiceRegistryParam param = serviceRegistryParamMap.get(instanceId);
+    if (param != null) {
+      try {
+        zookeeperHelper.removeServiceInstanceNode(param.getServiceName(), instanceId);
+        serviceRegistryParamMap.remove(instanceId);
+        log.info("Service instance [{}] unregistered successfully", instanceId);
+      } catch (Exception e) {
+        log.error("Failed to unregister service instance [{}]", instanceId, e);
+        throw new RuntimeException("Failed to unregister service", e);
+      }
+    }
   }
 }

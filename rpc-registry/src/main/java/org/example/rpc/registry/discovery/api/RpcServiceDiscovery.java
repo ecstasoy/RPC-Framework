@@ -4,6 +4,7 @@ import org.example.rpc.registry.IRegistryCenter;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 
 /**
@@ -22,7 +23,7 @@ public interface RpcServiceDiscovery extends IRegistryCenter {
    * @param serviceName name of service
    * @return type of registry center
    */
-  List<String> getServiceInstaceList(String serviceName);
+  List<String> getServiceInstaceList(String serviceName) throws ExecutionException;
 
   /**
    * Gets an instance of the service.
@@ -30,7 +31,7 @@ public interface RpcServiceDiscovery extends IRegistryCenter {
    * @param serviceName name of service
    * @return instance of service
    */
-  String getServiceInstance(String serviceName);
+  String getServiceInstance(String serviceName) throws ExecutionException;
 
   /**
    * Gets the map of service instances.

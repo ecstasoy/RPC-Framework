@@ -7,7 +7,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation for service reference.
+ * <p>Annotation for service reference.
+ *
  * <p>Used to replace the @Autowired annotation.
  * <p>Inspired by @Reference in Dubbo.
  *

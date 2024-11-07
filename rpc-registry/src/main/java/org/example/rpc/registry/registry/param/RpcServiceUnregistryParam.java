@@ -1,8 +1,10 @@
 package org.example.rpc.registry.registry.param;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class RpcServiceUnregistryParam {
 
   /**
@@ -19,5 +21,10 @@ public class RpcServiceUnregistryParam {
    * Port.
    */
   private int port;
+
+  /**
+   * Instance ID.
+   */
+  private String instanceId;
 
 }

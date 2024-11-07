@@ -1,0 +1,7 @@
+server:
+  port: 8099
+  address: localhost
+
+netty:
+  server:
+    port: 50013

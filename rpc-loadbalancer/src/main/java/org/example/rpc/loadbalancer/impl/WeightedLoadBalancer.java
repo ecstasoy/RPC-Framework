@@ -10,6 +10,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Weighted load balancer.
+ *
+ * <p>Implement the {@link LoadBalancer} interface.
+ * Use the smooth weighted round-robin algorithm.
+ *
+ * @see LoadBalancer
+ * @author Kunhua Huang
+ */
 @Component
 public class WeightedLoadBalancer implements LoadBalancer {
   private final Map<String, List<ServiceWeight>> serviceWeightMap = new ConcurrentHashMap<>();
@@ -36,7 +45,8 @@ public class WeightedLoadBalancer implements LoadBalancer {
   }
 
   /**
-   * Smooth weighted round-robin algorithm
+   * Smooth weighted round-robin algorithm.
+   *
    * @param weights service weight list
    * @return selected instance
    */
@@ -62,7 +72,8 @@ public class WeightedLoadBalancer implements LoadBalancer {
   }
 
   /**
-   * Adjust weight of service instance
+   * Adjust weight of service instance.
+   *
    * @param serviceName service name
    * @param serviceInstance service instance
    * @param newWeight new weight

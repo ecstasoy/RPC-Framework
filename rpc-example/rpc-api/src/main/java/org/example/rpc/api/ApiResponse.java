@@ -1,7 +1,7 @@
 package org.example.rpc.api;
 
-import lombok.Data;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 
 /**
  * API response.
@@ -16,6 +16,7 @@ public class ApiResponse<T> {
 
   /**
    * Create a success response.
+   *
    * @param data data
    * @return success response
    */
@@ -25,6 +26,7 @@ public class ApiResponse<T> {
 
   /**
    * Create an error response.
+   *
    * @param errorCode error code
    * @param message error message
    * @return error response

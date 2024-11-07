@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 /**
  * Annotation for RPC methods.
  *
- * <p>Used to mark a method as a RPC method.
+ * <p>Used to mark a method as an RPC method.
  *
  * @author Kunhua Huang
  */

@@ -11,9 +11,9 @@ import org.example.rpc.registry.registry.param.RpcServiceUnregistryParam;
 public interface RpcServiceRegistry extends IRegistryCenter {
 
   /**
-   * Gets the type of registry center.
+   * Register service.
    *
-   * @return type of registry center
+   * @param registryParam parameters for registration
    */
   void register(RpcServiceRegistryParam registryParam);
 

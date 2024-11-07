@@ -18,6 +18,8 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 @Slf4j
 public class CircuitBreaker {
+
+  private final CircuitBreakerProperties properties;
   private final AtomicReference<CircuitBreakerState> state;
   private final AtomicInteger failureCount;
   private final AtomicInteger successCount;
@@ -30,6 +32,7 @@ public class CircuitBreaker {
    * Circuit breaker state.
    */
   public CircuitBreaker(CircuitBreakerProperties properties) {
+    this.properties = properties;
     this.state = new AtomicReference<>(CircuitBreakerState.CLOSED);
     this.failureCount = new AtomicInteger(0);
     this.successCount = new AtomicInteger(0);
@@ -43,29 +46,29 @@ public class CircuitBreaker {
    *
    * @return true if the request is allowed, otherwise false
    */
-  public boolean allowRequest() {
+  public boolean isCircuitbBreakerOpen() {
     CircuitBreakerState currentState = state.get();
 
     if (currentState == CircuitBreakerState.CLOSED) {
-      return true;
-    }
-
-    if (currentState == CircuitBreakerState.OPEN) {
-      // 检查是否已经过了重置超时时间
-      long currentTime = System.currentTimeMillis();
-      if (currentTime - lastFailureTime >= resetTimeoutMs) {
-        // 切换到半开状态
-        if (state.compareAndSet(CircuitBreakerState.OPEN, CircuitBreakerState.HALF_OPEN)) {
-          log.info("Circuit breaker state changed to HALF_OPEN");
-          successCount.set(0);
-          return true;
-        }
-      }
       return false;
     }
 
+    if (currentState == CircuitBreakerState.OPEN) {
+
+      long currentTime = System.currentTimeMillis();
+      if (currentTime - lastFailureTime >= resetTimeoutMs) {
+
+        if (state.compareAndSet(CircuitBreakerState.OPEN, CircuitBreakerState.HALF_OPEN)) {
+          log.info("Circuit breaker state changed to HALF_OPEN");
+          successCount.set(0);
+          return false;
+        }
+      }
+      return true;
+    }
+
     // HALF_OPEN 状态下限制并发请求数
-    return successCount.get() < halfOpenMaxCalls;
+    return successCount.get() >= halfOpenMaxCalls;
   }
 
   /**

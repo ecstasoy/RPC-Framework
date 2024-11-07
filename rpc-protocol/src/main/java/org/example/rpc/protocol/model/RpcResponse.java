@@ -74,9 +74,8 @@ public class RpcResponse extends Packet implements Serializable {
   }
 
   /**
-   * Constructor, only provided to avoid errors in serialization and deserialization.
+   * No Args Constructor, only provided to avoid errors in serialization and deserialization.
    */
-  @Deprecated
   public RpcResponse() {
   }
 

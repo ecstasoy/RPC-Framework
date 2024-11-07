@@ -24,7 +24,7 @@ public class LoggingInterceptor implements RpcInterceptor {
         request.getSequence(),
         request.getMethodName(),
         request.getParameters());
-    return true;
+    return false;
   }
 
   @Override

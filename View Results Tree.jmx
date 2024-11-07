@@ -6,6 +6,7 @@
       <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
         <collectionProp name="Arguments.arguments"/>
       </elementProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
     </TestPlan>
     <hashTree>
       <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config">
@@ -20,7 +21,7 @@
         <stringProp name="variableNames">id,username</stringProp>
       </CSVDataSet>
       <hashTree/>
-      <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+      <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
         <collectionProp name="HeaderManager.headers">
           <elementProp name="" elementType="Header">
             <stringProp name="Header.name">Content-Type</stringProp>
@@ -67,9 +68,9 @@
       </ResultCollector>
       <hashTree/>
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group">
-        <intProp name="ThreadGroup.num_threads">100</intProp>
-        <intProp name="ThreadGroup.ramp_time">100</intProp>
-        <longProp name="ThreadGroup.duration">10</longProp>
+        <intProp name="ThreadGroup.num_threads">1</intProp>
+        <intProp name="ThreadGroup.ramp_time">10</intProp>
+        <longProp name="ThreadGroup.duration">300</longProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller">
@@ -78,10 +79,19 @@
         </elementProp>
       </ThreadGroup>
       <hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request All Users">
+        <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="Counter" enabled="true">
+          <stringProp name="CounterConfig.start">1</stringProp>
+          <stringProp name="CounterConfig.end"></stringProp>
+          <stringProp name="CounterConfig.incr">1</stringProp>
+          <stringProp name="CounterConfig.name">UserIdCounter</stringProp>
+          <stringProp name="CounterConfig.format"></stringProp>
+          <boolProp name="CounterConfig.per_user">false</boolProp>
+        </CounterConfig>
+        <hashTree/>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request add a user">
           <stringProp name="HTTPSampler.domain">127.0.0.1</stringProp>
           <stringProp name="HTTPSampler.port">8080</stringProp>
-          <stringProp name="HTTPSampler.path">/api/v1/users/batch</stringProp>
+          <stringProp name="HTTPSampler.path">/api/v1/users</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
@@ -90,69 +100,80 @@
             <collectionProp name="Arguments.arguments">
               <elementProp name="" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">[&#xd;
-	{&#xd;
-	&quot;id&quot;: &quot;${__UUID()}&quot;,&#xd;
-	&quot;username&quot;: &quot;${__RandomString(10,abcdefghijklmnopqrstuvwxyz)}&quot;&#xd;
-	},&#xd;
-	{&quot;id&quot;: &quot;${__UUID()}&quot;,&#xd;
-	&quot;username&quot;: &quot;${__RandomString(10,abcdefghijklmnopqrstuvwxyz)}&quot;&#xd;
-	},&#xd;
-	{&#xd;
-	&quot;id&quot;: &quot;${__UUID()}&quot;,&#xd;
-	&quot;username&quot;: &quot;${__RandomString(10,abcdefghijklmnopqrstuvwxyz)}&quot;&#xd;
-	},&#xd;
-	{&quot;id&quot;: &quot;${__UUID()}&quot;,&#xd;
-	&quot;username&quot;: &quot;${__RandomString(10,abcdefghijklmnopqrstuvwxyz)}&quot;&#xd;
-	},&#xd;
-	{&#xd;
-	&quot;id&quot;: &quot;${__UUID()}&quot;,&#xd;
-	&quot;username&quot;: &quot;${__RandomString(10,abcdefghijklmnopqrstuvwxyz)}&quot;&#xd;
-	},&#xd;
-	{&quot;id&quot;: &quot;${__UUID()}&quot;,&#xd;
-	&quot;username&quot;: &quot;${__RandomString(10,abcdefghijklmnopqrstuvwxyz)}&quot;&#xd;
-	},&#xd;
-	{&#xd;
-	&quot;id&quot;: &quot;${__UUID()}&quot;,&#xd;
-	&quot;username&quot;: &quot;${__RandomString(10,abcdefghijklmnopqrstuvwxyz)}&quot;&#xd;
-	},&#xd;
-	{&quot;id&quot;: &quot;${__UUID()}&quot;,&#xd;
-	&quot;username&quot;: &quot;${__RandomString(10,abcdefghijklmnopqrstuvwxyz)}&quot;&#xd;
-	},&#xd;
-	{&#xd;
-	&quot;id&quot;: &quot;${__UUID()}&quot;,&#xd;
-	&quot;username&quot;: &quot;${__RandomString(10,abcdefghijklmnopqrstuvwxyz)}&quot;&#xd;
-	},&#xd;
-	{&quot;id&quot;: &quot;${__UUID()}&quot;,&#xd;
-	&quot;username&quot;: &quot;${__RandomString(10,abcdefghijklmnopqrstuvwxyz)}&quot;&#xd;
-	},&#xd;
-	{&#xd;
-	&quot;id&quot;: &quot;${__UUID()}&quot;,&#xd;
-	&quot;username&quot;: &quot;${__RandomString(10,abcdefghijklmnopqrstuvwxyz)}&quot;&#xd;
-	},&#xd;
-	{&quot;id&quot;: &quot;${__UUID()}&quot;,&#xd;
-	&quot;username&quot;: &quot;${__RandomString(10,abcdefghijklmnopqrstuvwxyz)}&quot;&#xd;
-	},&#xd;
-	{&#xd;
-	&quot;id&quot;: &quot;${__UUID()}&quot;,&#xd;
-	&quot;username&quot;: &quot;${__RandomString(10,abcdefghijklmnopqrstuvwxyz)}&quot;&#xd;
-	},&#xd;
-	{&quot;id&quot;: &quot;${__UUID()}&quot;,&#xd;
-	&quot;username&quot;: &quot;${__RandomString(10,abcdefghijklmnopqrstuvwxyz)}&quot;&#xd;
-	},&#xd;
-	{&#xd;
-	&quot;id&quot;: &quot;${__UUID()}&quot;,&#xd;
-	&quot;username&quot;: &quot;${__RandomString(10,abcdefghijklmnopqrstuvwxyz)}&quot;&#xd;
-	},&#xd;
-	{&quot;id&quot;: &quot;${__UUID()}&quot;,&#xd;
-	&quot;username&quot;: &quot;${__RandomString(10,abcdefghijklmnopqrstuvwxyz)}&quot;&#xd;
-	}&#xd;
-]</stringProp>
+                <stringProp name="Argument.value">{&quot;id&quot;: &quot;${UserIdCounter}&quot;, &quot;username&quot;: &quot;user${UserIdCounter}&quot;, &quot;password&quot;:&quot;${__RandomString(6,abcdefghijklmnopqrstuvwxyz1234567890)}&quot;, &quot;email&quot;:&quot;johndoe${UserIdCounter}@outlook.com&quot;}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
             </collectionProp>
           </elementProp>
           <stringProp name="HTTPSampler.implementation">Java</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree/>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request add a blog">
+          <stringProp name="HTTPSampler.domain">127.0.0.1</stringProp>
+          <stringProp name="HTTPSampler.port">8080</stringProp>
+          <stringProp name="HTTPSampler.path">/api/v1/blogs</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&#xd;
+    &quot;title&quot;: &quot;${__RandomString(30,abcdefghijklmnopqrstuvwxyz,)}&quot;,&#xd;
+    &quot;content&quot;: &quot;${__RandomString(200,abcdefghijklmnopqrstuvwxyz,)}&quot;,&#xd;
+    &quot;authorId&quot;: &quot;${UserIdCounter}&quot;,&#xd;
+    &quot;authorName&quot;: &quot;user${UserIdCounter}&quot;&#xd;
+}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+        </HTTPSamplerProxy>
+        <hashTree/>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group" enabled="true">
+        <intProp name="ThreadGroup.num_threads">1</intProp>
+        <intProp name="ThreadGroup.ramp_time">1</intProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller">
+          <stringProp name="LoopController.loops">1</stringProp>
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+        </elementProp>
+      </ThreadGroup>
+      <hashTree>
+        <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="Counter" enabled="true">
+          <stringProp name="CounterConfig.start">1</stringProp>
+          <stringProp name="CounterConfig.end"></stringProp>
+          <stringProp name="CounterConfig.incr">1</stringProp>
+          <stringProp name="CounterConfig.name">UserIdCounter</stringProp>
+          <stringProp name="CounterConfig.format"></stringProp>
+          <boolProp name="CounterConfig.per_user">false</boolProp>
+        </CounterConfig>
+        <hashTree/>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request add a blog" enabled="true">
+          <stringProp name="HTTPSampler.domain">127.0.0.1</stringProp>
+          <stringProp name="HTTPSampler.port">8080</stringProp>
+          <stringProp name="HTTPSampler.path">/api/v1/blogs</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&#xd;
+    &quot;title&quot;: &quot;Understanding RPC Implementation&quot;,&#xd;
+    &quot;content&quot;: &quot;In this blog post, we&apos;ll explore how to implement a RPC framework...&quot;,&#xd;
+    &quot;authorId&quot;: &quot;${UserIdCounter}&quot;&#xd;
+}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
         </HTTPSamplerProxy>
         <hashTree/>
       </hashTree>

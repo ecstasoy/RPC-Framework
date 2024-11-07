@@ -1,5 +1,8 @@
 package org.example.rpc.api.service;
 
+import org.example.rpc.api.dto.request.CreateBlogDTO;
+import org.example.rpc.api.dto.request.UpdateBlogDTO;
+import org.example.rpc.api.dto.response.BlogDTO;
 import org.example.rpc.api.pojo.Blog;
 import org.example.rpc.common.annotations.*;
 
@@ -10,21 +13,21 @@ import java.util.List;
 public interface BlogService {
 
   @GET("/{id}")
-  CompletableFuture<Blog> selectById(@Path("id") String id);
+  CompletableFuture<BlogDTO> selectById(@Path("id") String id);
 
   @POST
-  CompletableFuture<Blog> createBlog(@Body Blog blog);
+  CompletableFuture<BlogDTO> createBlog(@Body CreateBlogDTO createBlogDTO);
 
   @PUT("/{id}")
-  CompletableFuture<Blog> updateBlog(@Path("id") String id, @Body Blog blog);
+  CompletableFuture<BlogDTO> updateBlog(@Path("id") String id, @Body UpdateBlogDTO updateBlogDTO);
 
   @DELETE("/{id}")
   CompletableFuture<Void> deleteBlog(@Path("id") String id);
 
   @POST("/batch")
-  CompletableFuture<List<Blog>> createBlogs(@Body List<Blog> blogs);
+  CompletableFuture<List<BlogDTO>> createBlogs(@Body List<CreateBlogDTO> createBlogDTOS);
 
   @GET("/all")
-  CompletableFuture<List<Blog>> selectAll();
+  CompletableFuture<List<BlogDTO>> selectAll();
 
 }

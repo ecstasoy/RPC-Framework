@@ -17,14 +17,15 @@ public class GlobalExceptionHandler {
     log.error("Unexpected error occurred:", ex);
     return ResponseEntity
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .body(ApiResponse.error("INTERNAL_ERROR", "An unexpected error occurred"));
+        .body(ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR.toString(), ex.getMessage()));
   }
 
   @ExceptionHandler(BaseRpcException.class)
   public ResponseEntity<ApiResponse<?>> handleBaseRpcException(BaseRpcException ex) {
+    log.error("Unexpected error occurred in RPC:", ex);
     return ResponseEntity
         .status(ex.getHttpStatus())
-        .body(ApiResponse.error(ex.getErrorCode(), ex.getMessage()));
+        .body(ApiResponse.error(ex.getHttpStatus() + " " + ex.getErrorCode(), ex.getMessage()));
   }
 
 }

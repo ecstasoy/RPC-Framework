@@ -1,6 +1,12 @@
 package org.example.rpc.bff;
 
 import lombok.extern.slf4j.Slf4j;
+import org.example.rpc.api.dto.request.CreateBlogDTO;
+import org.example.rpc.api.dto.request.CreateUserDTO;
+import org.example.rpc.api.dto.request.UpdateBlogDTO;
+import org.example.rpc.api.dto.request.UpdateUserDTO;
+import org.example.rpc.api.dto.response.BlogDTO;
+import org.example.rpc.api.dto.response.UserDTO;
 import org.example.rpc.api.pojo.Blog;
 import org.example.rpc.api.pojo.User;
 import org.example.rpc.api.service.BlogService;
@@ -33,12 +39,12 @@ public class BffService {
    * @param id user ID
    * @return user info
    */
-  public CompletableFuture<User> getUserInfo(String id) {
+  public CompletableFuture<UserDTO> getUserInfo(String id) {
     log.info("Fetching user info for ID: {}", id);
     return userService.selectById(id)
-        .thenApply(user -> {
-          log.info("Fetched user info: {}", user);
-          return user;
+        .thenApply(userDTO -> {
+          log.info("Fetched user info: {}", userDTO);
+          return userDTO;
         })
         .exceptionally(this::handleException);
   }
@@ -46,12 +52,11 @@ public class BffService {
   /**
    * Create a new user.
    *
-   * @param user user info
-   * @return created user info
+   * @param createUserDTO DTO for creating a user
    */
-  public CompletableFuture<User> createUser(User user) {
-    log.debug("Creating user: {}", user);
-    return userService.createUser(user)
+  public CompletableFuture<UserDTO> createUser(CreateUserDTO createUserDTO) {
+    log.debug("Creating user: {}", createUserDTO);
+    return userService.createUser(createUserDTO)
         .thenApply(createdUser -> {
           log.debug("Created user: {}", createdUser);
           return createdUser;
@@ -63,12 +68,12 @@ public class BffService {
    * Update user info.
    *
    * @param id   user ID
-   * @param user user info
+   * @param updateUserDTO DTO for updating a user
    * @return updated user info
    */
-  public CompletableFuture<User> updateUser(String id, User user) {
+  public CompletableFuture<UserDTO> updateUser(String id, UpdateUserDTO updateUserDTO) {
     log.debug("Updating user info for ID: {}", id);
-    return userService.updateUser(id, user)
+    return userService.updateUserId(id, updateUserDTO)
         .thenApply(updatedUser -> {
           log.debug("Updated user: {}", updatedUser);
           return updatedUser;
@@ -92,12 +97,12 @@ public class BffService {
   /**
    * Create multiple users.
    *
-   * @param users user list
+   * @param createUserDTOs user list
    * @return created users
    */
-  public CompletableFuture<List<User>> createUsers(List<User> users) {
-    log.debug("Creating users: {}", users);
-    return userService.createUsers(users)
+  public CompletableFuture<List<UserDTO>> createUsers(List<CreateUserDTO> createUserDTOs) {
+    log.debug("Creating users: {}", createUserDTOs);
+    return userService.createUsers(createUserDTOs)
         .thenApply(createdUsers -> {
           log.debug("Created users: {}", createdUsers);
           return createdUsers;
@@ -110,7 +115,7 @@ public class BffService {
    *
    * @return all users
    */
-  public CompletableFuture<List<User>> getAllUsers() {
+  public CompletableFuture<List<UserDTO>> getAllUsers() {
     log.debug("Fetching all users");
     return userService.selectAll()
         .thenApply(users -> {
@@ -126,7 +131,7 @@ public class BffService {
    * @param id blog ID
    * @return blog info
    */
-  public CompletableFuture<Blog> getBlogInfo(String id) {
+  public CompletableFuture<BlogDTO> getBlogInfo(String id) {
     log.info("Fetching blog info for ID: {}", id);
     return blogService.selectById(id)
         .thenApply(blog -> {
@@ -139,12 +144,12 @@ public class BffService {
   /**
    * Create a new blog.
    *
-   * @param blog blog info
+   * @param createBlogDTO DTO for creating a blog
    * @return created blog info
    */
-  public CompletableFuture<Blog> createBlog(Blog blog) {
-    log.debug("Creating blog: {}", blog);
-    return blogService.createBlog(blog)
+  public CompletableFuture<BlogDTO> createBlog(CreateBlogDTO createBlogDTO) {
+    log.debug("Creating blog: {}", createBlogDTO);
+    return blogService.createBlog(createBlogDTO)
         .thenApply(createdBlog -> {
           log.debug("Created blog: {}", createdBlog);
           return createdBlog;
@@ -156,12 +161,12 @@ public class BffService {
    * Update blog info.
    *
    * @param id   blog ID
-   * @param blog blog info
+   * @param updateBlogDTO DTO for updating a blog
    * @return updated blog info
    */
-  public CompletableFuture<Blog> updateBlog(String id, Blog blog) {
+  public CompletableFuture<BlogDTO> updateBlog(String id, UpdateBlogDTO updateBlogDTO) {
     log.debug("Updating blog info for ID: {}", id);
-    return blogService.updateBlog(id, blog)
+    return blogService.updateBlog(id, updateBlogDTO)
         .thenApply(updatedBlog -> {
           log.debug("Updated blog: {}", updatedBlog);
           return updatedBlog;
@@ -185,12 +190,12 @@ public class BffService {
   /**
    * Create multiple blogs.
    *
-   * @param blogs blog list
+   * @param createBlogDTOs blog list
    * @return created blogs
    */
-  public CompletableFuture<List<Blog>> createBlogs(List<Blog> blogs) {
-    log.debug("Creating blogs: {}", blogs);
-    return blogService.createBlogs(blogs)
+  public CompletableFuture<List<BlogDTO>> createBlogs(List<CreateBlogDTO> createBlogDTOs) {
+    log.debug("Creating blogs: {}", createBlogDTOs);
+    return blogService.createBlogs(createBlogDTOs)
         .thenApply(createdBlogs -> {
           log.debug("Created blogs: {}", createdBlogs);
           return createdBlogs;
@@ -203,7 +208,7 @@ public class BffService {
    *
    * @return all blogs
    */
-  public CompletableFuture<List<Blog>> getAllBlogs() {
+  public CompletableFuture<List<BlogDTO>> getAllBlogs() {
     log.debug("Fetching all blogs");
     return blogService.selectAll()
         .thenApply(blogs -> {
@@ -222,7 +227,7 @@ public class BffService {
    */
   private <T> T handleException(Throwable e) {
     log.error("Error occurred: {}", e.getMessage(), e);
-    // find the root cause
+
     Throwable cause = e;
     while (cause.getCause() != null) {
       cause = cause.getCause();
@@ -232,8 +237,8 @@ public class BffService {
       throw (BaseRpcException) cause;
     }
 
-    throw new RpcException("INTERNAL_ERROR",
-        e.getMessage(),
+    throw new RpcException("INTERNAL_SERVER_ERROR",
+        cause.getMessage(),
         HttpStatus.INTERNAL_SERVER_ERROR.value());
   }
 }

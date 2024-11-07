@@ -1,0 +1,10 @@
+server:
+  port: 8093
+  address: localhost
+spring:
+  application:
+    name: rpc-test-service3
+
+netty:
+  server:
+    port: 50006

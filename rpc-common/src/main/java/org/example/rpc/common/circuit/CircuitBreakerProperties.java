@@ -2,6 +2,7 @@ package org.example.rpc.common.circuit;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 /**
@@ -15,16 +16,12 @@ import org.springframework.stereotype.Component;
  */
 @Data
 @Component
+@ConfigurationProperties(prefix = "rpc.circuit-breaker")
 public class CircuitBreakerProperties {
 
-  @Value("${rpc.circuit-breaker.failure-threshold:5}")
-  private int failureThreshold;
-  
-  @Value("${rpc.circuit-breaker.reset-timeout-ms:1000}")
-  private long resetTimeoutMs;
-  
-  @Value("${rpc.circuit-breaker.half-open-max-calls:10}")
-  private int halfOpenMaxCalls;
+  private int failureThreshold = 15;
+  private long resetTimeoutMs = 10000;
+  private int halfOpenMaxCalls = 30;
 
   /**
    * Constructor.

@@ -1,10 +1,10 @@
 package org.example.rpc.registry.registry.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.example.rpc.processor.RpcRequestProcessor;
 import org.example.rpc.registry.registry.api.RpcServiceRegistry;
 import org.example.rpc.registry.registry.param.RpcServiceRegistryParam;
 import org.example.rpc.registry.registry.param.RpcServiceUnregistryParam;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * Abstract class for service registry.

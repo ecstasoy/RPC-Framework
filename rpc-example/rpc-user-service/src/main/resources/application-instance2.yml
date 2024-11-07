@@ -1,0 +1,8 @@
+server:
+  port: 8091
+  address: localhost
+  tomcat:
+
+netty:
+  server:
+    port: 50005

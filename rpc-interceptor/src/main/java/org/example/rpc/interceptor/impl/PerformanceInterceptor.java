@@ -53,7 +53,7 @@ public class PerformanceInterceptor implements RpcInterceptor {
   @Override
   public boolean preHandle(RpcRequest request) {
     startTime.set(System.currentTimeMillis());
-    return true;
+    return false;
   }
 
   @Override

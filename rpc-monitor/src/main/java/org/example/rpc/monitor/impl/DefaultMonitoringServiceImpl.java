@@ -67,8 +67,6 @@ public class DefaultMonitoringServiceImpl implements MonitoringService {
   @Override
   public void clearHistoricalData(Duration retention) {
     LocalDateTime cutoffTime = LocalDateTime.now().minus(retention);
-    methodMetricsMap.forEach((method, metrics) -> {
-      metrics.removeIf(m -> m.getTimestamp().isBefore(cutoffTime));
-    });
+    methodMetricsMap.forEach((method, metrics) -> metrics.removeIf(m -> m.getTimestamp().isBefore(cutoffTime)));
   }
 }

@@ -1,0 +1,22 @@
+server:
+  address: localhost
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+logging:
+  level:
+    org.example: debug
+rpc:
+  registry:
+    address: localhost:2181
+    type: zookeeper
+    base-sleep-time: 1000
+    max-retries: 3
+  circuit-breaker:
+    failure-threshold: 5
+    reset-timeout-ms: 1000
+    half-open-max-calls: 10
+  service:
+    port: ${netty.server.port}
+    address: ${server.address}

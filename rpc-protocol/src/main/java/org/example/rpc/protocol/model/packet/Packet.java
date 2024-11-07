@@ -1,10 +1,10 @@
 package org.example.rpc.protocol.model.packet;
 
-import org.example.rpc.common.enums.PacketType;
-import org.example.rpc.protocol.serialize.SerializerType;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
+import org.example.rpc.common.enums.PacketType;
+import org.example.rpc.protocol.serialize.SerializerType;
 
 import java.io.Serializable;
 
@@ -25,6 +25,10 @@ public abstract class Packet implements Serializable {
   @Setter(AccessLevel.NONE)
   private byte magicNum = 66;
 
+
+  @Setter
+  private SerializerType serializerType;
+
   /**
    * Get packet type.
    *
@@ -32,7 +36,4 @@ public abstract class Packet implements Serializable {
    */
   public abstract PacketType getPacketType();
 
-  // 添加序列化类型字段
-  @Setter(AccessLevel.NONE)
-  private SerializerType serializerType = SerializerType.JSON;
 }

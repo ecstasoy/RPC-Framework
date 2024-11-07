@@ -5,9 +5,7 @@ import org.example.rpc.protocol.model.RpcRequest;
 
 import java.util.concurrent.CompletableFuture;
 
-/**
- * RPC request sender.
- */
+
 public interface RpcRequestSender {
 
   /**

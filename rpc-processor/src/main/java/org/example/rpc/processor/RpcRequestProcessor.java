@@ -1,10 +1,9 @@
 package org.example.rpc.processor;
 
-import org.example.rpc.common.annotations.*;
+import lombok.extern.slf4j.Slf4j;
+import org.example.rpc.interceptor.InterceptorChainManager;
 import org.example.rpc.protocol.model.RpcRequest;
 import org.example.rpc.protocol.model.RpcResponse;
-import org.example.rpc.interceptor.InterceptorChainManager;
-import lombok.extern.slf4j.Slf4j;
 import org.example.rpc.router.api.Router;
 import org.springframework.stereotype.Component;
 

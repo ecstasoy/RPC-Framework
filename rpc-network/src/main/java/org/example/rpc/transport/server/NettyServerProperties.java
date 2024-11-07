@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class NettyServerProperties {
 
-  @Value("${netty.server.port:50001}")
+  @Value("${netty.server.port}")
   private int serverPort;
   
   @Autowired
