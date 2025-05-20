@@ -1,4 +1,5 @@
 # RPC Framework
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/189e0d34d5044bd1b553bd6406d95a0b)](https://app.codacy.com/gh/ecstasoy/RPC-Framework/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/ecstasoy/RPC-Framework)
 
 A lightweight, Spring Boot-based RPC (Remote Procedure Call) framework implementation with high performance and extensibility.
