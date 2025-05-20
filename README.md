@@ -1,4 +1,5 @@
 # RPC Framework
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/ecstasoy/RPC-Framework)
 
 A lightweight, Spring Boot-based RPC (Remote Procedure Call) framework implementation with high performance and extensibility.
 
