@@ -1,5 +1,5 @@
 ///*
-//package org.example.rpc.handler;
+//package io.ecstasoy.rpc.handler;
 //
 //import io.netty.channel.ChannelHandlerContext;
 //import io.netty.channel.ChannelInboundHandlerAdapter;

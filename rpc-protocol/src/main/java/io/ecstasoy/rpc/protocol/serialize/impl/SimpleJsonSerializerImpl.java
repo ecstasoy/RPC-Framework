@@ -28,7 +28,7 @@ public class SimpleJsonSerializerImpl implements Serializer {
   private static final Logger logger = LoggerFactory.getLogger(SimpleJsonSerializerImpl.class);
 
   static {
-    ParserConfig.getGlobalInstance().addAccept("org.example.rpc");
+    ParserConfig.getGlobalInstance().addAccept("io.ecstasoy.rpc");
     SerializeConfig.getGlobalInstance().put(Throwable.class, new ThrowableSerializer());
     ParserConfig.getGlobalInstance().putDeserializer(Throwable.class, new ThrowableDeserializer());
     ParserConfig.getGlobalInstance().setAutoTypeSupport(true);

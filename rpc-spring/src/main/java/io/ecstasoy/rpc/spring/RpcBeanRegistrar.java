@@ -24,7 +24,7 @@ public class RpcBeanRegistrar implements ImportBeanDefinitionRegistrar, Resource
   /**
    * rpc-core package full path.
    */
-  public static final String CORE_MODULE_PACKAGE = "org.example.rpc";
+  public static final String CORE_MODULE_PACKAGE = "io.ecstasoy.rpc";
 
   @Override
   public void setResourceLoader(ResourceLoader resourceLoader) {

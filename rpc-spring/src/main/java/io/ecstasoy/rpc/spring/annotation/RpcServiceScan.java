@@ -12,7 +12,7 @@ import java.lang.annotation.*;
  *
  * <p>For example:
  * <pre>
- *   {@literal @}RpcServiceScan(basePackages = "org.example.rpc")
+ *   {@literal @}RpcServiceScan(basePackages = "io.ecstasoy.rpc")
  *   public class Application {
  *   // ...
  *   }
