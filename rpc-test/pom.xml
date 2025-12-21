@@ -18,7 +18,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>org.example.rpc.core.test.loadbalance.LoadBalanceTestApplication</mainClass>
+                    <mainClass>io.ecstasoy.rpc.core.test.loadbalance.LoadBalanceTestApplication</mainClass>
                     <classifier>exec</classifier>
                 </configuration>
                 <executions>

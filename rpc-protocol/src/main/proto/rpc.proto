@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package org.example.rpc.core.protocol.proto;
+package io.ecstasoy.rpc.core.protocol.proto;
 option java_multiple_files = true;
 
 message RpcRequestProto {

@@ -2,30 +2,44 @@ server:
   port: 8081
   address: localhost
   tomcat:
-    connection-timeout: 30000
+    connection-timeout: 20000
     async-timeout: 20000
+    threads:
+      max: 300                # 最大工作线程数
+      min-spare: 100         # 最小空闲线程数
+    max-connections: 10000   # 最大连接数
+    accept-count: 1000      # 等待队列长度
 
 netty:
   server:
     port: 50002
+    option:
+      so-backlog: 1024
+      allocator: pooled
+    child:
+      option:
+        allocator: pooled
+        tcpNoDelay: true
+        keepAlive: true
 
 spring:
   main:
     allow-bean-definition-overriding: true
+    allow-circular-references: true
   datasource:
-    url: jdbc:mysql://localhost:3306/rpc_demo?useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/rpc_demo?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
     username: root
     password: '!Hyz001268'
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.zaxxer.hikari.HikariDataSource
     hikari:
       minimum-idle: 10
-      maximum-pool-size: 10
+      maximum-pool-size: 20
       auto-commit: true
-      idle-timeout: 300000
+      idle-timeout: 180000
       pool-name: UserServiceCP
       max-lifetime: 900000
-      connection-timeout: 5000
+      connection-timeout: 3000
       connection-test-query: SELECT 1
   mvc:
     async:
@@ -37,12 +51,14 @@ mybatis:
 
 logging:
   level:
-    org:
-      example:
+    io:
+      ecstasoy:
         rpc: DEBUG
 
 rpc:
   serializer:
     type: PROTOBUF
     enableAutoType: true
-    maxObjectSize: 10485760
+    maxObjectSize: 5242800
+  service:
+    name: io.ecstasoy.rpc.api.service.UserService

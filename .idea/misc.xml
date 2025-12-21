@@ -4,21 +4,23 @@
   <component name="MavenProjectsManager">
     <option name="originalFiles">
       <list>
-        <option value="$PROJECT_DIR$/pom.xml" />
-        <option value="$PROJECT_DIR$/rpc-registry-service/pom.xml" />
         <option value="$PROJECT_DIR$/rpc-common/pom.xml" />
+        <option value="$PROJECT_DIR$/rpc-example/pom.xml" />
+        <option value="$PROJECT_DIR$/rpc-handler/pom.xml" />
+        <option value="$PROJECT_DIR$/rpc-interceptor/pom.xml" />
+        <option value="$PROJECT_DIR$/rpc-loadbalancer/pom.xml" />
+        <option value="$PROJECT_DIR$/rpc-monitor/pom.xml" />
+        <option value="$PROJECT_DIR$/rpc-spring/pom.xml" />
         <option value="$PROJECT_DIR$/rpc-test/pom.xml" />
+        <option value="$PROJECT_DIR$/rpc-router/pom.xml" />
+        <option value="$PROJECT_DIR$/rpc-registry/pom.xml" />
+        <option value="$PROJECT_DIR$/rpc-proxy/pom.xml" />
+        <option value="$PROJECT_DIR$/rpc-protocol/pom.xml" />
+        <option value="$PROJECT_DIR$/rpc-processor/pom.xml" />
+        <option value="$PROJECT_DIR$/rpc-network/pom.xml" />
+        <option value="$PROJECT_DIR$/pom.xml" />
       </list>
     </option>
-    <option name="ignoredFiles">
-      <set>
-        <option value="$PROJECT_DIR$/rpc-core/rpc-common/pom.xml" />
-        <option value="$PROJECT_DIR$/rpc-registry-server/pom.xml" />
-        <option value="$PROJECT_DIR$/rpc-transport/pom.xml" />
-      </set>
-    </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_18" default="true" project-jdk-name="azul-18" project-jdk-type="JavaSDK">
-    <output url="file://$PROJECT_DIR$/out" />
-  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" project-jdk-name="azul-18" project-jdk-type="JavaSDK" />
 </project>

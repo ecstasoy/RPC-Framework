@@ -1,0 +1,2 @@
+io.ecstasoy.rpc.protocol.serialize.impl.SimpleJsonSerializerImpl
+io.ecstasoy.rpc.protocol.serialize.impl.ProtobufSerializerImpl

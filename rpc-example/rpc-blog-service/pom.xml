@@ -117,7 +117,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>2.7.3</version>
                 <configuration>
-                    <mainClass>org.example.rpc.blog.BlogServiceApplication</mainClass>
+                    <mainClass>io.ecstasoy.rpc.blog.BlogServiceApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

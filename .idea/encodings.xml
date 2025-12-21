@@ -3,12 +3,9 @@
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/rpc-common/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/rpc-example/rpc-api/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/rpc-example/rpc-api/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/rpc-example/rpc-bff-service/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/rpc-example/rpc-bff-service/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/rpc-example/rpc-blog-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/rpc-example/rpc-user-service/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/rpc-example/rpc-user-service/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/rpc-example/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/rpc-example/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/rpc-handler/src/main/java" charset="UTF-8" />
@@ -18,15 +15,11 @@
     <file url="file://$PROJECT_DIR$/rpc-network/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/rpc-processor/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/rpc-protocol/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/rpc-protocol/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/rpc-proxy/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/rpc-registry-server/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/rpc-registry/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/rpc-router/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/rpc-spring/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/rpc-test/rpc-commons/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/rpc-test/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/rpc-transport/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
     <file url="PROJECT" charset="UTF-8" />

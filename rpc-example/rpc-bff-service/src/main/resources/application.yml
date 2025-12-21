@@ -30,6 +30,13 @@ rpc:
     type: PROTOBUF
     enableAutoType: true
     maxObjectSize: 10485760
+  registry:
+    address: localhost:2181
+    type: zookeeper
+    base-sleep-time: 1000
+    max-retries: 3
+    session-timeout: 60000
+    connection-timeout: 5000
 
 mybatis:
   configuration:
@@ -37,7 +44,6 @@ mybatis:
 
 logging:
   level:
-    org:
-      example:
+    io:
+      ecstasoy:
         rpc: DEBUG
-      example: debug

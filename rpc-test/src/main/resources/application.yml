@@ -6,7 +6,7 @@ spring:
     allow-bean-definition-overriding: true
 logging:
   level:
-    org.example: debug
+    io.ecstasoy: debug
 rpc:
   registry:
     address: localhost:2181

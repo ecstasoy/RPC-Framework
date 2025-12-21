@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="1f1ac9a9-297f-4cdf-8dec-5044121fb5f7" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/rpc-example/rpc-blog-service/src/main/java/io/ecstasoy/rpc/blog/config/BlogServiceConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rpc-example/rpc-blog-service/src/main/java/io/ecstasoy/rpc/blog/impl/BlogServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rpc-example/rpc-blog-service/src/main/java/io/ecstasoy/rpc/blog/mapper/BlogMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rpc-example/rpc-blog-service/src/main/java/io/ecstasoy/rpc/blog/repository/BlogRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rpc-example/rpc-user-service/src/main/java/io/ecstasoy/rpc/user/config/UserServiceConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rpc-protocol/src/main/java/io/ecstasoy/rpc/protocol/model/ErrorResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rpc-protocol/src/main/resources/META-INF/services/io.ecstasoy.rpc.protocol.serialize.Serializer" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/checkstyle-idea.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/checkstyle-idea.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gbrowser_project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gbrowser_project.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/View Results Tree.jmx" beforeDir="false" afterPath="$PROJECT_DIR$/View Results Tree.jmx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jmeter.log" beforeDir="false" afterPath="$PROJECT_DIR$/jmeter.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-common/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-common/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-common/src/main/java/org/example/rpc/common/annotations/Api.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-common/src/main/java/io/ecstasoy/rpc/common/annotations/Api.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-common/src/main/java/org/example/rpc/common/annotations/Body.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-common/src/main/java/io/ecstasoy/rpc/common/annotations/Body.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-common/src/main/java/org/example/rpc/common/annotations/DELETE.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-common/src/main/java/io/ecstasoy/rpc/common/annotations/DELETE.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-common/src/main/java/org/example/rpc/common/annotations/GET.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-common/src/main/java/io/ecstasoy/rpc/common/annotations/GET.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-common/src/main/java/org/example/rpc/common/annotations/POST.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-common/src/main/java/io/ecstasoy/rpc/common/annotations/POST.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-common/src/main/java/org/example/rpc/common/annotations/PUT.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-common/src/main/java/io/ecstasoy/rpc/common/annotations/PUT.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-common/src/main/java/org/example/rpc/common/annotations/Param.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-common/src/main/java/io/ecstasoy/rpc/common/annotations/Param.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-common/src/main/java/org/example/rpc/common/annotations/Path.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-common/src/main/java/io/ecstasoy/rpc/common/annotations/Path.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-common/src/main/java/org/example/rpc/common/annotations/Query.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-common/src/main/java/io/ecstasoy/rpc/common/annotations/Query.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-common/src/main/java/org/example/rpc/common/annotations/Reference.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-common/src/main/java/io/ecstasoy/rpc/common/annotations/Reference.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-common/src/main/java/org/example/rpc/common/annotations/RpcMethod.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-common/src/main/java/io/ecstasoy/rpc/common/annotations/RpcMethod.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-common/src/main/java/org/example/rpc/common/annotations/RpcService.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-common/src/main/java/io/ecstasoy/rpc/common/annotations/RpcService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-common/src/main/java/org/example/rpc/common/circuit/CircuitBreaker.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-common/src/main/java/io/ecstasoy/rpc/common/circuit/CircuitBreaker.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-common/src/main/java/org/example/rpc/common/circuit/CircuitBreakerProperties.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-common/src/main/java/io/ecstasoy/rpc/common/circuit/CircuitBreakerProperties.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-common/src/main/java/org/example/rpc/common/circuit/CircuitBreakerState.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-common/src/main/java/io/ecstasoy/rpc/common/circuit/CircuitBreakerState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-common/src/main/java/org/example/rpc/common/enums/MetricType.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-common/src/main/java/io/ecstasoy/rpc/common/enums/MetricType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-common/src/main/java/org/example/rpc/common/enums/PacketType.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-common/src/main/java/io/ecstasoy/rpc/common/enums/PacketType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-common/src/main/java/org/example/rpc/common/enums/RegistryCenterType.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-common/src/main/java/io/ecstasoy/rpc/common/enums/RegistryCenterType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-common/src/main/java/org/example/rpc/common/exception/BaseRpcException.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-common/src/main/java/io/ecstasoy/rpc/common/exception/BaseRpcException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-common/src/main/java/org/example/rpc/common/exception/BusinessException.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-common/src/main/java/io/ecstasoy/rpc/common/exception/BusinessException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-common/src/main/java/org/example/rpc/common/exception/RpcException.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-common/src/main/java/io/ecstasoy/rpc/common/exception/RpcException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-example/rpc-api/src/main/java/org/example/rpc/api/ApiResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-example/rpc-api/src/main/java/io/ecstasoy/rpc/api/ApiResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-example/rpc-api/src/main/java/org/example/rpc/api/dto/request/CreateBlogDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-example/rpc-api/src/main/java/io/ecstasoy/rpc/api/dto/request/CreateBlogDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-example/rpc-api/src/main/java/org/example/rpc/api/dto/request/CreateUserDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-example/rpc-api/src/main/java/io/ecstasoy/rpc/api/dto/request/CreateUserDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-example/rpc-api/src/main/java/org/example/rpc/api/dto/request/UpdateBlogDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-example/rpc-api/src/main/java/io/ecstasoy/rpc/api/dto/request/UpdateBlogDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-example/rpc-api/src/main/java/org/example/rpc/api/dto/request/UpdateUserDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-example/rpc-api/src/main/java/io/ecstasoy/rpc/api/dto/request/UpdateUserDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-example/rpc-api/src/main/java/org/example/rpc/api/dto/response/BlogDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-example/rpc-api/src/main/java/io/ecstasoy/rpc/api/dto/response/BlogDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-example/rpc-api/src/main/java/org/example/rpc/api/dto/response/UserDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-example/rpc-api/src/main/java/io/ecstasoy/rpc/api/dto/response/UserDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-example/rpc-api/src/main/java/org/example/rpc/api/entity/BlogEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-example/rpc-api/src/main/java/io/ecstasoy/rpc/api/entity/BlogEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-example/rpc-api/src/main/java/org/example/rpc/api/entity/UserEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-example/rpc-api/src/main/java/io/ecstasoy/rpc/api/entity/UserEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-example/rpc-api/src/main/java/org/example/rpc/api/exception/GlobalExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-example/rpc-api/src/main/java/io/ecstasoy/rpc/api/exception/GlobalExceptionHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-example/rpc-api/src/main/java/org/example/rpc/api/exception/InvalidUserInputException.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-example/rpc-api/src/main/java/io/ecstasoy/rpc/api/exception/InvalidUserInputException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-example/rpc-api/src/main/java/org/example/rpc/api/exception/blog/BlogNotFoundException.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-example/rpc-api/src/main/java/io/ecstasoy/rpc/api/exception/blog/BlogNotFoundException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-example/rpc-api/src/main/java/org/example/rpc/api/exception/blog/DuplicateBlogException.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-example/rpc-api/src/main/java/io/ecstasoy/rpc/api/exception/blog/DuplicateBlogException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-example/rpc-api/src/main/java/org/example/rpc/api/exception/user/DuplicateUserException.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-example/rpc-api/src/main/java/io/ecstasoy/rpc/api/exception/user/DuplicateUserException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-example/rpc-api/src/main/java/org/example/rpc/api/exception/user/UserAuthenticationException.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-example/rpc-api/src/main/java/io/ecstasoy/rpc/api/exception/user/UserAuthenticationException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-example/rpc-api/src/main/java/org/example/rpc/api/exception/user/UserDeletionException.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-example/rpc-api/src/main/java/io/ecstasoy/rpc/api/exception/user/UserDeletionException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-example/rpc-api/src/main/java/org/example/rpc/api/exception/user/UserNotFoundException.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-example/rpc-api/src/main/java/io/ecstasoy/rpc/api/exception/user/UserNotFoundException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-example/rpc-api/src/main/java/org/example/rpc/api/exception/user/UserUpdateException.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-example/rpc-api/src/main/java/io/ecstasoy/rpc/api/exception/user/UserUpdateException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-example/rpc-api/src/main/java/org/example/rpc/api/pojo/Blog.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-example/rpc-api/src/main/java/io/ecstasoy/rpc/api/pojo/Blog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-example/rpc-api/src/main/java/org/example/rpc/api/pojo/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-example/rpc-api/src/main/java/io/ecstasoy/rpc/api/pojo/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-example/rpc-api/src/main/java/org/example/rpc/api/service/BlogService.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-example/rpc-api/src/main/java/io/ecstasoy/rpc/api/service/BlogService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-example/rpc-api/src/main/java/org/example/rpc/api/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-example/rpc-api/src/main/java/io/ecstasoy/rpc/api/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-example/rpc-bff-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-example/rpc-bff-service/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-example/rpc-bff-service/src/main/java/org/example/rpc/bff/BffController.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-example/rpc-bff-service/src/main/java/io/ecstasoy/rpc/bff/BffController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-example/rpc-bff-service/src/main/java/org/example/rpc/bff/BffService.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-example/rpc-bff-service/src/main/java/io/ecstasoy/rpc/bff/BffService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-example/rpc-bff-service/src/main/java/org/example/rpc/bff/BffServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-example/rpc-bff-service/src/main/java/io/ecstasoy/rpc/bff/BffServiceApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-example/rpc-bff-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-example/rpc-bff-service/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-example/rpc-blog-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-example/rpc-blog-service/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-example/rpc-blog-service/src/main/java/org/example/rpc/blog/BlogServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-example/rpc-blog-service/src/main/java/io/ecstasoy/rpc/blog/BlogServiceApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-example/rpc-blog-service/src/main/java/org/example/rpc/blog/config/BlogServiceConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-example/rpc-blog-service/src/main/java/org/example/rpc/blog/convert/BlogConverter.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-example/rpc-blog-service/src/main/java/io/ecstasoy/rpc/blog/convert/BlogConverter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-example/rpc-blog-service/src/main/java/org/example/rpc/blog/impl/BlogServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-example/rpc-blog-service/src/main/java/org/example/rpc/blog/mapper/BlogMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-example/rpc-blog-service/src/main/java/org/example/rpc/blog/repository/BlogRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-example/rpc-blog-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-example/rpc-blog-service/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-example/rpc-blog-service/src/main/resources/mapper/BlogMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-example/rpc-blog-service/src/main/resources/mapper/BlogMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-example/rpc-user-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-example/rpc-user-service/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-example/rpc-user-service/src/main/java/org/example/rpc/user/UserServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-example/rpc-user-service/src/main/java/io/ecstasoy/rpc/user/UserServiceApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-example/rpc-user-service/src/main/java/org/example/rpc/user/config/UserServiceConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-example/rpc-user-service/src/main/java/org/example/rpc/user/convert/UserConverter.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-example/rpc-user-service/src/main/java/io/ecstasoy/rpc/user/convert/UserConverter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-example/rpc-user-service/src/main/java/org/example/rpc/user/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-example/rpc-user-service/src/main/java/io/ecstasoy/rpc/user/impl/UserServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-example/rpc-user-service/src/main/java/org/example/rpc/user/mapper/UserMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-example/rpc-user-service/src/main/java/io/ecstasoy/rpc/user/mapper/UserMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-example/rpc-user-service/src/main/java/org/example/rpc/user/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-example/rpc-user-service/src/main/java/io/ecstasoy/rpc/user/repository/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-example/rpc-user-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-example/rpc-user-service/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-handler/src/main/java/org/example/rpc/handler/ClientIdleStateHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-handler/src/main/java/io/ecstasoy/rpc/handler/ClientIdleStateHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-handler/src/main/java/org/example/rpc/handler/ServerIdleStateHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-handler/src/main/java/io/ecstasoy/rpc/handler/ServerIdleStateHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-interceptor/src/main/java/org/example/rpc/interceptor/ClientInterceptorChainManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-interceptor/src/main/java/io/ecstasoy/rpc/interceptor/ClientInterceptorChainManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-interceptor/src/main/java/org/example/rpc/interceptor/InterceptorChainManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-interceptor/src/main/java/io/ecstasoy/rpc/interceptor/InterceptorChainManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-interceptor/src/main/java/org/example/rpc/interceptor/RpcInterceptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-interceptor/src/main/java/io/ecstasoy/rpc/interceptor/RpcInterceptor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-interceptor/src/main/java/org/example/rpc/interceptor/impl/ClientCircuitBreakerInterceptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-interceptor/src/main/java/io/ecstasoy/rpc/interceptor/impl/ClientCircuitBreakerInterceptor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-interceptor/src/main/java/org/example/rpc/interceptor/impl/LoggingInterceptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-interceptor/src/main/java/io/ecstasoy/rpc/interceptor/impl/LoggingInterceptor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-interceptor/src/main/java/org/example/rpc/interceptor/impl/PerformanceInterceptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-interceptor/src/main/java/io/ecstasoy/rpc/interceptor/impl/PerformanceInterceptor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-loadbalancer/src/main/java/org/example/rpc/loadbalancer/LoadBalancerFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-loadbalancer/src/main/java/io/ecstasoy/rpc/loadbalancer/LoadBalancerFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-loadbalancer/src/main/java/org/example/rpc/loadbalancer/api/LoadBalanceStrategy.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-loadbalancer/src/main/java/io/ecstasoy/rpc/loadbalancer/api/LoadBalanceStrategy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-loadbalancer/src/main/java/org/example/rpc/loadbalancer/api/LoadBalancer.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-loadbalancer/src/main/java/io/ecstasoy/rpc/loadbalancer/api/LoadBalancer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-loadbalancer/src/main/java/org/example/rpc/loadbalancer/impl/ConsistentHashLoadBalancer.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-loadbalancer/src/main/java/io/ecstasoy/rpc/loadbalancer/impl/ConsistentHashLoadBalancer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-loadbalancer/src/main/java/org/example/rpc/loadbalancer/impl/LeastActiveLoadBalancer.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-loadbalancer/src/main/java/io/ecstasoy/rpc/loadbalancer/impl/LeastActiveLoadBalancer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-loadbalancer/src/main/java/org/example/rpc/loadbalancer/impl/RandomLoadBalancer.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-loadbalancer/src/main/java/io/ecstasoy/rpc/loadbalancer/impl/RandomLoadBalancer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-loadbalancer/src/main/java/org/example/rpc/loadbalancer/impl/RoundRobinLoadBalancer.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-loadbalancer/src/main/java/io/ecstasoy/rpc/loadbalancer/impl/RoundRobinLoadBalancer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-loadbalancer/src/main/java/org/example/rpc/loadbalancer/impl/WeightedLoadBalancer.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-loadbalancer/src/main/java/io/ecstasoy/rpc/loadbalancer/impl/WeightedLoadBalancer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-loadbalancer/src/main/java/org/example/rpc/loadbalancer/impl/weight/ServiceWeight.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-loadbalancer/src/main/java/io/ecstasoy/rpc/loadbalancer/impl/weight/ServiceWeight.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-monitor/src/main/java/org/example/rpc/monitor/api/MonitoringService.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-monitor/src/main/java/io/ecstasoy/rpc/monitor/api/MonitoringService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-monitor/src/main/java/org/example/rpc/monitor/controller/ClientMonitorController.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-monitor/src/main/java/io/ecstasoy/rpc/monitor/controller/ClientMonitorController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-monitor/src/main/java/org/example/rpc/monitor/controller/ServerMonitorController.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-monitor/src/main/java/io/ecstasoy/rpc/monitor/controller/ServerMonitorController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-monitor/src/main/java/org/example/rpc/monitor/impl/ClientMonitoringServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-monitor/src/main/java/io/ecstasoy/rpc/monitor/impl/ClientMonitoringServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-monitor/src/main/java/org/example/rpc/monitor/impl/DefaultMonitoringServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-monitor/src/main/java/io/ecstasoy/rpc/monitor/impl/DefaultMonitoringServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-monitor/src/main/java/org/example/rpc/monitor/model/MethodMetrics.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-monitor/src/main/java/io/ecstasoy/rpc/monitor/model/MethodMetrics.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-monitor/src/main/java/org/example/rpc/monitor/model/StatisticalMetrics.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-monitor/src/main/java/io/ecstasoy/rpc/monitor/model/StatisticalMetrics.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-network/src/main/java/org/example/rpc/network/ChannelManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-network/src/main/java/io/ecstasoy/rpc/network/ChannelManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-network/src/main/java/org/example/rpc/network/ChannelPool.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-network/src/main/java/io/ecstasoy/rpc/network/ChannelPool.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-network/src/main/java/org/example/rpc/network/NettyRpcRequestSenderImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-network/src/main/java/io/ecstasoy/rpc/network/NettyRpcRequestSenderImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-network/src/main/java/org/example/rpc/network/RpcRequestSender.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-network/src/main/java/io/ecstasoy/rpc/network/RpcRequestSender.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-network/src/main/java/org/example/rpc/transport/client/NettyClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-network/src/main/java/io/ecstasoy/rpc/transport/client/NettyClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-network/src/main/java/org/example/rpc/transport/client/RequestFutureManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-network/src/main/java/io/ecstasoy/rpc/transport/client/RequestFutureManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-network/src/main/java/org/example/rpc/transport/client/RpcClientChannelInboundHandlerImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-network/src/main/java/io/ecstasoy/rpc/transport/client/RpcClientChannelInboundHandlerImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-network/src/main/java/org/example/rpc/transport/server/NettyServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-network/src/main/java/io/ecstasoy/rpc/transport/server/NettyServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-network/src/main/java/org/example/rpc/transport/server/NettyServerProperties.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-network/src/main/java/io/ecstasoy/rpc/transport/server/NettyServerProperties.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-network/src/main/java/org/example/rpc/transport/server/RpcServerSimpleChannelInboundHandlerImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-network/src/main/java/io/ecstasoy/rpc/transport/server/RpcServerSimpleChannelInboundHandlerImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-processor/src/main/java/org/example/rpc/processor/RpcRequestProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-processor/src/main/java/io/ecstasoy/rpc/processor/RpcRequestProcessor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-protocol/src/main/java/org/example/rpc/protocol/codec/MessageDecoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-protocol/src/main/java/io/ecstasoy/rpc/protocol/codec/MessageDecoder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-protocol/src/main/java/org/example/rpc/protocol/codec/MessageEncoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-protocol/src/main/java/io/ecstasoy/rpc/protocol/codec/MessageEncoder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-protocol/src/main/java/org/example/rpc/protocol/codec/PacketClassManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-protocol/src/main/java/io/ecstasoy/rpc/protocol/codec/PacketClassManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-protocol/src/main/java/org/example/rpc/protocol/model/ErrorResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-protocol/src/main/java/org/example/rpc/protocol/model/RpcRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-protocol/src/main/java/io/ecstasoy/rpc/protocol/model/RpcRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-protocol/src/main/java/org/example/rpc/protocol/model/RpcResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-protocol/src/main/java/io/ecstasoy/rpc/protocol/model/RpcResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-protocol/src/main/java/org/example/rpc/protocol/model/packet/HeartBeatPacket.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-protocol/src/main/java/io/ecstasoy/rpc/protocol/model/packet/HeartBeatPacket.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-protocol/src/main/java/org/example/rpc/protocol/model/packet/Packet.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-protocol/src/main/java/io/ecstasoy/rpc/protocol/model/packet/Packet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-protocol/src/main/java/org/example/rpc/protocol/serialize/Serializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-protocol/src/main/java/io/ecstasoy/rpc/protocol/serialize/Serializer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-protocol/src/main/java/org/example/rpc/protocol/serialize/SerializerFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-protocol/src/main/java/io/ecstasoy/rpc/protocol/serialize/SerializerFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-protocol/src/main/java/org/example/rpc/protocol/serialize/SerializerProperties.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-protocol/src/main/java/io/ecstasoy/rpc/protocol/serialize/SerializerProperties.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-protocol/src/main/java/org/example/rpc/protocol/serialize/SerializerType.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-protocol/src/main/java/io/ecstasoy/rpc/protocol/serialize/SerializerType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-protocol/src/main/java/org/example/rpc/protocol/serialize/impl/ProtobufSerializerImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-protocol/src/main/java/io/ecstasoy/rpc/protocol/serialize/impl/ProtobufSerializerImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-protocol/src/main/java/org/example/rpc/protocol/serialize/impl/SimpleJsonSerializerImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-protocol/src/main/java/io/ecstasoy/rpc/protocol/serialize/impl/SimpleJsonSerializerImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-protocol/src/main/proto/rpc.proto" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-protocol/src/main/proto/rpc.proto" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-protocol/src/main/resources/META-INF/services/org.example.rpc.protocol.serialize.Serializer" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-proxy/src/main/java/org/example/rpc/proxy/RpcClientProxy.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-proxy/src/main/java/io/ecstasoy/rpc/proxy/RpcClientProxy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-registry/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-registry/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-registry/src/main/java/org/example/rpc/registry/IRegistryCenter.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-registry/src/main/java/io/ecstasoy/rpc/registry/IRegistryCenter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-registry/src/main/java/org/example/rpc/registry/discovery/api/RpcServiceDiscovery.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-registry/src/main/java/io/ecstasoy/rpc/registry/discovery/api/RpcServiceDiscovery.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-registry/src/main/java/org/example/rpc/registry/discovery/impl/AbstractRpcServiceDiscovery.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-registry/src/main/java/io/ecstasoy/rpc/registry/discovery/impl/AbstractRpcServiceDiscovery.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-registry/src/main/java/org/example/rpc/registry/discovery/impl/ZookeeperRpcServiceDiscoveryImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-registry/src/main/java/io/ecstasoy/rpc/registry/discovery/impl/ZookeeperRpcServiceDiscoveryImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-registry/src/main/java/org/example/rpc/registry/health/ServiceHealthManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-registry/src/main/java/io/ecstasoy/rpc/registry/health/ServiceHealthManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-registry/src/main/java/org/example/rpc/registry/health/ServiceShutdownHook.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-registry/src/main/java/io/ecstasoy/rpc/registry/health/ServiceShutdownHook.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-registry/src/main/java/org/example/rpc/registry/registry/HeartbeatManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-registry/src/main/java/io/ecstasoy/rpc/registry/registry/HeartbeatManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-registry/src/main/java/org/example/rpc/registry/registry/api/RpcServiceRegistry.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-registry/src/main/java/io/ecstasoy/rpc/registry/registry/api/RpcServiceRegistry.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-registry/src/main/java/org/example/rpc/registry/registry/api/model/ServiceInstance.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-registry/src/main/java/io/ecstasoy/rpc/registry/registry/api/model/ServiceInstance.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-registry/src/main/java/org/example/rpc/registry/registry/impl/AbstractRpcServiceRegistry.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-registry/src/main/java/io/ecstasoy/rpc/registry/registry/impl/AbstractRpcServiceRegistry.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-registry/src/main/java/org/example/rpc/registry/registry/impl/ZookeeperRpcServiceRegistryImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-registry/src/main/java/io/ecstasoy/rpc/registry/registry/impl/ZookeeperRpcServiceRegistryImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-registry/src/main/java/org/example/rpc/registry/registry/param/RpcServiceRegistryParam.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-registry/src/main/java/io/ecstasoy/rpc/registry/registry/param/RpcServiceRegistryParam.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-registry/src/main/java/org/example/rpc/registry/registry/param/RpcServiceUnregistryParam.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-registry/src/main/java/io/ecstasoy/rpc/registry/registry/param/RpcServiceUnregistryParam.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-registry/src/main/java/org/example/rpc/registry/zookeeper/ZookeeperHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-registry/src/main/java/io/ecstasoy/rpc/registry/zookeeper/ZookeeperHelper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-registry/src/main/java/org/example/rpc/registry/zookeeper/ZookeeperProperties.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-registry/src/main/java/io/ecstasoy/rpc/registry/zookeeper/ZookeeperProperties.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-router/src/main/java/org/example/rpc/router/api/Router.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-router/src/main/java/io/ecstasoy/rpc/router/api/Router.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-router/src/main/java/org/example/rpc/router/impl/DefaultRouter.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-router/src/main/java/io/ecstasoy/rpc/router/impl/DefaultRouter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-spring/src/main/java/org/example/rpc/spring/RpcBeanProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-spring/src/main/java/io/ecstasoy/rpc/spring/RpcBeanProcessor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-spring/src/main/java/org/example/rpc/spring/RpcBeanRegistrar.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-spring/src/main/java/io/ecstasoy/rpc/spring/RpcBeanRegistrar.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-spring/src/main/java/org/example/rpc/spring/annotation/RpcServiceScan.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-spring/src/main/java/io/ecstasoy/rpc/spring/annotation/RpcServiceScan.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-test/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-test/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-test/src/main/java/org/example/rpc/core/test/TestApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-test/src/main/java/io/ecstasoy/rpc/core/test/TestApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-test/src/main/java/org/example/rpc/core/test/TestConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-test/src/main/java/io/ecstasoy/rpc/core/test/TestConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-test/src/main/java/org/example/rpc/core/test/TestService.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-test/src/main/java/io/ecstasoy/rpc/core/test/TestService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-test/src/main/java/org/example/rpc/core/test/TestServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-test/src/main/java/io/ecstasoy/rpc/core/test/TestServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-test/src/main/java/org/example/rpc/core/test/circuit/CircuitBreakerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-test/src/main/java/io/ecstasoy/rpc/core/test/circuit/CircuitBreakerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-test/src/main/java/org/example/rpc/core/test/heartbeat/HeartbeatTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-test/src/main/java/io/ecstasoy/rpc/core/test/heartbeat/HeartbeatTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-test/src/main/java/org/example/rpc/core/test/interceptor/PerformanceInterceptorTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-test/src/main/java/io/ecstasoy/rpc/core/test/interceptor/PerformanceInterceptorTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-test/src/main/java/org/example/rpc/core/test/loadbalance/LoadBalanceIntegrationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-test/src/main/java/io/ecstasoy/rpc/core/test/loadbalance/LoadBalanceIntegrationTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-test/src/main/java/org/example/rpc/core/test/loadbalance/LoadBalanceTestApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-test/src/main/java/io/ecstasoy/rpc/core/test/loadbalance/LoadBalanceTestApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-test/src/main/java/org/example/rpc/core/test/loadbalance/LoadBalancerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-test/src/main/java/io/ecstasoy/rpc/core/test/loadbalance/LoadBalancerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-test/src/main/java/org/example/rpc/core/test/monitor/MonitoringServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-test/src/main/java/io/ecstasoy/rpc/core/test/monitor/MonitoringServiceTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-test/src/main/java/org/example/rpc/core/test/serialize/SerializerPerformanceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-test/src/main/java/io/ecstasoy/rpc/core/test/serialize/SerializerPerformanceTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpc-test/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/rpc-test/src/main/resources/application.yml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;ecstasoy&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/ecstasoy/RPC-Framework&quot;,
+    &quot;accountId&quot;: &quot;87a60b11-c532-463e-8fe7-021965e5c63d&quot;
+  }
+}</component>
+  <component name="GradleLocalSettings">
+    <option name="modificationStamps">
+      <map>
+        <entry key="$USER_HOME$/Dropbox/code/kotlin/kotlin-koans" value="1495164112000" />
+      </map>
+    </option>
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="userSettingsFile" value="/opt/homebrew/Cellar/maven/3.9.10/libexec/conf/settings.xml" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="MavenRunner">
+    <option name="delegateBuildToMaven" value="true" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="2vLcwsdfp0YclBaZwEcUSmuwiCE" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Maven.rpc-bff-service [install].executor": "Run",
+    "Maven.rpc-blog-service [install].executor": "Run",
+    "Maven.rpc-framework [clean,install,--projects...].executor": "Run",
+    "Maven.rpc-framework [install,--projects...].executor": "Run",
+    "Maven.rpc-user-service [install].executor": "Run",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "Spring Boot.BffServiceApplication.executor": "Run",
+    "Spring Boot.BlogServiceApplication.executor": "Run",
+    "Spring Boot.UserServiceApplication.executor": "Run",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/Users/kw/project/RPC-Framework",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "run.configurations.included.in.services": "true",
+    "settings.editor.selected.configurable": "MavenSettings",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager" selected="Spring Boot.BlogServiceApplication">
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <module />
+      <method />
+    </configuration>
+    <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin">
+      <module name="" />
+      <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m -ea" />
+      <option name="PROGRAM_PARAMETERS" />
+      <predefined_log_file id="idea.log" enabled="true" />
+      <method />
+    </configuration>
+    <configuration default="true" type="Application" factoryName="Application">
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JUnit" factoryName="JUnit">
+      <option name="TEST_OBJECT" value="class" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="BffServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="ALTERNATIVE_JRE_PATH" value="azul-18" />
+      <module name="rpc-bff-service" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="io.ecstasoy.rpc.bff.BffServiceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="BlogServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="ALTERNATIVE_JRE_PATH" value="azul-18" />
+      <module name="rpc-blog-service" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="io.ecstasoy.rpc.blog.BlogServiceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UserServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="ALTERNATIVE_JRE_PATH" value="azul-18" />
+      <module name="rpc-user-service" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="io.ecstasoy.rpc.user.UserServiceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="TestNG">
+      <option name="TEST_OBJECT" value="CLASS" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <properties />
+      <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Spring Boot.BffServiceApplication" />
+      <item itemvalue="Spring Boot.BlogServiceApplication" />
+      <item itemvalue="Spring Boot.UserServiceApplication" />
+    </list>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="StructureViewState">
+    <option name="selectedTab" value="Logical" />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="1f1ac9a9-297f-4cdf-8dec-5044121fb5f7" name="Changes" comment="" />
+      <created>1743928037611</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1743928037611</updated>
+      <workItem from="1743928040128" duration="122000" />
+      <workItem from="1743928181570" duration="48000" />
+      <workItem from="1743928244516" duration="167000" />
+      <workItem from="1743928420211" duration="322000" />
+      <workItem from="1743928768580" duration="9405000" />
+      <workItem from="1744340721272" duration="10895000" />
+      <workItem from="1748057032337" duration="793000" />
+      <workItem from="1766203812794" duration="436000" />
+      <workItem from="1766204268722" duration="112000" />
+      <workItem from="1766204394867" duration="2205000" />
+      <workItem from="1766206946038" duration="488000" />
+      <workItem from="1766207703560" duration="309000" />
+      <workItem from="1766208024864" duration="14619000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
