@@ -1,4 +1,6 @@
 # RPC Framework
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/189e0d34d5044bd1b553bd6406d95a0b)](https://app.codacy.com/gh/ecstasoy/RPC-Framework/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/ecstasoy/RPC-Framework)
 
 A lightweight, Spring Boot-based RPC (Remote Procedure Call) framework implementation with high performance and extensibility.
 
@@ -162,12 +164,6 @@ rpc-framework/
 └── rpc-test/          # Tests
 ```
 
-### Adding New Features
-
-1. Create a new branch for your feature
-2. Implement the feature with appropriate tests
-3. Submit a pull request with a detailed description
-
 ### Coding Standards
 
 - Follow Java coding conventions
@@ -175,27 +171,6 @@ rpc-framework/
 - Document public APIs
 - Keep code modular and maintainable
 
-## Contributing
-
-We welcome contributions! Please follow these steps:
-
-1. Fork the repository
-2. Create your feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
-
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Support
-
-For support and questions, please:
-- Create an issue in the repository
-- Contact the maintainers
-- Check existing documentation
-
-## Acknowledgments
-
-Thanks to all contributors who have helped make this framework better!
